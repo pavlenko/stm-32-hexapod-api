@@ -19,8 +19,6 @@ static control_t control;
 static const uint32_t delay = 20;
 static uint32_t latest;
 
-static uint8_t step = 0;
-
 static const float STEP_SIZE_X1_FULL = 30.0;
 static const float STEP_SIZE_X1_PART = 7.5;
 
@@ -29,6 +27,20 @@ static const float STEP_SIZE_X2_PART = 10.0;
 
 static const float STEP_SIZE_X3_FULL = 60.0;
 static const float STEP_SIZE_X3_PART = 15.0;
+
+typedef enum Step {
+    STEP_IDLE,
+    STEP_MOVE_1,
+    STEP_MOVE_2,
+    STEP_MOVE_3,
+    STEP_MOVE_4,
+    STEP_MOVE_5,
+    STEP_MOVE_6,
+    STEP_MOVE_7,
+    STEP_MOVE_8,
+} Step_t;
+
+static Step_t step = STEP_IDLE;
 
 typedef enum Status {
     STATUS_IDLE,
@@ -59,7 +71,7 @@ void dispatch(uint32_t millis) {
 
     // algorithm step logic
     switch (step) {
-        case 0:
+        case STEP_IDLE:
             // Change speed (copy to private value for prevent change in other places)
             currSpeed = nextSpeed;
 
@@ -71,7 +83,7 @@ void dispatch(uint32_t millis) {
             // Check if any control signal exists and if true - go to next step
             if (control.moveX != 0 || control.moveY != 0 || control.rotateX != 0 || control.rotateZ != 0) {
                 // Go to move step
-                step   = 1;
+                step   = STEP_MOVE_1;
                 status = STATUS_MOVE;
             }
             break;
@@ -79,23 +91,23 @@ void dispatch(uint32_t millis) {
             //TODO calculate positions
 
             // Go to next step
-            step = 2;
+            step = STEP_MOVE_2;
             break;
         case 2:
             //TODO calculate positions
 
             // Go to next step
-            step = 3;
+            step = STEP_MOVE_3;
             break;
         case 3:
             //TODO calculate positions
 
             if (control.moveX == 0 && control.moveY == 0 && control.rotateX == 0 && control.rotateZ == 0) {
                 // Go to init step
-                step = 0;
+                step = STEP_IDLE;
             } else {
                 // Go to next step
-                step = 4;
+                step = STEP_MOVE_4;
             }
             break;
         case 4:
@@ -105,29 +117,29 @@ void dispatch(uint32_t millis) {
             //TODO calculate positions
 
             // Go to next step
-            step = 5;
+            step = STEP_MOVE_5;
             break;
         case 5:
             //TODO calculate positions
 
             // Go to next step
-            step = 6;
+            step = STEP_MOVE_6;
             break;
         case 6:
             //TODO calculate positions
 
             // Go to next step
-            step = 7;
+            step = STEP_MOVE_7;
             break;
         case 7:
             //TODO calculate positions
 
             if (control.moveX == 0 && control.moveY == 0 && control.rotateX == 0 && control.rotateZ == 0) {
                 // Go to init step
-                step = 0;
+                step = STEP_IDLE;
             } else {
                 // Go to next step
-                step = 8;
+                step = STEP_MOVE_8;
             }
             break;
         case 8:
@@ -137,7 +149,7 @@ void dispatch(uint32_t millis) {
             //TODO calculate positions
 
             // Go to next step
-            step = 1;
+            step = STEP_MOVE_1;
             break;
     }
 }
