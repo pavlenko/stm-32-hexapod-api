@@ -12,17 +12,17 @@ Hexapod::Leg::Leg(Point3D &mount): _mount(mount) {}
 
 void Hexapod::Leg::_fwdKinematics(const float *angles, Point3D &target)
 {
-    float radian[3];
-
-    for (int i = 0; i < 3; i++) {
-        radian[i] = DEG_TO_RAD(angles[i]);
-    }
-
-    float x = kLegJoint1ToJoint2 + std::cos(radian[1]) * kLegJoint2ToJoint3 + std::cos(radian[1] + radian[2] - hpi) * kLegJoint3ToTip;
-
-    target.x = kLegRootToJoint1 + std::cos(radian[0]) * x;
-    target.y = std::sin(radian[0]) * x;
-    target.z = std::sin(radian[1]) * kLegJoint2ToJoint3 + std::sin(radian[1] + radian[2] - hpi) * kLegJoint3ToTip;
+//    float radian[3];
+//
+//    for (int i = 0; i < 3; i++) {
+//        radian[i] = DEG_TO_RAD(angles[i]);
+//    }
+//
+//    float x = kLegJoint1ToJoint2 + std::cos(radian[1]) * kLegJoint2ToJoint3 + std::cos(radian[1] + radian[2] - hpi) * kLegJoint3ToTip;
+//
+//    target.x = kLegRootToJoint1 + std::cos(radian[0]) * x;
+//    target.y = std::sin(radian[0]) * x;
+//    target.z = std::sin(radian[1]) * kLegJoint2ToJoint3 + std::sin(radian[1] + radian[2] - hpi) * kLegJoint3ToTip;
 }
 
 //void leg_point_to_angles(leg_point_t *point, leg_angles_t *angles)
@@ -51,19 +51,19 @@ void Hexapod::Leg::_fwdKinematics(const float *angles, Point3D &target)
 //}
 void Hexapod::Leg::_invKinematics(const Point3D &target, float *angles)
 {
-    float x = to.x_ - kLegRootToJoint1;
-    float y = to.y_;
-
-    angles[0] = RAD_TO_DEG(std::atan2(y, x));
-
-    x = std::sqrt(x*x + y*y) - kLegJoint1ToJoint2;
-    y = to.z_;
-    float ar = std::atan2(y, x);
-    float lr2 = x*x + y*y;
-    float lr = std::sqrt(lr2);
-    float a1 = std::acos((lr2 + kLegJoint2ToJoint3*kLegJoint2ToJoint3 - kLegJoint3ToTip*kLegJoint3ToTip)/(2*kLegJoint2ToJoint3*lr));
-    float a2 = std::acos((lr2 - kLegJoint2ToJoint3*kLegJoint2ToJoint3 + kLegJoint3ToTip*kLegJoint3ToTip)/(2*kLegJoint3ToTip*lr));
-
-    angles[1] = RAD_TO_DEG((ar + a1));
-    angles[2] = 90 - RAD_TO_DEG((a1 + a2));
+//    float x = to.x_ - kLegRootToJoint1;
+//    float y = to.y_;
+//
+//    angles[0] = RAD_TO_DEG(std::atan2(y, x));
+//
+//    x = std::sqrt(x*x + y*y) - kLegJoint1ToJoint2;
+//    y = to.z_;
+//    float ar = std::atan2(y, x);
+//    float lr2 = x*x + y*y;
+//    float lr = std::sqrt(lr2);
+//    float a1 = std::acos((lr2 + kLegJoint2ToJoint3*kLegJoint2ToJoint3 - kLegJoint3ToTip*kLegJoint3ToTip)/(2*kLegJoint2ToJoint3*lr));
+//    float a2 = std::acos((lr2 - kLegJoint2ToJoint3*kLegJoint2ToJoint3 + kLegJoint3ToTip*kLegJoint3ToTip)/(2*kLegJoint3ToTip*lr));
+//
+//    angles[1] = RAD_TO_DEG((ar + a1));
+//    angles[2] = 90 - RAD_TO_DEG((a1 + a2));
 }
