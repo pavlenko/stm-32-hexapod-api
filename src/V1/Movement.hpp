@@ -14,6 +14,13 @@ typedef struct {
     int8_t rotateZ;
 } control_t;
 
+enum class Power {
+    OFF,
+    ON,
+};
+
+static Power power;
+
 static control_t control;
 
 static const uint32_t delay = 20;
@@ -28,7 +35,7 @@ static const float STEP_SIZE_X2_PART = 10.0;
 static const float STEP_SIZE_X3_FULL = 60.0;
 static const float STEP_SIZE_X3_PART = 15.0;
 
-typedef enum Step {
+typedef enum Step_e {
     STEP_IDLE,
     STEP_MOVE_1,
     STEP_MOVE_2,
@@ -42,7 +49,7 @@ typedef enum Step {
 
 static Step_t step = STEP_IDLE;
 
-typedef enum Status {
+typedef enum Status_e {
     STATUS_IDLE,
     STATUS_MOVE,
 } Status_t;
@@ -59,6 +66,24 @@ typedef enum Speed {
 static Speed_t currSpeed = Speed_X1;// Private
 static Speed_t nextSpeed = Speed_X1;// Public, may be set via some method
 
+enum class State {
+    POWER_ON, // default status after boot, set standby positions and goto idle mode
+    IDLE, // check for signals and goto moving or off mode
+    MOVING, // check for signals only in specific steps and got idle mode
+    SHUTDOWN,
+    POWER_OFF, // set standby positions and goto complete off mode
+    //TODO complete off mode - set power enable pin to off state
+};
+
+static State state;
+
+static bool mustShutdown;
+
+void initialize() {
+    // Set power enable pin to ON state (this must be a set GPIO port pin value)
+    power = Power::ON;
+}
+
 void dispatch(uint32_t millis) {
     // Delay logic
     if (millis - latest < delay) {
@@ -68,6 +93,39 @@ void dispatch(uint32_t millis) {
     latest = millis;
 
     //TODO speed = step length * 1|2|3
+
+    switch (state) {
+        case State::POWER_ON:
+            //TODO set standby positions
+
+            // Go to next state
+            state = State::IDLE;
+            break;
+        case State::IDLE:
+            //TODO set idle positions (maybe do in separate case branch)
+
+            //TODO checks && go to next step
+            // Check if any control signal exists and if true - go to next step
+            if (control.moveX != 0 || control.moveY != 0 || control.rotateX != 0 || control.rotateZ != 0) {
+                state = State::MOVING;
+            } else if (mustShutdown) {
+                state = State::POWER_OFF;
+            }
+            break;
+        case State::MOVING:
+            //TODO process moving steps
+            break;
+        case State::SHUTDOWN:
+            //TODO set standby positions
+
+            // Go to next state
+            state = State::POWER_OFF;
+            break;
+        case State::POWER_OFF:
+            // Disable power
+            power = Power::OFF;
+            break;
+    }
 
     // algorithm step logic
     switch (step) {
@@ -87,19 +145,19 @@ void dispatch(uint32_t millis) {
                 status = STATUS_MOVE;
             }
             break;
-        case 1:
+        case STEP_MOVE_1:
             //TODO calculate positions
 
             // Go to next step
             step = STEP_MOVE_2;
             break;
-        case 2:
+        case STEP_MOVE_2:
             //TODO calculate positions
 
             // Go to next step
             step = STEP_MOVE_3;
             break;
-        case 3:
+        case STEP_MOVE_3:
             //TODO calculate positions
 
             if (control.moveX == 0 && control.moveY == 0 && control.rotateX == 0 && control.rotateZ == 0) {
@@ -110,7 +168,7 @@ void dispatch(uint32_t millis) {
                 step = STEP_MOVE_4;
             }
             break;
-        case 4:
+        case STEP_MOVE_4:
             // Change speed (copy to private value for prevent change in other places)
             currSpeed = nextSpeed;
 
@@ -119,19 +177,19 @@ void dispatch(uint32_t millis) {
             // Go to next step
             step = STEP_MOVE_5;
             break;
-        case 5:
+        case STEP_MOVE_5:
             //TODO calculate positions
 
             // Go to next step
             step = STEP_MOVE_6;
             break;
-        case 6:
+        case STEP_MOVE_6:
             //TODO calculate positions
 
             // Go to next step
             step = STEP_MOVE_7;
             break;
-        case 7:
+        case STEP_MOVE_7:
             //TODO calculate positions
 
             if (control.moveX == 0 && control.moveY == 0 && control.rotateX == 0 && control.rotateZ == 0) {
@@ -142,7 +200,7 @@ void dispatch(uint32_t millis) {
                 step = STEP_MOVE_8;
             }
             break;
-        case 8:
+        case STEP_MOVE_8:
             // Change speed (copy to private value for prevent change in other places)
             currSpeed = nextSpeed;
 
