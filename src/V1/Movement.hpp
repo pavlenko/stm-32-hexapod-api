@@ -23,7 +23,9 @@ static Power power;
 
 static control_t control;
 
-static const uint32_t delay = 20;
+static const uint32_t DELAY_DEFAULT = 20;
+
+static uint32_t delay = DELAY_DEFAULT;
 static uint32_t latest;
 
 static const float STEP_SIZE_X1_FULL = 30.0;
@@ -67,12 +69,11 @@ static Speed_t currSpeed = Speed_X1;// Private
 static Speed_t nextSpeed = Speed_X1;// Public, may be set via some method
 
 enum class State {
-    POWER_ON, // default status after boot, set standby positions and goto idle mode
-    IDLE, // check for signals and goto moving or off mode
-    MOVING, // check for signals only in specific steps and got idle mode
+    BOOTING,
+    WAITING,
+    MOVING,
+    CONFIGURE,
     SHUTDOWN,
-    POWER_OFF, // set standby positions and goto complete off mode
-    //TODO complete off mode - set power enable pin to off state
 };
 
 static State state;
@@ -95,33 +96,31 @@ void dispatch(uint32_t millis) {
     //TODO speed = step length * 1|2|3
 
     switch (state) {
-        case State::POWER_ON:
+        case State::BOOTING:
             //TODO set standby positions
 
             // Go to next state
-            state = State::IDLE;
+            state = State::WAITING;
             break;
-        case State::IDLE:
-            //TODO set idle positions (maybe do in separate case branch)
+        case State::WAITING:
+            //TODO set idle positions, once
 
-            //TODO checks && go to next step
-            // Check if any control signal exists and if true - go to next step
+            // Go to next state
             if (control.moveX != 0 || control.moveY != 0 || control.rotateX != 0 || control.rotateZ != 0) {
                 state = State::MOVING;
             } else if (mustShutdown) {
-                state = State::POWER_OFF;
+                state = State::SHUTDOWN;
             }
             break;
         case State::MOVING:
             //TODO process moving steps
             break;
-        case State::SHUTDOWN:
-            //TODO set standby positions
-
-            // Go to next state
-            state = State::POWER_OFF;
+        case State::CONFIGURE:
+            //TODO process configure
             break;
-        case State::POWER_OFF:
+        case State::SHUTDOWN:
+            //TODO set standby positions, once
+
             // Disable power
             power = Power::OFF;
             break;
