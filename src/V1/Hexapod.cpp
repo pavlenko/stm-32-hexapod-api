@@ -20,23 +20,23 @@ PE_FSMState MODE_SHUTDOWN  = PE_FSMState(MODE_SHUTDOWN_onEntering, MODE_SHUTDOWN
 
 PE_FSM ModeFSM = PE_FSM();
 
-void MODE_STEP1_onEntering(PE_FSM &fsm);
-void MODE_STEP2_onEntering(PE_FSM &fsm);
-void MODE_STEP3_onEntering(PE_FSM &fsm);
-void MODE_STEP4_onEntering(PE_FSM &fsm);
-void MODE_STEP5_onEntering(PE_FSM &fsm);
-void MODE_STEP6_onEntering(PE_FSM &fsm);
-void MODE_STEP7_onEntering(PE_FSM &fsm);
-void MODE_STEP8_onEntering(PE_FSM &fsm);
+void MOVE_STEP1_onEntering(PE_FSM &fsm);
+void MOVE_STEP2_onEntering(PE_FSM &fsm);
+void MOVE_STEP3_onEntering(PE_FSM &fsm);
+void MOVE_STEP4_onEntering(PE_FSM &fsm);
+void MOVE_STEP5_onEntering(PE_FSM &fsm);
+void MOVE_STEP6_onEntering(PE_FSM &fsm);
+void MOVE_STEP7_onEntering(PE_FSM &fsm);
+void MOVE_STEP8_onEntering(PE_FSM &fsm);
 
-PE_FSMState MOVE_STEP1 = PE_FSMState(MODE_STEP1_onEntering, nullptr);
-PE_FSMState MOVE_STEP2 = PE_FSMState(MODE_STEP2_onEntering, nullptr);
-PE_FSMState MOVE_STEP3 = PE_FSMState(MODE_STEP3_onEntering, nullptr);
-PE_FSMState MOVE_STEP4 = PE_FSMState(MODE_STEP4_onEntering, nullptr);
-PE_FSMState MOVE_STEP5 = PE_FSMState(MODE_STEP5_onEntering, nullptr);
-PE_FSMState MOVE_STEP6 = PE_FSMState(MODE_STEP6_onEntering, nullptr);
-PE_FSMState MOVE_STEP7 = PE_FSMState(MODE_STEP7_onEntering, nullptr);
-PE_FSMState MOVE_STEP8 = PE_FSMState(MODE_STEP8_onEntering, nullptr);
+PE_FSMState MOVE_STEP1 = PE_FSMState(MOVE_STEP1_onEntering, nullptr);
+PE_FSMState MOVE_STEP2 = PE_FSMState(MOVE_STEP2_onEntering, nullptr);
+PE_FSMState MOVE_STEP3 = PE_FSMState(MOVE_STEP3_onEntering, nullptr);
+PE_FSMState MOVE_STEP4 = PE_FSMState(MOVE_STEP4_onEntering, nullptr);
+PE_FSMState MOVE_STEP5 = PE_FSMState(MOVE_STEP5_onEntering, nullptr);
+PE_FSMState MOVE_STEP6 = PE_FSMState(MOVE_STEP6_onEntering, nullptr);
+PE_FSMState MOVE_STEP7 = PE_FSMState(MOVE_STEP7_onEntering, nullptr);
+PE_FSMState MOVE_STEP8 = PE_FSMState(MOVE_STEP8_onEntering, nullptr);
 
 PE_FSM MoveFSM = PE_FSM();
 
@@ -56,6 +56,16 @@ enum class Power {
 static Power power;
 
 static control_t control;
+
+typedef enum Speed {
+    Speed_X1,
+    Speed_X2,
+    Speed_X3,
+    Speed_X4,
+} Speed_t;
+
+static Speed_t currSpeed = Speed_X1;// Private
+static Speed_t nextSpeed = Speed_X1;// Public, may be set via some method
 
 void MODE_BOOTING_onEntering(PE_FSM &fsm) {
     // Disable power
@@ -97,44 +107,77 @@ void MODE_SHUTDOWN_onDispatch(PE_FSM &fsm) {
     power = Power::OFF;
 }
 
-void MODE_STEP1_onEntering(PE_FSM &fsm) {
+void MOVE_STEP1_onEntering(PE_FSM &fsm) {
+    //TODO calculate positions
+
     // Go to next state
-    MoveFSM.transitionTo(&MOVE_STEP2);
+    fsm.transitionTo(&MOVE_STEP2);
 }
 
-void MODE_STEP2_onEntering(PE_FSM &fsm) {
+void MOVE_STEP2_onEntering(PE_FSM &fsm) {
+    //TODO calculate positions
+
     // Go to next state
-    MoveFSM.transitionTo(&MOVE_STEP3);
+    fsm.transitionTo(&MOVE_STEP3);
 }
 
-void MODE_STEP3_onEntering(PE_FSM &fsm) {
+void MOVE_STEP3_onEntering(PE_FSM &fsm) {
+    //TODO calculate positions
+
     // Go to next state
-    MoveFSM.transitionTo(&MOVE_STEP4);
+    if (control.moveX == 0 && control.moveY == 0 && control.rotateX == 0 && control.rotateZ == 0) {
+        // Go to init step
+        ModeFSM.transitionTo(&MODE_WAITING);
+    } else {
+        // Go to next step
+        fsm.transitionTo(&MOVE_STEP4);
+    }
 }
 
-void MODE_STEP4_onEntering(PE_FSM &fsm) {
+void MOVE_STEP4_onEntering(PE_FSM &fsm) {
+    // Change speed (copy to private value for prevent change in other places)
+    currSpeed = nextSpeed;
+
+    //TODO calculate positions
+
     // Go to next state
-    MoveFSM.transitionTo(&MOVE_STEP5);
+    fsm.transitionTo(&MOVE_STEP5);
 }
 
-void MODE_STEP5_onEntering(PE_FSM &fsm) {
+void MOVE_STEP5_onEntering(PE_FSM &fsm) {
+    //TODO calculate positions
+
     // Go to next state
-    MoveFSM.transitionTo(&MOVE_STEP6);
+    fsm.transitionTo(&MOVE_STEP6);
 }
 
-void MODE_STEP6_onEntering(PE_FSM &fsm) {
+void MOVE_STEP6_onEntering(PE_FSM &fsm) {
+    //TODO calculate positions
+
     // Go to next state
-    MoveFSM.transitionTo(&MOVE_STEP7);
+    fsm.transitionTo(&MOVE_STEP7);
 }
 
-void MODE_STEP7_onEntering(PE_FSM &fsm) {
-    // Go to next state
-    MoveFSM.transitionTo(&MOVE_STEP8);
+void MOVE_STEP7_onEntering(PE_FSM &fsm) {
+    //TODO calculate positions
+
+    if (control.moveX == 0 && control.moveY == 0 && control.rotateX == 0 && control.rotateZ == 0) {
+        // Go to init step
+        ModeFSM.transitionTo(&MODE_WAITING);
+    } else {
+        // Go to next state
+        fsm.transitionTo(&MOVE_STEP8);
+    }
 }
 
-void MODE_STEP8_onEntering(PE_FSM &fsm) {
+void MOVE_STEP8_onEntering(PE_FSM &fsm) {
+    // Change speed (copy to private value for prevent change in other places)
+    currSpeed = nextSpeed;
+
+    //TODO calculate positions
+
     // Go to next state
-    MoveFSM.transitionTo(&MOVE_STEP1);
+    fsm.transitionTo(&MOVE_STEP1);
 }
 
 void Hexapod::initialize() {
