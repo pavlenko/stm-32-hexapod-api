@@ -20,6 +20,26 @@ PE_FSMState MODE_SHUTDOWN  = PE_FSMState(MODE_SHUTDOWN_onEntering, MODE_SHUTDOWN
 
 PE_FSM ModeFSM = PE_FSM();
 
+void MODE_STEP1_onEntering(PE_FSM &fsm);
+void MODE_STEP2_onEntering(PE_FSM &fsm);
+void MODE_STEP3_onEntering(PE_FSM &fsm);
+void MODE_STEP4_onEntering(PE_FSM &fsm);
+void MODE_STEP5_onEntering(PE_FSM &fsm);
+void MODE_STEP6_onEntering(PE_FSM &fsm);
+void MODE_STEP7_onEntering(PE_FSM &fsm);
+void MODE_STEP8_onEntering(PE_FSM &fsm);
+
+PE_FSMState MOVE_STEP1 = PE_FSMState(MODE_STEP1_onEntering, nullptr);
+PE_FSMState MOVE_STEP2 = PE_FSMState(MODE_STEP2_onEntering, nullptr);
+PE_FSMState MOVE_STEP3 = PE_FSMState(MODE_STEP3_onEntering, nullptr);
+PE_FSMState MOVE_STEP4 = PE_FSMState(MODE_STEP4_onEntering, nullptr);
+PE_FSMState MOVE_STEP5 = PE_FSMState(MODE_STEP5_onEntering, nullptr);
+PE_FSMState MOVE_STEP6 = PE_FSMState(MODE_STEP6_onEntering, nullptr);
+PE_FSMState MOVE_STEP7 = PE_FSMState(MODE_STEP7_onEntering, nullptr);
+PE_FSMState MOVE_STEP8 = PE_FSMState(MODE_STEP8_onEntering, nullptr);
+
+PE_FSM MoveFSM = PE_FSM();
+
 typedef struct {
     float moveX;
     float moveY;
@@ -75,6 +95,46 @@ void MODE_SHUTDOWN_onEntering(PE_FSM &fsm) {
 void MODE_SHUTDOWN_onDispatch(PE_FSM &fsm) {
     // Disable power
     power = Power::OFF;
+}
+
+void MODE_STEP1_onEntering(PE_FSM &fsm) {
+    // Go to next state
+    MoveFSM.transitionTo(&MOVE_STEP2);
+}
+
+void MODE_STEP2_onEntering(PE_FSM &fsm) {
+    // Go to next state
+    MoveFSM.transitionTo(&MOVE_STEP3);
+}
+
+void MODE_STEP3_onEntering(PE_FSM &fsm) {
+    // Go to next state
+    MoveFSM.transitionTo(&MOVE_STEP4);
+}
+
+void MODE_STEP4_onEntering(PE_FSM &fsm) {
+    // Go to next state
+    MoveFSM.transitionTo(&MOVE_STEP5);
+}
+
+void MODE_STEP5_onEntering(PE_FSM &fsm) {
+    // Go to next state
+    MoveFSM.transitionTo(&MOVE_STEP6);
+}
+
+void MODE_STEP6_onEntering(PE_FSM &fsm) {
+    // Go to next state
+    MoveFSM.transitionTo(&MOVE_STEP7);
+}
+
+void MODE_STEP7_onEntering(PE_FSM &fsm) {
+    // Go to next state
+    MoveFSM.transitionTo(&MOVE_STEP8);
+}
+
+void MODE_STEP8_onEntering(PE_FSM &fsm) {
+    // Go to next state
+    MoveFSM.transitionTo(&MOVE_STEP1);
 }
 
 void Hexapod::initialize() {
