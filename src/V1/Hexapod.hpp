@@ -5,12 +5,16 @@
 #ifndef HEXAPOD_HPP
 #define HEXAPOD_HPP
 
+#include <cstdint>
 #include "PE_FSM.hpp"
 
-//TODO unusable, use lib classes directly and use prefixes for states
-class ModeState: public PE_FSMState {
+class Hexapod {
+private:
+    uint32_t updated;
 public:
-    ModeState() = default;
+    void initialize();
+
+    void dispatch(uint32_t millis);
 };
 
 #endif //HEXAPOD_HPP

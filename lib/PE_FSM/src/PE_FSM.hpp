@@ -13,17 +13,19 @@ public:
     /**
      * Default constructor
      */
-    PE_FSMState() = default;
+    //PE_FSMState() = default;
 
-    PE_FSMState &setOnEntering(PE_FSMHandler handler) {
-        onEntering = handler;
-        return *this;
-    }
+    PE_FSMState(PE_FSMHandler onEntering, PE_FSMHandler onDispatch);
 
-    PE_FSMState &setOnDispatch(PE_FSMHandler handler) {
-        onDispatch = handler;
-        return *this;
-    }
+//    PE_FSMState &setOnEntering(PE_FSMHandler handler) {
+//        onEntering = handler;
+//        return *this;
+//    }
+//
+//    PE_FSMState &setOnDispatch(PE_FSMHandler handler) {
+//        onDispatch = handler;
+//        return *this;
+//    }
 };
 
 class PE_FSM {

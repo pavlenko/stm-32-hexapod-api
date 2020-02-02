@@ -5,11 +5,13 @@
 #include <V1/Hexapod.hpp>
 #include "main.h"
 
-PE_FSM ModeFSM = PE_FSM();
+Hexapod hp = Hexapod();
 
 int main()
 {
+    hp.initialize();
+
     while (true) {
-        ModeFSM.dispatch();
+        hp.dispatch(1);
     }
 }

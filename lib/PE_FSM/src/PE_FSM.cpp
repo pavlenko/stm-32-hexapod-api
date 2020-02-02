@@ -1,5 +1,10 @@
 #include "PE_FSM.hpp"
 
+PE_FSMState::PE_FSMState(PE_FSMHandler onEntering, PE_FSMHandler onDispatch):
+onEntering(onEntering),
+onDispatch(onDispatch)
+{}
+
 PE_FSM::PE_FSM():
 _prevState(nullptr),
 _nextState(nullptr)
