@@ -1,46 +1,35 @@
 #ifndef PE_FSM_HPP
 #define PE_FSM_HPP
 
-#include <type_traits>
-
-template <class T>
 class PE_FSM;
 
-template <class T>
-using PE_FSMHandler = void (*)(PE_FSM<T> &fsm);
+typedef void (*PE_FSMHandler)(PE_FSM &fsm);
 
-template <class T>
 class PE_FSMState {
 public:
-    PE_FSMHandler<T> onEntering = nullptr;
-    PE_FSMHandler<T> onDispatch = nullptr;
+    PE_FSMHandler onEntering = nullptr;
+    PE_FSMHandler onDispatch = nullptr;
 public:
     /**
      * Default constructor
      */
-    PE_FSMState() = delete;
+    PE_FSMState() = default;
 
-    /**
-     * Init with only enter callback
-     *
-     * @param onEntering
-     */
-    explicit PE_FSMState(PE_FSMHandler<T> onEntering);
+    PE_FSMState &setOnEntering(PE_FSMHandler handler) {
+        onEntering = handler;
+        return *this;
+    }
 
-    /**
-     * Init with enter and dispatch callback
-     *
-     * @param onEntering
-     * @param onDispatch
-     */
-    explicit PE_FSMState(PE_FSMHandler<T> onEntering, PE_FSMHandler<T> onDispatch);
+    PE_FSMState &setOnDispatch(PE_FSMHandler handler) {
+        onDispatch = handler;
+        return *this;
+    }
 };
 
-template <class T>
 class PE_FSM {
 private:
-    T _prevState;
-    T _nextState;
+    PE_FSMState *_prevState;
+    PE_FSMState *_nextState;
 public:
     /**
      * Default constructor
@@ -52,14 +41,14 @@ public:
      *
      * @param state
      */
-    void initialize(T &state);
+    void initialize(PE_FSMState *state);
 
     /**
      * Set new state
      *
      * @param state
      */
-    void transitionTo(T &state);
+    void transitionTo(PE_FSMState *state);
 
     /**
      * Process change state

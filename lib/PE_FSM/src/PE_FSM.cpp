@@ -1,47 +1,32 @@
 #include "PE_FSM.hpp"
 
-template<class T>
-PE_FSMState<T>::PE_FSMState(PE_FSMHandler<T> onEntering):
-onEntering(onEntering)
-{}
-
-template<class T>
-PE_FSMState<T>::PE_FSMState(PE_FSMHandler<T> onEntering, PE_FSMHandler<T> onDispatch):
-onEntering(onEntering),
-onDispatch(onDispatch)
-{}
-
-template<class T>
-PE_FSM<T>::PE_FSM():
+PE_FSM::PE_FSM():
 _prevState(nullptr),
 _nextState(nullptr)
 {}
 
-template<class T>
-void PE_FSM<T>::initialize(T &state) {
+void PE_FSM::initialize(PE_FSMState *state) {
     _prevState = _nextState = state;
 
-    if (_prevState.onEntering) {
-        _prevState.onEntering();
+    if (_prevState->onEntering) {
+        _prevState->onEntering(*this);
     }
 }
 
-template<class T>
-void PE_FSM<T>::transitionTo(T &state) {
+void PE_FSM::transitionTo(PE_FSMState *state) {
     _nextState = state;
 }
 
-template<class T>
-void PE_FSM<T>::dispatch() {
+void PE_FSM::dispatch() {
     if (_prevState != _nextState) {
         _prevState = _nextState;
 
-        if (_prevState.onEntering) {
-            _prevState.onEntering(*this);
+        if (_prevState->onEntering) {
+            _prevState->onEntering(*this);
         }
     }
 
-    if (_prevState.onDispatch) {
-        _prevState.onDispatch(*this);
+    if (_prevState->onDispatch) {
+        _prevState->onDispatch(*this);
     }
 }
