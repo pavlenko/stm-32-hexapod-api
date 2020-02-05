@@ -39,6 +39,10 @@ static float heightIdle = 60;
 static float targetNear = 30;
 static float targetIdle = 120;
 
+static float stepSizeFull = 40;
+static float stepSizeHalf = 20;
+static float stepSizeQuat = 10;
+
 void calculateInit() {
     float diffX = targetNear * COS_60;
     float diffY = targetNear * SIN_60;
@@ -86,6 +90,33 @@ void calculateIdle() {
 //TODO if rotate+move - use direction for resolve rotate point and use it for calculate (differential?????)
 
 void calculateStep1() {
+    if (control.rotateZ != 0) {
+        if (control.moveX != 0 || control.moveY != 0) {
+            //TODO rotate + move
+        } else {
+            //TODO rotate only
+            float rotateByX = 0;
+            float rotateByY = 0;
+        }
+    } else {
+        //TODO move only
+        float angle = atan(control.moveY / control.moveX);
+        float coefX = cos(angle);
+        float coefY = sin(angle);
+
+        float diffX = targetIdle * COS_60;
+        float diffY = targetIdle * SIN_60;
+
+        Point3D_t targets[6] = {
+                {.x = mounts[LEG_F_L].x - diffX + (stepSizeQuat * coefX), .y = mounts[LEG_F_L].y + diffY + (stepSizeQuat * coefY), .z = mounts[LEG_F_L].z - heightInit},
+                {.x = mounts[LEG_F_R].x + diffX - (stepSizeQuat * coefX), .y = mounts[LEG_F_R].y + diffY - (stepSizeQuat * coefY), .z = mounts[LEG_F_R].z - heightIdle},
+                {.x = mounts[LEG_M_L].x + targetIdle + (stepSizeQuat * coefX), .y = mounts[LEG_M_L].y + (stepSizeQuat * coefY), .z = mounts[LEG_M_L].z - heightInit},
+                {.x = mounts[LEG_M_R].x + targetIdle - (stepSizeQuat * coefX), .y = mounts[LEG_M_R].y - (stepSizeQuat * coefY), .z = mounts[LEG_M_R].z - heightIdle},
+                {.x = mounts[LEG_B_L].x - diffX + (stepSizeQuat * coefX), .y = mounts[LEG_B_L].y - diffY + (stepSizeQuat * coefY), .z = mounts[LEG_B_L].z - heightInit},
+                {.x = mounts[LEG_B_R].x + diffX - (stepSizeQuat * coefX), .y = mounts[LEG_B_R].y - diffY - (stepSizeQuat * coefY), .z = mounts[LEG_B_R].z - heightIdle},
+        };
+    }
+
     //TODO FL, MR, BL: z = 0; xy -= step/4; FR, ML, BR: z = -60; xy += step/4
 }
 void calculateStep2() {
