@@ -13,15 +13,14 @@ typedef struct {
     int8_t rotateX;
     int8_t rotateZ;
 } control_t;
-
+static control_t control;
+/*
 enum class Power {
     OFF,
     ON,
 };
 
 static Power power;
-
-static control_t control;
 
 static const uint32_t DELAY_DEFAULT = 20;
 
@@ -210,5 +209,17 @@ void dispatch(uint32_t millis) {
             break;
     }
 }
+*/
+
+void calculateInit();
+void calculateIdle();
+void calculateStep1();
+void calculateStep2();
+void calculateStep3();
+void calculateStep4();
+void calculateStep5();
+void calculateStep6();
+void calculateStep7();
+void calculateStep8();
 
 #endif //MOVEMENT_HPP
