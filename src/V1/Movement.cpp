@@ -89,6 +89,8 @@ void calculateIdle() {
 
 void calculateStep1() {
     //TODO FL, MR, BL: z = 0; xy -= step/4; FR, ML, BR: z = -60; xy += step/4
+    float rotateByX = 0, rotateByY = 0;
+
     if (control.rotateZ != 0) {
         if (control.moveX != 0 || control.moveY != 0) {
             //TODO rotate + move
@@ -99,10 +101,31 @@ void calculateStep1() {
         }
     } else {}
 
+    // Find distance between rotate point & base dst point
+    float l_dst2rot = hypotf(rotateByX - dstFL.x, rotateByY - dstFL.y);
+    float l_tgt2rot = l_dst2rot;
+    float l_dst2tgt = stepX1;
+
+    // Find angle between dst2rot and tgt2rot sides: cos(b) = (A^2 + C^2 - B^2) / (2 * A * C)
+    float a_diff = acosf((l_dst2rot * l_dst2rot + l_tgt2rot * l_tgt2rot - l_dst2tgt * l_dst2tgt) / (2 * l_dst2rot * l_tgt2rot));
+
+    // Find angle between dst2rot and x axis
+    float a_dst2x = acosf((rotateByX - dstFL.x) / l_dst2rot);
+
+    // LEG target angle if ccw: deg = a_dst2x - angle, else deg = a_dst2x + angle, x = l_dst2rot * cos(deg), y = l_dst2rot * sin(deg)
+    float deg = a_dst2x - a_diff;
+    float x = l_dst2rot * cosf(deg);
+    float y = l_dst2rot * sinf(deg);
+
+    //TODO how to calculate LEG CCW/CW depends on rotate direction
+    (void) x;
+    (void) y;
+    // End calc rotation
+
     // Move only (for now)
-    float angle = atan(control.moveY / control.moveX);
-    float diffX = cos(angle);
-    float diffY = sin(angle);
+    float angle = atanf(control.moveY / control.moveX);
+    float diffX = cosf(angle);
+    float diffY = sinf(angle);
 
     setTarget(LEG_F_L, dstFL.x + (stepX1 * diffX), dstFL.y + (stepX1 * diffY), dstFL.z);
     setTarget(LEG_F_R, dstFR.x - (stepX1 * diffX), dstFR.y - (stepX1 * diffY), -heightIdle);
@@ -115,9 +138,9 @@ void calculateStep2() {
     //TODO FL, MR, BL: z = -60; xy -= step/2; FR, ML, BR: z = -60; xy += step/2
 
     // Move only (for now)
-    float angle = atan(control.moveY / control.moveX);
-    float diffX = cos(angle);
-    float diffY = sin(angle);
+    float angle = atanf(control.moveY / control.moveX);
+    float diffX = cosf(angle);
+    float diffY = sinf(angle);
 
     setTarget(LEG_F_L, dstFL.x + (stepX2 * diffX), dstFL.y + (stepX2 * diffY), -heightIdle);
     setTarget(LEG_F_R, dstFR.x - (stepX2 * diffX), dstFR.y - (stepX2 * diffY), -heightIdle);
