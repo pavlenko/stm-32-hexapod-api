@@ -5,11 +5,22 @@
 #include <cmath>
 #include "Movement.hpp"
 
+typedef struct Point2D_t {
+    float x;
+    float y;
+} Point2D_t;
+
 typedef struct Point3D_t {
     float x;
     float y;
     float z;
 } Point3D_t;
+
+typedef enum Rotation_t {
+    ROTATION_CCW  = -1,
+    ROTATION_NONE = 0,
+    ROTATION_CW   = 1,
+} Rotation_t;
 
 typedef enum Legs_t {
     LEG_F_L,
@@ -89,6 +100,24 @@ void calculateIdle() {
 //TODO if only move - just use direction for calculate
 //TODO if only rotate - use center point for rotate
 //TODO if rotate+move - use direction for resolve rotate point and use it for calculate (differential?????)
+
+void calculateRotationCenter(Point2D_t *result) {
+    if (control.moveX == 0 && control.moveY == 0) {
+        result->x = 0;
+        result->y = 0;
+    } else if (control.moveX == 0) {
+        result->x = BODY_RADIUS_X4 * ((float) control.rotateZ);
+        result->y = 0;
+    } else if (control.moveY == 0) {
+        result->x = 0;
+        result->y = BODY_RADIUS_X4 * ((float) control.rotateZ);
+    } else {
+        float direction = atanf(control.moveY / control.moveX) + ((float) control.rotateZ * (float) M_PI_2);
+
+        result->x = BODY_RADIUS_X4 * cosf(direction);//TODO check
+        result->y = BODY_RADIUS_X4 * sinf(direction);//TODO check
+    }
+}
 
 void calculateStep1() {
     //TODO FL, MR, BL: z = 0; xy -= step/4; FR, ML, BR: z = -60; xy += step/4
