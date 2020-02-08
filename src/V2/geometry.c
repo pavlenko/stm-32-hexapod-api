@@ -10,10 +10,25 @@
 /* Private functions ---------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
-float deg2rad(float value) {
+float convertDegreeToRadian(float value) {
     return PI * value / 180;
 }
 
-float rad2deg(float value) {
+float convertRadianToDegree(float value) {
     return value * 180 / PI;
+}
+
+float calculateSideByOppositeAngle(float adjacentSideA, float adjacentSideB, float oppositeAngle) {
+    return sqrtf(
+            adjacentSideA * adjacentSideA +
+            adjacentSideB * adjacentSideB -
+            2 * adjacentSideA * adjacentSideB * cosf(oppositeAngle)
+    );
+}
+
+float calculateAngleByOppositeSide(float adjacentSideA, float adjacentSideB, float oppositeSide) {
+    return acosf(
+            (adjacentSideA * adjacentSideA + adjacentSideB * adjacentSideB - oppositeSide * oppositeSide) /
+            (2 * adjacentSideA * adjacentSideB)
+    );
 }

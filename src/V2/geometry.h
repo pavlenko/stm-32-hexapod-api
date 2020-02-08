@@ -38,7 +38,7 @@ typedef struct Point3D {
  * @param value
  * @return
  */
-static inline float deg2rad(float value);
+static inline float convertDegreeToRadian(float value);
 
 /**
  * Convert angle value from radians to degrees
@@ -46,9 +46,31 @@ static inline float deg2rad(float value);
  * @param value
  * @return
  */
-static inline float rad2deg(float value);
+static inline float convertRadianToDegree(float value);
 
-//TODO helper functions for calculate geometry: theorem of cosinus, etc
+/**
+ * Calculate side by opposite angle based on cosine formula
+ *
+ * Formula: C = sqrt(A*A + B*B - 2*A*B*cos(c))
+ *
+ * @param adjacentSideA
+ * @param adjacentSideB
+ * @param oppositeAngle
+ * @return
+ */
+static inline float calculateSideByOppositeAngle(float adjacentSideA, float adjacentSideB, float oppositeAngle);
+
+/**
+ * Calculate angle by opposite side based on cosine formula
+ *
+ * Formula: c = acos((A*A + B*B - C*C) / (2*A*B))
+ *
+ * @param adjacentSideA
+ * @param adjacentSideB
+ * @param oppositeSide
+ * @return
+ */
+static inline float calculateAngleByOppositeSide(float adjacentSideA, float adjacentSideB, float oppositeSide);
 
 /* Exported variables --------------------------------------------------------*/
 
