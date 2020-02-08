@@ -21,6 +21,9 @@ typedef enum Legs_t {
     LEG_COUNT,
 } Legs_t;
 
+const float BODY_RADIUS_X1 = 170;
+const float BODY_RADIUS_X4 = BODY_RADIUS_X1 * 4;
+
 // Default mounts for legs (by radius 170mm)
 //const Point3D_t mntFL = {.x = -85, .y = 147.2, .z = 0};
 //const Point3D_t mntFR = {.x = 85, .y = 147.2, .z = 0};
@@ -94,6 +97,19 @@ void calculateStep1() {
     if (control.rotateZ != 0) {
         if (control.moveX != 0 || control.moveY != 0) {
             //TODO rotate + move
+            //TODO optimize this calculations to prevent do it at each step
+            if (control.moveX == 0) {
+                rotateByX = ((float) control.rotateZ) * BODY_RADIUS_X4;
+                rotateByY = 0;
+            } else if (control.moveY == 0) {
+                rotateByX = 0;
+                rotateByY = ((float) control.rotateZ) * BODY_RADIUS_X4;
+            } else {
+                float direction = atanf(control.moveY / control.moveX) + ((float) control.rotateZ * (float) M_PI_2);
+
+                rotateByX = BODY_RADIUS_X4 * cosf(direction);//TODO check
+                rotateByY = BODY_RADIUS_X4 * sinf(direction);//TODO check
+            }
         } else {
             //TODO rotate only
             //float rotateByX = 0;
