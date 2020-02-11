@@ -6,8 +6,8 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
 
-const float BODY_RADIUS_X1 = 170;
-const float BODY_RADIUS_X4 = 680;
+const float HP_BODY_RADIUS_X1 = 170;
+const float HP_BODY_RADIUS_X4 = 680;
 
 const float STEP_PART_X1 = 10;
 const float STEP_PART_X2 = 20;
@@ -21,24 +21,20 @@ Hexapod_t h;
 /* Private functions ---------------------------------------------------------*/
 
 void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status) {
-
-}
-
-void hp_calculateRotationCenter() {
-    if (h.moveX == 0 && h.moveY == 0) {
-        h.rotateZBy.x = 0;
-        h.rotateZBy.y = 0;
-    } else if (h.moveX == 0) {
-        h.rotateZBy.x = BODY_RADIUS_X4 * ((float) h.rotateZ);
-        h.rotateZBy.y = 0;
-    } else if (h.moveY == 0) {
-        h.rotateZBy.x = 0;
-        h.rotateZBy.y = BODY_RADIUS_X4 * ((float) h.rotateZ);
+    if (remote->moveX == 0 && remote->moveY == 0) {
+        status->rotateZBy.x = 0;
+        status->rotateZBy.y = 0;
+    } else if (remote->moveX == 0) {
+        status->rotateZBy.x = HP_BODY_RADIUS_X4 * ((float) remote->rotateZ);
+        status->rotateZBy.y = 0;
+    } else if (remote->moveY == 0) {
+        status->rotateZBy.x = 0;
+        status->rotateZBy.y = HP_BODY_RADIUS_X4 * ((float) remote->rotateZ);
     } else {
-        float direction = atanf(h.moveY / h.moveX) + ((float) h.rotateZ * (float) M_PI_2);
+        float direction = atanf(remote->moveY / remote->moveX) + ((float) remote->rotateZ * (float) M_PI_2);
 
-        h.rotateZBy.x = BODY_RADIUS_X4 * cosf(direction);
-        h.rotateZBy.y = BODY_RADIUS_X4 * sinf(direction);
+        status->rotateZBy.x = HP_BODY_RADIUS_X4 * cosf(direction);
+        status->rotateZBy.y = HP_BODY_RADIUS_X4 * sinf(direction);
     }
 }
 

@@ -12,6 +12,10 @@ extern "C" {
 #include "geometry.h"
 
 /* Exported constants --------------------------------------------------------*/
+
+extern const float HP_BODY_RADIUS_X1;
+extern const float HP_BODY_RADIUS_X4;
+
 /* Exported types ------------------------------------------------------------*/
 
 typedef enum {
