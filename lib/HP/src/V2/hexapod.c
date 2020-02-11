@@ -31,10 +31,18 @@ void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status) {
         status->rotateZBy.x = 0;
         status->rotateZBy.y = HP_BODY_RADIUS_X4 * ((float) remote->rotateZ);
     } else {
-        float direction = atanf(remote->moveY / remote->moveX) + ((float) remote->rotateZ * (float) M_PI_2);
+        float angle  = atan2f(remote->moveY, remote->moveX);
+        float rotate = (float) remote->rotateZ * (float) M_PI_2;
+        float result;
 
-        status->rotateZBy.x = HP_BODY_RADIUS_X4 * cosf(direction);
-        status->rotateZBy.y = HP_BODY_RADIUS_X4 * sinf(direction);
+        if (angle >= 0) {
+            result = angle - rotate;
+        } else {
+            result = angle + rotate;
+        }
+
+        status->rotateZBy.x = HP_BODY_RADIUS_X4 * cosf(result);
+        status->rotateZBy.y = HP_BODY_RADIUS_X4 * sinf(result);
     }
 }
 
