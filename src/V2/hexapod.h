@@ -24,6 +24,17 @@ typedef enum {
 } Leg_n;
 
 typedef struct {
+    float moveX;
+    float moveY;
+    int8_t rotateZ;
+} HP_Remote_t;
+
+typedef struct {
+    uint16_t height;
+    Point2D_t rotateZBy;
+} HP_Status_t;
+
+typedef struct {
     Point3D_t mnt;
     Point3D_t def;
     Point3D_t tgt;
@@ -40,6 +51,8 @@ typedef struct {
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported function prototypes --------------------------------------------- */
+
+void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status);
 
 void hp_calculateInit();
 void hp_calculateIdle();

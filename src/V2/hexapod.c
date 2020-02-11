@@ -20,6 +20,10 @@ Hexapod_t h;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
+void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status) {
+
+}
+
 void hp_calculateRotationCenter() {
     if (h.moveX == 0 && h.moveY == 0) {
         h.rotateZBy.x = 0;
