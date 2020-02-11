@@ -12,9 +12,6 @@ extern "C" {
 #include <math.h>
 
 /* Exported constants --------------------------------------------------------*/
-
-const float PI = (float) M_PI;
-
 /* Exported types ------------------------------------------------------------*/
 
 typedef struct Point2D {
@@ -38,7 +35,7 @@ typedef struct Point3D {
  * @param value
  * @return
  */
-static inline float convertDegreeToRadian(float value);
+float convertDegreeToRadian(float value);
 
 /**
  * Convert angle value from radians to degrees
@@ -46,7 +43,7 @@ static inline float convertDegreeToRadian(float value);
  * @param value
  * @return
  */
-static inline float convertRadianToDegree(float value);
+float convertRadianToDegree(float value);
 
 /**
  * Calculate side by opposite angle based on cosine formula
@@ -58,7 +55,7 @@ static inline float convertRadianToDegree(float value);
  * @param oppositeAngle
  * @return
  */
-static inline float calculateSideByOppositeAngle(float adjacentSideA, float adjacentSideB, float oppositeAngle);
+float calculateSideByOppositeAngle(float adjacentSideA, float adjacentSideB, float oppositeAngle);
 
 /**
  * Calculate angle by opposite side based on cosine formula
@@ -70,7 +67,7 @@ static inline float calculateSideByOppositeAngle(float adjacentSideA, float adja
  * @param oppositeSide
  * @return
  */
-static inline float calculateAngleByOppositeSide(float adjacentSideA, float adjacentSideB, float oppositeSide);
+float calculateAngleByOppositeSide(float adjacentSideA, float adjacentSideB, float oppositeSide);
 
 /* Exported variables --------------------------------------------------------*/
 

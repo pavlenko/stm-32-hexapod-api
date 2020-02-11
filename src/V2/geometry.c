@@ -11,11 +11,11 @@
 /* Exported functions ------------------------------------------------------- */
 
 float convertDegreeToRadian(float value) {
-    return PI * value / 180;
+    return ((float) M_PI) * value / 180;
 }
 
 float convertRadianToDegree(float value) {
-    return value * 180 / PI;
+    return value * 180 / ((float) M_PI);
 }
 
 float calculateSideByOppositeAngle(float adjacentSideA, float adjacentSideB, float oppositeAngle) {

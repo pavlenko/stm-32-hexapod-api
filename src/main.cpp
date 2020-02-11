@@ -4,12 +4,15 @@
 
 #include <V1/Hexapod.hpp>
 #include <V1/Movement.hpp>
+#include <V2/hexapod.h>
 #include "main.h"
 
 Hexapod hp = Hexapod();
 
 int main()
 {
+    hp_calculateInit();
+    hp_calculateIdle();
     calculateInit();
     calculateIdle();
     calculateStep1();
