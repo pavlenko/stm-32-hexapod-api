@@ -46,6 +46,25 @@ void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status) {
     }
 }
 
+void HP_calculateLinear(HP_Remote_t *remote, HP_Status_t *status) {
+    float angle = atan2f(remote->moveY, remote->moveX);
+
+    status->rotateZBy.x = cosf(angle);
+    status->rotateZBy.y = sinf(angle);
+}
+
+void HP_calculateTargetLinear(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode) {
+    //TODO save result of below logic to status in calculate rotation center (maybe rename to calculateStatus)
+    //TODO maybe create separate function for calculate only this params
+    //float angle = atanf(control.moveY / control.moveX);
+    //float diffX = stepX1 * cosf(angle);
+    //float diffY = stepX1 * sinf(angle);
+}
+
+void HP_calculateTargetRotate(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode) {
+    //TODO full recalculation for each leg
+}
+
 void hp_calculateLegTarget(Leg_n n, float step, float height) {
     // Calculate leg rotation radius
     float rotationRadius = hypotf(h.rotateZBy.x - h.legs[n].def.x, h.rotateZBy.y - h.legs[n].def.y);

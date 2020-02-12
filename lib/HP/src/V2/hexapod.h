@@ -18,6 +18,11 @@ extern const float HP_BODY_RADIUS_X4;
 
 /* Exported types ------------------------------------------------------------*/
 
+typedef enum HP_LegMode_e {
+    LEG_MODE_GROUNDED,
+    LEG_MODE_FLOATING,
+} HP_LegMode_t;
+
 typedef enum {
     LEG_FL,
     LEG_FR,
@@ -42,10 +47,10 @@ typedef struct {
     Point3D_t mnt;
     Point3D_t def;
     Point3D_t tgt;
-} Leg_t;
+} HP_Leg_t;
 
 typedef struct {
-    Leg_t legs[6];
+    HP_Leg_t legs[6];
     uint8_t height;
     float moveX;
     float moveY;
@@ -57,6 +62,7 @@ typedef struct {
 /* Exported function prototypes --------------------------------------------- */
 
 void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status);
+void HP_calculateLinear(HP_Remote_t *remote, HP_Status_t *status);
 
 void hp_calculateInit();
 void hp_calculateIdle();
