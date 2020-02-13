@@ -115,4 +115,76 @@ void hp_calculateIdle() {
     h.legs[LEG_BR].tgt = (Point3D_t) {h.legs[LEG_BR].def.x, h.legs[LEG_BR].def.y, h.height};
 }
 
+void HP_calculateStep1(HP_Status_t *status) {
+    h.calculate(status, &h.legs[LEG_FL], STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_FR], -STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_ML], STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_MR], -STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_BL], STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_BR], -STEP_PART_X1, LEG_MODE_GROUNDED);
+}
+
+void HP_calculateStep2(HP_Status_t *status) {
+    h.calculate(status, &h.legs[LEG_FL], STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_FR], -STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_ML], STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_MR], -STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_BL], STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_BR], -STEP_PART_X2, LEG_MODE_GROUNDED);
+}
+
+void HP_calculateStep3(HP_Status_t *status) {
+    h.calculate(status, &h.legs[LEG_FL], STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_FR], -STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_ML], STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_MR], -STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_BL], STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_BR], -STEP_PART_X1, LEG_MODE_FLOATING);
+}
+
+void HP_calculateStep4(HP_Status_t *status) {
+    h.calculate(status, &h.legs[LEG_FL], 0, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_FR], 0, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_ML], 0, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_MR], 0, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_BL], 0, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_BR], 0, LEG_MODE_FLOATING);
+}
+
+void HP_calculateStep5(HP_Status_t *status) {
+    h.calculate(status, &h.legs[LEG_FL], -STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_FR], STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_ML], -STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_MR], STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_BL], -STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_BR], STEP_PART_X1, LEG_MODE_FLOATING);
+}
+
+void HP_calculateStep6(HP_Status_t *status) {
+    h.calculate(status, &h.legs[LEG_FL], -STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_FR], STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_ML], -STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_MR], STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_BL], -STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_BR], STEP_PART_X2, LEG_MODE_GROUNDED);
+}
+
+void HP_calculateStep7(HP_Status_t *status) {
+    h.calculate(status, &h.legs[LEG_FL], -STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_FR], STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_ML], -STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_MR], STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_BL], -STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_BR], STEP_PART_X1, LEG_MODE_GROUNDED);
+}
+
+void HP_calculateStep8(HP_Status_t *status) {
+    h.calculate(status, &h.legs[LEG_FL], 0, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_FR], 0, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_ML], 0, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_MR], 0, LEG_MODE_GROUNDED);
+    h.calculate(status, &h.legs[LEG_BL], 0, LEG_MODE_FLOATING);
+    h.calculate(status, &h.legs[LEG_BR], 0, LEG_MODE_GROUNDED);
+}
+
 /* Exported functions ------------------------------------------------------- */

@@ -51,13 +51,12 @@ typedef struct {
     Point3D_t tgt;
 } HP_Leg_t;
 
+typedef void (*HP_calculate_t) (HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode);
+
 typedef struct {
     HP_Leg_t legs[6];
     uint8_t height;
-    float moveX;
-    float moveY;
-    int8_t rotateZ;
-    Point2D_t rotateZBy;
+    HP_calculate_t calculate;
 } Hexapod_t;
 
 /* Exported macro ------------------------------------------------------------*/
@@ -70,14 +69,14 @@ void HP_calculateTargetRotate(HP_Status_t *status, HP_Leg_t *leg, float step, HP
 
 void hp_calculateInit();
 void hp_calculateIdle();
-void hp_calculateStep1();
-void hp_calculateStep2();
-void hp_calculateStep3();
-void hp_calculateStep4();
-void hp_calculateStep5();
-void hp_calculateStep6();
-void hp_calculateStep7();
-void hp_calculateStep8();
+void HP_calculateStep1(HP_Status_t *status);
+void HP_calculateStep2(HP_Status_t *status);
+void HP_calculateStep3(HP_Status_t *status);
+void HP_calculateStep4(HP_Status_t *status);
+void HP_calculateStep5(HP_Status_t *status);
+void HP_calculateStep6(HP_Status_t *status);
+void HP_calculateStep7(HP_Status_t *status);
+void HP_calculateStep8(HP_Status_t *status);
 
 /* Exported variables --------------------------------------------------------*/
 
