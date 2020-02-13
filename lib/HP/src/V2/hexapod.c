@@ -47,10 +47,15 @@ void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status) {
 }
 
 void HP_calculateLinear(HP_Remote_t *remote, HP_Status_t *status) {
-    float angle = atan2f(remote->moveY, remote->moveX);
+    if (remote->moveX == 0 && remote->moveY == 0) {
+        status->moveByX = 0;
+        status->moveByY = 0;
+    } else {
+        float angle = atan2f(remote->moveY, remote->moveX);
 
-    status->rotateZBy.x = cosf(angle);
-    status->rotateZBy.y = sinf(angle);
+        status->moveByX = cosf(angle);
+        status->moveByY = sinf(angle);
+    }
 }
 
 void HP_calculateTargetLinear(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode) {

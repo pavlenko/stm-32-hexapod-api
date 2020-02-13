@@ -40,6 +40,8 @@ typedef struct {
 
 typedef struct {
     uint16_t height;
+    float moveByX;
+    float moveByY;
     Point2D_t rotateZBy;
 } HP_Status_t;
 
