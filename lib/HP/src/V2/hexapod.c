@@ -70,22 +70,31 @@ void HP_calculateTargetLinear(HP_Status_t *status, HP_Leg_t *leg, float step, HP
 }
 
 void HP_calculateTargetRotate(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode) {
-    //TODO full recalculation for each leg
-}
-
-void hp_calculateLegTarget(Leg_n n, float step, float height) {
     // Calculate leg rotation radius
-    float rotationRadius = hypotf(h.rotateZBy.x - h.legs[n].def.x, h.rotateZBy.y - h.legs[n].def.y);
+    float radius = hypotf(status->rotateZBy.x - leg->def.x, status->rotateZBy.y - leg->def.y);
 
     // Calculate leg rotation angle
-    float rotationAngle = calculateAngleByOppositeSide(rotationRadius, rotationRadius, step);
+    float stepAngle = calculateAngleByOppositeSide(radius, radius, step);
 
     // Calculate basic angle
-    float basicAngle = acosf((h.rotateZBy.x - h.legs[n].def.x) / rotationRadius);
+    float baseAngle = acosf((status->rotateZBy.x - leg->def.x) / radius);
 
-    float resultAngle = step < 0 ? basicAngle - rotationAngle : basicAngle + rotationAngle;//TODO result value sign must depends on step var sign
+    // Calculate result angle
+    float diffAngle;
+    if (step < 0) {
+        diffAngle = baseAngle - stepAngle;
+    } else {
+        diffAngle = baseAngle + stepAngle;
+    }
 
-    h.legs[n].tgt = (Point3D_t) {rotationRadius * cosf(resultAngle), rotationRadius * sinf(resultAngle), -height};//TODO check result
+    leg->tgt.x = leg->def.x + step * sinf(diffAngle);
+    leg->tgt.y = leg->def.y + step * cosf(diffAngle);
+
+    if (mode == LEG_MODE_FLOATING) {
+        leg->tgt.z = leg->def.z;
+    } else {
+        leg->tgt.z = leg->def.z + ((float) -status->height);
+    }
 }
 
 void hp_calculateInit() {

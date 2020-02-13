@@ -66,6 +66,7 @@ typedef struct {
 void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status);
 void HP_calculateLinear(HP_Remote_t *remote, HP_Status_t *status);
 void HP_calculateTargetLinear(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode);
+void HP_calculateTargetRotate(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode);
 
 void hp_calculateInit();
 void hp_calculateIdle();

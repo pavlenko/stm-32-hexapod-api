@@ -1,10 +1,6 @@
 #include <V2/hexapod.h>
 #include <unity.h>
 
-//TODO test y pos & neg
-//TODO test z pos & neg
-//TODO test z floating
-
 void test_HP_calculateTargetLinearX() {
     HP_Status_t status = {0,1,0,0,0};
     HP_Leg_t leg = {0,0,0,20, 20, 20};
