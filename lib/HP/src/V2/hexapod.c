@@ -59,11 +59,14 @@ void HP_calculateLinear(HP_Remote_t *remote, HP_Status_t *status) {
 }
 
 void HP_calculateTargetLinear(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode) {
-    //TODO save result of below logic to status in calculate rotation center (maybe rename to calculateStatus)
-    //TODO maybe create separate function for calculate only this params
-    //float angle = atanf(control.moveY / control.moveX);
-    //float diffX = stepX1 * cosf(angle);
-    //float diffY = stepX1 * sinf(angle);
+    leg->tgt.x = leg->def.x + status->moveByX * step;
+    leg->tgt.y = leg->def.y + status->moveByY * step;
+
+    if (mode == LEG_MODE_FLOATING) {
+        leg->tgt.z = leg->def.z;
+    } else {
+        leg->tgt.z = leg->def.z + ((float) -status->height);
+    }
 }
 
 void HP_calculateTargetRotate(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode) {
