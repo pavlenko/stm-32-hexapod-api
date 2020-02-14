@@ -33,16 +33,16 @@ void HP_moveStep8();
 
 /* Private functions ---------------------------------------------------------*/
 
-void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status) {
+void HP_calculateMovingRotate(HP_Remote_t *remote, HP_Moving_t *moving) {
     if (remote->moveX == 0 && remote->moveY == 0) {
-        status->rotateZBy.x = 0;
-        status->rotateZBy.y = 0;
+        moving->rotateZBy.x = 0;
+        moving->rotateZBy.y = 0;
     } else if (remote->moveX == 0) {
-        status->rotateZBy.x = HP_ROTATE_RADIUS * ((float) remote->rotateZ);
-        status->rotateZBy.y = 0;
+        moving->rotateZBy.x = HP_ROTATE_RADIUS * ((float) remote->rotateZ);
+        moving->rotateZBy.y = 0;
     } else if (remote->moveY == 0) {
-        status->rotateZBy.x = 0;
-        status->rotateZBy.y = HP_ROTATE_RADIUS * ((float) remote->rotateZ);
+        moving->rotateZBy.x = 0;
+        moving->rotateZBy.y = HP_ROTATE_RADIUS * ((float) remote->rotateZ);
     } else {
         float angle  = atan2f(remote->moveY, remote->moveX);
         float rotate = (float) remote->rotateZ * (float) M_PI_2;
@@ -54,43 +54,43 @@ void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status) {
             result = angle + rotate;
         }
 
-        status->rotateZBy.x = HP_ROTATE_RADIUS * cosf(result);
-        status->rotateZBy.y = HP_ROTATE_RADIUS * sinf(result);
+        moving->rotateZBy.x = HP_ROTATE_RADIUS * cosf(result);
+        moving->rotateZBy.y = HP_ROTATE_RADIUS * sinf(result);
     }
 }
 
-void HP_calculateLinear(HP_Remote_t *remote, HP_Status_t *status) {
+void HP_calculateMovingLinear(HP_Remote_t *remote, HP_Moving_t *moving) {
     if (remote->moveX == 0 && remote->moveY == 0) {
-        status->moveByX = 0;
-        status->moveByY = 0;
+        moving->moveByX = 0;
+        moving->moveByY = 0;
     } else {
         float angle = atan2f(remote->moveY, remote->moveX);
 
-        status->moveByX = cosf(angle);
-        status->moveByY = sinf(angle);
+        moving->moveByX = cosf(angle);
+        moving->moveByY = sinf(angle);
     }
 }
 
-void HP_calculateTargetLinear(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode) {
-    leg->tgt.x = leg->def.x + status->moveByX * step;
-    leg->tgt.y = leg->def.y + status->moveByY * step;
+void HP_calculateTargetLinear(HP_Moving_t *moving, HP_Leg_t *leg, float step, HP_LegMode_t mode) {
+    leg->tgt.x = leg->def.x + moving->moveByX * step;
+    leg->tgt.y = leg->def.y + moving->moveByY * step;
 
     if (mode == LEG_MODE_FLOATING) {
         leg->tgt.z = leg->def.z;
     } else {
-        leg->tgt.z = leg->def.z + ((float) -status->height);
+        leg->tgt.z = leg->def.z + ((float) -moving->height);
     }
 }
 
-void HP_calculateTargetRotate(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode) {
+void HP_calculateTargetRotate(HP_Moving_t *moving, HP_Leg_t *leg, float step, HP_LegMode_t mode) {
     // Calculate leg rotation radius
-    float radius = hypotf(status->rotateZBy.x - leg->def.x, status->rotateZBy.y - leg->def.y);
+    float radius = hypotf(moving->rotateZBy.x - leg->def.x, moving->rotateZBy.y - leg->def.y);
 
     // Calculate leg rotation angle
     float stepAngle = calculateAngleByOppositeSide(radius, radius, step);
 
     // Calculate basic angle
-    float baseAngle = acosf((status->rotateZBy.x - leg->def.x) / radius);
+    float baseAngle = acosf((moving->rotateZBy.x - leg->def.x) / radius);
 
     // Calculate result angle
     float diffAngle;
@@ -106,98 +106,98 @@ void HP_calculateTargetRotate(HP_Status_t *status, HP_Leg_t *leg, float step, HP
     if (mode == LEG_MODE_FLOATING) {
         leg->tgt.z = leg->def.z;
     } else {
-        leg->tgt.z = leg->def.z + ((float) -status->height);
+        leg->tgt.z = leg->def.z + ((float) -moving->height);
     }
 }
 
-void HP_calculateInit(HP_Status_t *status) {
-    HP_calculateTargetLinear(status, &h.legs[LEG_FL], 0, LEG_MODE_FLOATING);
-    HP_calculateTargetLinear(status, &h.legs[LEG_FR], 0, LEG_MODE_FLOATING);
-    HP_calculateTargetLinear(status, &h.legs[LEG_ML], 0, LEG_MODE_FLOATING);
-    HP_calculateTargetLinear(status, &h.legs[LEG_MR], 0, LEG_MODE_FLOATING);
-    HP_calculateTargetLinear(status, &h.legs[LEG_BL], 0, LEG_MODE_FLOATING);
-    HP_calculateTargetLinear(status, &h.legs[LEG_BR], 0, LEG_MODE_FLOATING);
+void HP_calculateInit(HP_Moving_t *moving) {
+    HP_calculateTargetLinear(moving, &h.legs[LEG_FL], 0, LEG_MODE_FLOATING);
+    HP_calculateTargetLinear(moving, &h.legs[LEG_FR], 0, LEG_MODE_FLOATING);
+    HP_calculateTargetLinear(moving, &h.legs[LEG_ML], 0, LEG_MODE_FLOATING);
+    HP_calculateTargetLinear(moving, &h.legs[LEG_MR], 0, LEG_MODE_FLOATING);
+    HP_calculateTargetLinear(moving, &h.legs[LEG_BL], 0, LEG_MODE_FLOATING);
+    HP_calculateTargetLinear(moving, &h.legs[LEG_BR], 0, LEG_MODE_FLOATING);
 }
 
-void HP_calculateIdle(HP_Status_t *status) {
-    HP_calculateTargetLinear(status, &h.legs[LEG_FL], 0, LEG_MODE_GROUNDED);
-    HP_calculateTargetLinear(status, &h.legs[LEG_FR], 0, LEG_MODE_GROUNDED);
-    HP_calculateTargetLinear(status, &h.legs[LEG_ML], 0, LEG_MODE_GROUNDED);
-    HP_calculateTargetLinear(status, &h.legs[LEG_MR], 0, LEG_MODE_GROUNDED);
-    HP_calculateTargetLinear(status, &h.legs[LEG_BL], 0, LEG_MODE_GROUNDED);
-    HP_calculateTargetLinear(status, &h.legs[LEG_BR], 0, LEG_MODE_GROUNDED);
+void HP_calculateIdle(HP_Moving_t *moving) {
+    HP_calculateTargetLinear(moving, &h.legs[LEG_FL], 0, LEG_MODE_GROUNDED);
+    HP_calculateTargetLinear(moving, &h.legs[LEG_FR], 0, LEG_MODE_GROUNDED);
+    HP_calculateTargetLinear(moving, &h.legs[LEG_ML], 0, LEG_MODE_GROUNDED);
+    HP_calculateTargetLinear(moving, &h.legs[LEG_MR], 0, LEG_MODE_GROUNDED);
+    HP_calculateTargetLinear(moving, &h.legs[LEG_BL], 0, LEG_MODE_GROUNDED);
+    HP_calculateTargetLinear(moving, &h.legs[LEG_BR], 0, LEG_MODE_GROUNDED);
 }
 
-void HP_calculateStep1(HP_Status_t *status) {
-    h.calculate(status, &h.legs[LEG_FL], STEP_PART_X1, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_FR], -STEP_PART_X1, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_ML], STEP_PART_X1, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_MR], -STEP_PART_X1, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_BL], STEP_PART_X1, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_BR], -STEP_PART_X1, LEG_MODE_GROUNDED);
+void HP_calculateStep1(HP_Moving_t *moving) {
+    h.calculate(moving, &h.legs[LEG_FL], STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_FR], -STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_ML], STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_MR], -STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_BL], STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_BR], -STEP_PART_X1, LEG_MODE_GROUNDED);
 }
 
-void HP_calculateStep2(HP_Status_t *status) {
-    h.calculate(status, &h.legs[LEG_FL], STEP_PART_X2, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_FR], -STEP_PART_X2, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_ML], STEP_PART_X2, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_MR], -STEP_PART_X2, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_BL], STEP_PART_X2, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_BR], -STEP_PART_X2, LEG_MODE_GROUNDED);
+void HP_calculateStep2(HP_Moving_t *moving) {
+    h.calculate(moving, &h.legs[LEG_FL], STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_FR], -STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_ML], STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_MR], -STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_BL], STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_BR], -STEP_PART_X2, LEG_MODE_GROUNDED);
 }
 
-void HP_calculateStep3(HP_Status_t *status) {
-    h.calculate(status, &h.legs[LEG_FL], STEP_PART_X1, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_FR], -STEP_PART_X1, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_ML], STEP_PART_X1, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_MR], -STEP_PART_X1, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_BL], STEP_PART_X1, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_BR], -STEP_PART_X1, LEG_MODE_FLOATING);
+void HP_calculateStep3(HP_Moving_t *moving) {
+    h.calculate(moving, &h.legs[LEG_FL], STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_FR], -STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_ML], STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_MR], -STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_BL], STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_BR], -STEP_PART_X1, LEG_MODE_FLOATING);
 }
 
-void HP_calculateStep4(HP_Status_t *status) {
-    h.calculate(status, &h.legs[LEG_FL], 0, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_FR], 0, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_ML], 0, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_MR], 0, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_BL], 0, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_BR], 0, LEG_MODE_FLOATING);
+void HP_calculateStep4(HP_Moving_t *moving) {
+    h.calculate(moving, &h.legs[LEG_FL], 0, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_FR], 0, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_ML], 0, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_MR], 0, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_BL], 0, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_BR], 0, LEG_MODE_FLOATING);
 }
 
-void HP_calculateStep5(HP_Status_t *status) {
-    h.calculate(status, &h.legs[LEG_FL], -STEP_PART_X1, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_FR], STEP_PART_X1, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_ML], -STEP_PART_X1, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_MR], STEP_PART_X1, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_BL], -STEP_PART_X1, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_BR], STEP_PART_X1, LEG_MODE_FLOATING);
+void HP_calculateStep5(HP_Moving_t *moving) {
+    h.calculate(moving, &h.legs[LEG_FL], -STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_FR], STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_ML], -STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_MR], STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_BL], -STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_BR], STEP_PART_X1, LEG_MODE_FLOATING);
 }
 
-void HP_calculateStep6(HP_Status_t *status) {
-    h.calculate(status, &h.legs[LEG_FL], -STEP_PART_X2, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_FR], STEP_PART_X2, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_ML], -STEP_PART_X2, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_MR], STEP_PART_X2, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_BL], -STEP_PART_X2, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_BR], STEP_PART_X2, LEG_MODE_GROUNDED);
+void HP_calculateStep6(HP_Moving_t *moving) {
+    h.calculate(moving, &h.legs[LEG_FL], -STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_FR], STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_ML], -STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_MR], STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_BL], -STEP_PART_X2, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_BR], STEP_PART_X2, LEG_MODE_GROUNDED);
 }
 
-void HP_calculateStep7(HP_Status_t *status) {
-    h.calculate(status, &h.legs[LEG_FL], -STEP_PART_X1, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_FR], STEP_PART_X1, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_ML], -STEP_PART_X1, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_MR], STEP_PART_X1, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_BL], -STEP_PART_X1, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_BR], STEP_PART_X1, LEG_MODE_GROUNDED);
+void HP_calculateStep7(HP_Moving_t *moving) {
+    h.calculate(moving, &h.legs[LEG_FL], -STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_FR], STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_ML], -STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_MR], STEP_PART_X1, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_BL], -STEP_PART_X1, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_BR], STEP_PART_X1, LEG_MODE_GROUNDED);
 }
 
-void HP_calculateStep8(HP_Status_t *status) {
-    h.calculate(status, &h.legs[LEG_FL], 0, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_FR], 0, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_ML], 0, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_MR], 0, LEG_MODE_GROUNDED);
-    h.calculate(status, &h.legs[LEG_BL], 0, LEG_MODE_FLOATING);
-    h.calculate(status, &h.legs[LEG_BR], 0, LEG_MODE_GROUNDED);
+void HP_calculateStep8(HP_Moving_t *moving) {
+    h.calculate(moving, &h.legs[LEG_FL], 0, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_FR], 0, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_ML], 0, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_MR], 0, LEG_MODE_GROUNDED);
+    h.calculate(moving, &h.legs[LEG_BL], 0, LEG_MODE_FLOATING);
+    h.calculate(moving, &h.legs[LEG_BR], 0, LEG_MODE_GROUNDED);
 }
 
 uint32_t startAt = 0;
@@ -218,23 +218,23 @@ HP_Handler_t _onEntering;
 HP_Handler_t _onDispatch;
 
 HP_Remote_t remote;
-HP_Status_t status;
+HP_Moving_t moving;
 
 void HP_handlerInit_onEntering() {
-    HP_calculateInit(&status);
+    HP_calculateInit(&moving);
 
     _onEntering = HP_handlerIdle_onEntering;
     _onDispatch = HP_handlerIdle_onDispatch;
 }
 
 void HP_handlerIdle_onEntering() {
-    HP_calculateIdle(&status);
+    HP_calculateIdle(&moving);
 }
 
 void HP_handlerIdle_onDispatch() {
     if (remote.moveX != 0 || remote.moveY != 0 || remote.rotateZ != 0) {
-        HP_calculateLinear(&remote, &status);
-        HP_calculateRotationCenter(&remote, &status);
+        HP_calculateMovingLinear(&remote, &moving);
+        HP_calculateMovingRotate(&remote, &moving);
 
         _onEntering = HP_moveStep1;
         _onDispatch = NULL;
@@ -242,46 +242,46 @@ void HP_handlerIdle_onDispatch() {
 }
 
 void HP_moveStep1() {
-    HP_calculateStep1(&status);
+    HP_calculateStep1(&moving);
     _onEntering = HP_moveStep2;
 }
 
 void HP_moveStep2() {
-    HP_calculateStep2(&status);
+    HP_calculateStep2(&moving);
     _onEntering = HP_moveStep3;
 }
 
 void HP_moveStep3() {
     //TODO change state depends on remote
-    HP_calculateStep3(&status);
+    HP_calculateStep3(&moving);
     _onEntering = HP_moveStep4;
 }
 
 void HP_moveStep4() {
     //TODO recalculate linear & rotate
-    HP_calculateStep4(&status);
+    HP_calculateStep4(&moving);
     _onEntering = HP_moveStep5;
 }
 
 void HP_moveStep5() {
-    HP_calculateStep5(&status);
+    HP_calculateStep5(&moving);
     _onEntering = HP_moveStep6;
 }
 
 void HP_moveStep6() {
-    HP_calculateStep6(&status);
+    HP_calculateStep6(&moving);
     _onEntering = HP_moveStep7;
 }
 
 void HP_moveStep7() {
     //TODO change state depends on remote
-    HP_calculateStep7(&status);
+    HP_calculateStep7(&moving);
     _onEntering = HP_moveStep8;
 }
 
 void HP_moveStep8() {
     //TODO recalculate linear & rotate
-    HP_calculateStep8(&status);
+    HP_calculateStep8(&moving);
     _onEntering = HP_moveStep1;
 }
 

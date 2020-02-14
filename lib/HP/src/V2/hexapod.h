@@ -37,12 +37,12 @@ typedef struct {
     int8_t rotateZ;
 } HP_Remote_t;
 
-typedef struct {
+typedef struct HP_Moving_s {
     uint16_t height;
     float moveByX;
     float moveByY;
     Point2D_t rotateZBy;
-} HP_Status_t;
+} HP_Moving_t;
 
 typedef struct {
     Point3D_t mnt;
@@ -50,7 +50,7 @@ typedef struct {
     Point3D_t tgt;
 } HP_Leg_t;
 
-typedef void (*HP_calculate_t) (HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode);
+typedef void (*HP_calculate_t) (HP_Moving_t *moving, HP_Leg_t *leg, float step, HP_LegMode_t mode);
 
 typedef struct {
     HP_Leg_t legs[6];
@@ -60,21 +60,21 @@ typedef struct {
 /* Exported macro ------------------------------------------------------------*/
 /* Exported function prototypes --------------------------------------------- */
 
-void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status);
-void HP_calculateLinear(HP_Remote_t *remote, HP_Status_t *status);
-void HP_calculateTargetLinear(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode);
-void HP_calculateTargetRotate(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode);
+void HP_calculateMovingRotate(HP_Remote_t *remote, HP_Moving_t *moving);
+void HP_calculateMovingLinear(HP_Remote_t *remote, HP_Moving_t *moving);
+void HP_calculateTargetLinear(HP_Moving_t *moving, HP_Leg_t *leg, float step, HP_LegMode_t mode);
+void HP_calculateTargetRotate(HP_Moving_t *moving, HP_Leg_t *leg, float step, HP_LegMode_t mode);
 
-void HP_calculateInit(HP_Status_t *status);
-void HP_calculateIdle(HP_Status_t *status);
-void HP_calculateStep1(HP_Status_t *status);
-void HP_calculateStep2(HP_Status_t *status);
-void HP_calculateStep3(HP_Status_t *status);
-void HP_calculateStep4(HP_Status_t *status);
-void HP_calculateStep5(HP_Status_t *status);
-void HP_calculateStep6(HP_Status_t *status);
-void HP_calculateStep7(HP_Status_t *status);
-void HP_calculateStep8(HP_Status_t *status);
+void HP_calculateInit(HP_Moving_t *moving);
+void HP_calculateIdle(HP_Moving_t *moving);
+void HP_calculateStep1(HP_Moving_t *moving);
+void HP_calculateStep2(HP_Moving_t *moving);
+void HP_calculateStep3(HP_Moving_t *moving);
+void HP_calculateStep4(HP_Moving_t *moving);
+void HP_calculateStep5(HP_Moving_t *moving);
+void HP_calculateStep6(HP_Moving_t *moving);
+void HP_calculateStep7(HP_Moving_t *moving);
+void HP_calculateStep8(HP_Moving_t *moving);
 
 void HP_initialize();
 void HP_dispatch(uint32_t millis);
