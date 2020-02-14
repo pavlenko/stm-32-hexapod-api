@@ -204,6 +204,16 @@ uint32_t startAt = 0;
 
 typedef void (*HP_Handler_t) ();
 
+typedef struct HP_State_s {
+    HP_Handler_t onEntering;
+    HP_Handler_t onDispatch;
+} HP_State_t;
+
+HP_State_t HP_init = {HP_handlerInit_onEntering, NULL};
+
+HP_State_t *_prevState;
+HP_State_t *_nextState;
+
 HP_Handler_t _onEntering;
 HP_Handler_t _onDispatch;
 
@@ -276,6 +286,8 @@ void HP_moveStep8() {
 }
 
 void HP_initialize() {
+    _nextState = &HP_init;
+
     _onEntering = HP_handlerInit_onEntering;
 }
 
@@ -286,6 +298,18 @@ void HP_dispatch(uint32_t millis) {
     }
 
     startAt = millis;
+
+    if (_prevState != _nextState) {
+        _prevState = _nextState;
+
+        if (_prevState->onEntering) {
+            _prevState->onEntering();
+        }
+    }
+
+    if (_prevState->onDispatch) {
+        _prevState->onDispatch();
+    }
 
     // Handle singular callback
     if (_onEntering) {
