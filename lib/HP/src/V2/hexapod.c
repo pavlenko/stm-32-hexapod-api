@@ -19,6 +19,9 @@ Hexapod_t h;
 
 /* Private function prototypes -----------------------------------------------*/
 
+void HP_handlerInit_onEntering();
+void HP_handlerIdle_onEntering();
+void HP_handlerIdle_onDispatch();
 void HP_moveStep1();
 void HP_moveStep2();
 void HP_moveStep3();
@@ -204,36 +207,76 @@ typedef void (*HP_Handler_t) ();
 HP_Handler_t _onEntering;
 HP_Handler_t _onDispatch;
 
+HP_Remote_t remote;
+HP_Status_t status;
+
+void HP_handlerInit_onEntering() {
+    HP_calculateInit(&status);
+
+    _onEntering = HP_handlerIdle_onEntering;
+    _onDispatch = HP_handlerIdle_onDispatch;
+}
+
+void HP_handlerIdle_onEntering() {
+    HP_calculateIdle(&status);
+}
+
+void HP_handlerIdle_onDispatch() {
+    if (remote.moveX != 0 || remote.moveY != 0 || remote.rotateZ != 0) {
+        HP_calculateLinear(&remote, &status);
+        HP_calculateRotationCenter(&remote, &status);
+
+        _onEntering = HP_moveStep1;
+        _onDispatch = NULL;
+    }
+}
+
 void HP_moveStep1() {
+    HP_calculateStep1(&status);
     _onEntering = HP_moveStep2;
 }
 
 void HP_moveStep2() {
+    HP_calculateStep2(&status);
     _onEntering = HP_moveStep3;
 }
 
 void HP_moveStep3() {
+    //TODO change state depends on remote
+    HP_calculateStep3(&status);
     _onEntering = HP_moveStep4;
 }
 
 void HP_moveStep4() {
+    //TODO recalculate linear & rotate
+    HP_calculateStep4(&status);
     _onEntering = HP_moveStep5;
 }
 
 void HP_moveStep5() {
+    HP_calculateStep5(&status);
     _onEntering = HP_moveStep6;
 }
 
 void HP_moveStep6() {
+    HP_calculateStep6(&status);
     _onEntering = HP_moveStep7;
 }
 
 void HP_moveStep7() {
+    //TODO change state depends on remote
+    HP_calculateStep7(&status);
     _onEntering = HP_moveStep8;
 }
 
 void HP_moveStep8() {
+    //TODO recalculate linear & rotate
+    HP_calculateStep8(&status);
     _onEntering = HP_moveStep1;
+}
+
+void HP_initialize() {
+    _onEntering = HP_handlerInit_onEntering;
 }
 
 void HP_dispatch(uint32_t millis) {

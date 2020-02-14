@@ -76,6 +76,9 @@ void HP_calculateStep6(HP_Status_t *status);
 void HP_calculateStep7(HP_Status_t *status);
 void HP_calculateStep8(HP_Status_t *status);
 
+void HP_initialize();
+void HP_dispatch(uint32_t millis);
+
 /* Exported variables --------------------------------------------------------*/
 
 extern Hexapod_t h;

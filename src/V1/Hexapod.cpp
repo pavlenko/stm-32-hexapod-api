@@ -179,18 +179,3 @@ void MOVE_STEP8_onEntering(PE_FSM &fsm) {
     // Go to next state
     fsm.transitionTo(&MOVE_STEP1);
 }
-
-void Hexapod::initialize() {
-    ModeFSM.initialize(&MODE_BOOTING);
-}
-
-void Hexapod::dispatch(uint32_t millis) {
-    // Delay logic
-    if (millis - updated < 20) {
-        return;
-    }
-
-    updated = millis;
-
-    ModeFSM.dispatch();
-}
