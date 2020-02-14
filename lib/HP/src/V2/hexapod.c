@@ -213,13 +213,8 @@ void HP_calculateStep8(HP_Moving_t *moving) {
 
 uint32_t startAt = 0;
 
-HP_State_t HP_init = {HP_handlerInit_onEntering, NULL};
-
 HP_State_t *_prevState;
 HP_State_t *_nextState;
-
-HP_Handler_t _onEntering;
-HP_Handler_t _onDispatch;
 
 HP_Remote_t remote;
 HP_Moving_t moving;
@@ -227,8 +222,7 @@ HP_Moving_t moving;
 void HP_handlerInit_onEntering() {
     HP_calculateInit(&moving);
 
-    _onEntering = HP_handlerIdle_onEntering;
-    _onDispatch = HP_handlerIdle_onDispatch;
+    _nextState = &HP_stateIdle;
 }
 
 void HP_handlerIdle_onEntering() {
@@ -240,59 +234,66 @@ void HP_handlerIdle_onDispatch() {
         HP_calculateMovingLinear(&remote, &moving);
         HP_calculateMovingRotate(&remote, &moving);
 
-        _onEntering = HP_handlerMoveStep1_onEntering;
-        _onDispatch = NULL;
+        _nextState = &HP_stateMoveStep1;
     }
 }
 
 void HP_handlerMoveStep1_onEntering() {
     HP_calculateStep1(&moving);
-    _onEntering = HP_handlerMoveStep2_onEntering;
+    _nextState = &HP_stateMoveStep2;
 }
 
 void HP_handlerMoveStep2_onEntering() {
     HP_calculateStep2(&moving);
-    _onEntering = HP_handlerMoveStep3_onEntering;
+    _nextState = &HP_stateMoveStep3;
 }
 
 void HP_handlerMoveStep3_onEntering() {
-    //TODO change state depends on remote
     HP_calculateStep3(&moving);
-    _onEntering = HP_handlerMoveStep4_onEntering;
+
+    if (remote.moveX == 0 || remote.moveY == 0 || remote.rotateZ == 0) {
+        _nextState = &HP_stateIdle;
+    } else {
+        _nextState = &HP_stateMoveStep4;
+    }
 }
 
 void HP_handlerMoveStep4_onEntering() {
-    //TODO recalculate linear & rotate
     HP_calculateStep4(&moving);
-    _onEntering = HP_handlerMoveStep5_onEntering;
+    HP_calculateMovingLinear(&remote, &moving);
+    HP_calculateMovingRotate(&remote, &moving);
+    _nextState = &HP_stateMoveStep5;
 }
 
 void HP_handlerMoveStep5_onEntering() {
     HP_calculateStep5(&moving);
-    _onEntering = HP_handlerMoveStep6_onEntering;
+    _nextState = &HP_stateMoveStep6;
 }
 
 void HP_handlerMoveStep6_onEntering() {
     HP_calculateStep6(&moving);
-    _onEntering = HP_handlerMoveStep7_onEntering;
+    _nextState = &HP_stateMoveStep7;
 }
 
 void HP_handlerMoveStep7_onEntering() {
-    //TODO change state depends on remote
     HP_calculateStep7(&moving);
-    _onEntering = HP_handlerMoveStep8_onEntering;
+
+    if (remote.moveX == 0 || remote.moveY == 0 || remote.rotateZ == 0) {
+        _nextState = &HP_stateIdle;
+    } else {
+        _nextState = &HP_stateMoveStep8;
+    }
 }
 
 void HP_handlerMoveStep8_onEntering() {
-    //TODO recalculate linear & rotate
     HP_calculateStep8(&moving);
-    _onEntering = HP_handlerMoveStep1_onEntering;
+    HP_calculateMovingLinear(&remote, &moving);
+    HP_calculateMovingRotate(&remote, &moving);
+    _nextState = &HP_stateMoveStep1;
 }
 
 void HP_initialize() {
-    _nextState = &HP_init;
-
-    _onEntering = HP_handlerInit_onEntering;
+    _nextState = &HP_stateInit;
 }
 
 void HP_dispatch(uint32_t millis) {
@@ -313,17 +314,6 @@ void HP_dispatch(uint32_t millis) {
 
     if (_prevState->onDispatch) {
         _prevState->onDispatch();
-    }
-
-    // Handle singular callback
-    if (_onEntering) {
-        _onEntering();
-        _onEntering = NULL;
-    }
-
-    // Handle periodic callback
-    if (_onDispatch) {
-        _onDispatch();
     }
 }
 
