@@ -55,7 +55,6 @@ typedef void (*HP_calculate_t) (HP_Status_t *status, HP_Leg_t *leg, float step, 
 
 typedef struct {
     HP_Leg_t legs[6];
-    uint8_t height;
     HP_calculate_t calculate;
 } Hexapod_t;
 
@@ -67,8 +66,8 @@ void HP_calculateLinear(HP_Remote_t *remote, HP_Status_t *status);
 void HP_calculateTargetLinear(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode);
 void HP_calculateTargetRotate(HP_Status_t *status, HP_Leg_t *leg, float step, HP_LegMode_t mode);
 
-void hp_calculateInit();
-void hp_calculateIdle();
+void HP_calculateInit(HP_Status_t *status);
+void HP_calculateIdle(HP_Status_t *status);
 void HP_calculateStep1(HP_Status_t *status);
 void HP_calculateStep2(HP_Status_t *status);
 void HP_calculateStep3(HP_Status_t *status);

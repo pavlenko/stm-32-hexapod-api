@@ -7,13 +7,6 @@
 
 #include <cstdint>
 
-typedef struct {
-    float moveX;
-    float moveY;
-    int8_t rotateX;
-    int8_t rotateZ;
-} control_t;
-static control_t control;
 /*
 enum class Power {
     OFF,

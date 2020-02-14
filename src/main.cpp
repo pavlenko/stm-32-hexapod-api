@@ -11,8 +11,6 @@ Hexapod hp = Hexapod();
 
 int main()
 {
-    hp_calculateInit();
-    hp_calculateIdle();
     calculateInit();
     calculateIdle();
     calculateStep1();

@@ -97,22 +97,22 @@ void HP_calculateTargetRotate(HP_Status_t *status, HP_Leg_t *leg, float step, HP
     }
 }
 
-void hp_calculateInit() {
-    h.legs[LEG_FL].tgt = (Point3D_t) {h.legs[LEG_FL].def.x, h.legs[LEG_FL].def.y, h.legs[LEG_FL].def.z};
-    h.legs[LEG_FR].tgt = (Point3D_t) {h.legs[LEG_FR].def.x, h.legs[LEG_FR].def.y, h.legs[LEG_FR].def.z};
-    h.legs[LEG_ML].tgt = (Point3D_t) {h.legs[LEG_ML].def.x, h.legs[LEG_ML].def.y, h.legs[LEG_ML].def.z};
-    h.legs[LEG_MR].tgt = (Point3D_t) {h.legs[LEG_MR].def.x, h.legs[LEG_MR].def.y, h.legs[LEG_MR].def.z};
-    h.legs[LEG_BL].tgt = (Point3D_t) {h.legs[LEG_BL].def.x, h.legs[LEG_BL].def.y, h.legs[LEG_BL].def.z};
-    h.legs[LEG_BR].tgt = (Point3D_t) {h.legs[LEG_BR].def.x, h.legs[LEG_BR].def.y, h.legs[LEG_BR].def.z};
+void HP_calculateInit(HP_Status_t *status) {
+    HP_calculateTargetLinear(status, &h.legs[LEG_FL], 0, LEG_MODE_FLOATING);
+    HP_calculateTargetLinear(status, &h.legs[LEG_FR], 0, LEG_MODE_FLOATING);
+    HP_calculateTargetLinear(status, &h.legs[LEG_ML], 0, LEG_MODE_FLOATING);
+    HP_calculateTargetLinear(status, &h.legs[LEG_MR], 0, LEG_MODE_FLOATING);
+    HP_calculateTargetLinear(status, &h.legs[LEG_BL], 0, LEG_MODE_FLOATING);
+    HP_calculateTargetLinear(status, &h.legs[LEG_BR], 0, LEG_MODE_FLOATING);
 }
 
-void hp_calculateIdle() {
-    h.legs[LEG_FL].tgt = (Point3D_t) {h.legs[LEG_FL].def.x, h.legs[LEG_FL].def.y, h.height};
-    h.legs[LEG_FR].tgt = (Point3D_t) {h.legs[LEG_FR].def.x, h.legs[LEG_FR].def.y, h.height};
-    h.legs[LEG_ML].tgt = (Point3D_t) {h.legs[LEG_ML].def.x, h.legs[LEG_ML].def.y, h.height};
-    h.legs[LEG_MR].tgt = (Point3D_t) {h.legs[LEG_MR].def.x, h.legs[LEG_MR].def.y, h.height};
-    h.legs[LEG_BL].tgt = (Point3D_t) {h.legs[LEG_BL].def.x, h.legs[LEG_BL].def.y, h.height};
-    h.legs[LEG_BR].tgt = (Point3D_t) {h.legs[LEG_BR].def.x, h.legs[LEG_BR].def.y, h.height};
+void HP_calculateIdle(HP_Status_t *status) {
+    HP_calculateTargetLinear(status, &h.legs[LEG_FL], 0, LEG_MODE_GROUNDED);
+    HP_calculateTargetLinear(status, &h.legs[LEG_FR], 0, LEG_MODE_GROUNDED);
+    HP_calculateTargetLinear(status, &h.legs[LEG_ML], 0, LEG_MODE_GROUNDED);
+    HP_calculateTargetLinear(status, &h.legs[LEG_MR], 0, LEG_MODE_GROUNDED);
+    HP_calculateTargetLinear(status, &h.legs[LEG_BL], 0, LEG_MODE_GROUNDED);
+    HP_calculateTargetLinear(status, &h.legs[LEG_BR], 0, LEG_MODE_GROUNDED);
 }
 
 void HP_calculateStep1(HP_Status_t *status) {
