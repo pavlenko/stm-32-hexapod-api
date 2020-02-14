@@ -50,6 +50,13 @@ typedef struct {
     Point3D_t tgt;
 } HP_Leg_t;
 
+typedef void (*HP_Handler_t) ();
+
+typedef struct HP_State_s {
+    HP_Handler_t onEntering;
+    HP_Handler_t onDispatch;
+} HP_State_t;
+
 typedef void (*HP_calculate_t) (HP_Moving_t *moving, HP_Leg_t *leg, float step, HP_LegMode_t mode);
 
 typedef struct {

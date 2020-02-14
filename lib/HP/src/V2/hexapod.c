@@ -22,14 +22,25 @@ Hexapod_t h;
 void HP_handlerInit_onEntering();
 void HP_handlerIdle_onEntering();
 void HP_handlerIdle_onDispatch();
-void HP_moveStep1();
-void HP_moveStep2();
-void HP_moveStep3();
-void HP_moveStep4();
-void HP_moveStep5();
-void HP_moveStep6();
-void HP_moveStep7();
-void HP_moveStep8();
+void HP_handlerMoveStep1_onEntering();
+void HP_handlerMoveStep2_onEntering();
+void HP_handlerMoveStep3_onEntering();
+void HP_handlerMoveStep4_onEntering();
+void HP_handlerMoveStep5_onEntering();
+void HP_handlerMoveStep6_onEntering();
+void HP_handlerMoveStep7_onEntering();
+void HP_handlerMoveStep8_onEntering();
+
+HP_State_t HP_stateInit      = {HP_handlerInit_onEntering, NULL};
+HP_State_t HP_stateIdle      = {HP_handlerIdle_onEntering, HP_handlerIdle_onDispatch};
+HP_State_t HP_stateMoveStep1 = {HP_handlerMoveStep1_onEntering, NULL};
+HP_State_t HP_stateMoveStep2 = {HP_handlerMoveStep2_onEntering, NULL};
+HP_State_t HP_stateMoveStep3 = {HP_handlerMoveStep3_onEntering, NULL};
+HP_State_t HP_stateMoveStep4 = {HP_handlerMoveStep4_onEntering, NULL};
+HP_State_t HP_stateMoveStep5 = {HP_handlerMoveStep5_onEntering, NULL};
+HP_State_t HP_stateMoveStep6 = {HP_handlerMoveStep6_onEntering, NULL};
+HP_State_t HP_stateMoveStep7 = {HP_handlerMoveStep7_onEntering, NULL};
+HP_State_t HP_stateMoveStep8 = {HP_handlerMoveStep8_onEntering, NULL};
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -202,13 +213,6 @@ void HP_calculateStep8(HP_Moving_t *moving) {
 
 uint32_t startAt = 0;
 
-typedef void (*HP_Handler_t) ();
-
-typedef struct HP_State_s {
-    HP_Handler_t onEntering;
-    HP_Handler_t onDispatch;
-} HP_State_t;
-
 HP_State_t HP_init = {HP_handlerInit_onEntering, NULL};
 
 HP_State_t *_prevState;
@@ -236,53 +240,53 @@ void HP_handlerIdle_onDispatch() {
         HP_calculateMovingLinear(&remote, &moving);
         HP_calculateMovingRotate(&remote, &moving);
 
-        _onEntering = HP_moveStep1;
+        _onEntering = HP_handlerMoveStep1_onEntering;
         _onDispatch = NULL;
     }
 }
 
-void HP_moveStep1() {
+void HP_handlerMoveStep1_onEntering() {
     HP_calculateStep1(&moving);
-    _onEntering = HP_moveStep2;
+    _onEntering = HP_handlerMoveStep2_onEntering;
 }
 
-void HP_moveStep2() {
+void HP_handlerMoveStep2_onEntering() {
     HP_calculateStep2(&moving);
-    _onEntering = HP_moveStep3;
+    _onEntering = HP_handlerMoveStep3_onEntering;
 }
 
-void HP_moveStep3() {
+void HP_handlerMoveStep3_onEntering() {
     //TODO change state depends on remote
     HP_calculateStep3(&moving);
-    _onEntering = HP_moveStep4;
+    _onEntering = HP_handlerMoveStep4_onEntering;
 }
 
-void HP_moveStep4() {
+void HP_handlerMoveStep4_onEntering() {
     //TODO recalculate linear & rotate
     HP_calculateStep4(&moving);
-    _onEntering = HP_moveStep5;
+    _onEntering = HP_handlerMoveStep5_onEntering;
 }
 
-void HP_moveStep5() {
+void HP_handlerMoveStep5_onEntering() {
     HP_calculateStep5(&moving);
-    _onEntering = HP_moveStep6;
+    _onEntering = HP_handlerMoveStep6_onEntering;
 }
 
-void HP_moveStep6() {
+void HP_handlerMoveStep6_onEntering() {
     HP_calculateStep6(&moving);
-    _onEntering = HP_moveStep7;
+    _onEntering = HP_handlerMoveStep7_onEntering;
 }
 
-void HP_moveStep7() {
+void HP_handlerMoveStep7_onEntering() {
     //TODO change state depends on remote
     HP_calculateStep7(&moving);
-    _onEntering = HP_moveStep8;
+    _onEntering = HP_handlerMoveStep8_onEntering;
 }
 
-void HP_moveStep8() {
+void HP_handlerMoveStep8_onEntering() {
     //TODO recalculate linear & rotate
     HP_calculateStep8(&moving);
-    _onEntering = HP_moveStep1;
+    _onEntering = HP_handlerMoveStep1_onEntering;
 }
 
 void HP_initialize() {
