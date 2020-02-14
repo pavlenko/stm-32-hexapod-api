@@ -1,13 +1,13 @@
 /* Includes ------------------------------------------------------------------*/
 
 #include <math.h>
+#include <stddef.h>
 #include "hexapod.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
 
-const float HP_BODY_RADIUS_X1 = 170;
-const float HP_BODY_RADIUS_X4 = 680;
+const float HP_ROTATE_RADIUS = 680;
 
 const float STEP_PART_X1 = 10;
 const float STEP_PART_X2 = 20;
@@ -18,6 +18,16 @@ const float STEP_PART_X2 = 20;
 Hexapod_t h;
 
 /* Private function prototypes -----------------------------------------------*/
+
+void HP_moveStep1();
+void HP_moveStep2();
+void HP_moveStep3();
+void HP_moveStep4();
+void HP_moveStep5();
+void HP_moveStep6();
+void HP_moveStep7();
+void HP_moveStep8();
+
 /* Private functions ---------------------------------------------------------*/
 
 void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status) {
@@ -25,11 +35,11 @@ void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status) {
         status->rotateZBy.x = 0;
         status->rotateZBy.y = 0;
     } else if (remote->moveX == 0) {
-        status->rotateZBy.x = HP_BODY_RADIUS_X4 * ((float) remote->rotateZ);
+        status->rotateZBy.x = HP_ROTATE_RADIUS * ((float) remote->rotateZ);
         status->rotateZBy.y = 0;
     } else if (remote->moveY == 0) {
         status->rotateZBy.x = 0;
-        status->rotateZBy.y = HP_BODY_RADIUS_X4 * ((float) remote->rotateZ);
+        status->rotateZBy.y = HP_ROTATE_RADIUS * ((float) remote->rotateZ);
     } else {
         float angle  = atan2f(remote->moveY, remote->moveX);
         float rotate = (float) remote->rotateZ * (float) M_PI_2;
@@ -41,8 +51,8 @@ void HP_calculateRotationCenter(HP_Remote_t *remote, HP_Status_t *status) {
             result = angle + rotate;
         }
 
-        status->rotateZBy.x = HP_BODY_RADIUS_X4 * cosf(result);
-        status->rotateZBy.y = HP_BODY_RADIUS_X4 * sinf(result);
+        status->rotateZBy.x = HP_ROTATE_RADIUS * cosf(result);
+        status->rotateZBy.y = HP_ROTATE_RADIUS * sinf(result);
     }
 }
 
@@ -185,6 +195,65 @@ void HP_calculateStep8(HP_Status_t *status) {
     h.calculate(status, &h.legs[LEG_MR], 0, LEG_MODE_GROUNDED);
     h.calculate(status, &h.legs[LEG_BL], 0, LEG_MODE_FLOATING);
     h.calculate(status, &h.legs[LEG_BR], 0, LEG_MODE_GROUNDED);
+}
+
+uint32_t startAt = 0;
+
+typedef void (*HP_Handler_t) ();
+
+HP_Handler_t _onEntering;
+HP_Handler_t _onDispatch;
+
+void HP_moveStep1() {
+    _onEntering = HP_moveStep2;
+}
+
+void HP_moveStep2() {
+    _onEntering = HP_moveStep3;
+}
+
+void HP_moveStep3() {
+    _onEntering = HP_moveStep4;
+}
+
+void HP_moveStep4() {
+    _onEntering = HP_moveStep5;
+}
+
+void HP_moveStep5() {
+    _onEntering = HP_moveStep6;
+}
+
+void HP_moveStep6() {
+    _onEntering = HP_moveStep7;
+}
+
+void HP_moveStep7() {
+    _onEntering = HP_moveStep8;
+}
+
+void HP_moveStep8() {
+    _onEntering = HP_moveStep1;
+}
+
+void HP_dispatch(uint32_t millis) {
+    // Timings
+    if (millis - startAt < 20) {
+        return;
+    }
+
+    startAt = millis;
+
+    // Handle singular callback
+    if (_onEntering) {
+        _onEntering();
+        _onEntering = NULL;
+    }
+
+    // Handle periodic callback
+    if (_onDispatch) {
+        _onDispatch();
+    }
 }
 
 /* Exported functions ------------------------------------------------------- */

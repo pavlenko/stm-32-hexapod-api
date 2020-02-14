@@ -13,8 +13,7 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 
-extern const float HP_BODY_RADIUS_X1;
-extern const float HP_BODY_RADIUS_X4;
+extern const float HP_ROTATE_RADIUS;
 
 /* Exported types ------------------------------------------------------------*/
 

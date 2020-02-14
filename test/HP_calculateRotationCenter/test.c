@@ -26,13 +26,13 @@ void test_HP_calculateRotationCenterMoveX() {
     HP_calculateRotationCenter(&remote, &status);
 
     TEST_ASSERT_EQUAL(0, status.rotateZBy.x);
-    TEST_ASSERT_EQUAL(HP_BODY_RADIUS_X4, status.rotateZBy.y);
+    TEST_ASSERT_EQUAL(HP_ROTATE_RADIUS, status.rotateZBy.y);
 
     remote = (HP_Remote_t) {10, 0, -1};
     HP_calculateRotationCenter(&remote, &status);
 
     TEST_ASSERT_EQUAL(0, status.rotateZBy.x);
-    TEST_ASSERT_EQUAL(-HP_BODY_RADIUS_X4, status.rotateZBy.y);
+    TEST_ASSERT_EQUAL(-HP_ROTATE_RADIUS, status.rotateZBy.y);
 }
 
 void test_HP_calculateRotationCenterMoveY() {
@@ -42,13 +42,13 @@ void test_HP_calculateRotationCenterMoveY() {
     remote = (HP_Remote_t) {0, 10, 1};
     HP_calculateRotationCenter(&remote, &status);
 
-    TEST_ASSERT_EQUAL(HP_BODY_RADIUS_X4, status.rotateZBy.x);
+    TEST_ASSERT_EQUAL(HP_ROTATE_RADIUS, status.rotateZBy.x);
     TEST_ASSERT_EQUAL(0, status.rotateZBy.y);
 
     remote = (HP_Remote_t) {0, 10, -1};
     HP_calculateRotationCenter(&remote, &status);
 
-    TEST_ASSERT_EQUAL(-HP_BODY_RADIUS_X4, status.rotateZBy.x);
+    TEST_ASSERT_EQUAL(-HP_ROTATE_RADIUS, status.rotateZBy.x);
     TEST_ASSERT_EQUAL(0, status.rotateZBy.y);
 }
 
