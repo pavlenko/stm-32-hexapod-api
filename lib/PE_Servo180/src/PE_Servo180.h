@@ -17,6 +17,31 @@ typedef struct {
     uint16_t max;    // Calibration max
 } PE_Servo180_Motor_t;
 
+typedef struct {
+    uint16_t ticksPerUs;
+    volatile uint16_t *counter;
+    volatile uint16_t *compare;
+} PE_Servo180_ChannelInit_t;
+
+typedef struct {
+    int8_t index;
+    volatile uint16_t *counter;
+    volatile uint16_t *compare;
+} PE_Servo180_ChannelItem_t;
+
+typedef enum {
+    PE_Servo180_RESULT_SUCCESS,
+    PE_Servo180_RESULT_FAILURE,
+} PE_Servo180_Result_t;
+
+/**
+ *
+ * @param channel
+ *
+ * @return PE_Servo180_RESULT_SUCCESS If channel successfully initialized
+ */
+PE_Servo180_Result_t PE_Servo180_initializeChannel(PE_Servo180_ChannelInit_t *channel);
+
 void PE_Servo180_initialize(uint8_t total);
 
 uint16_t PE_Servo180_getMicros();
@@ -34,6 +59,14 @@ void PE_Servo180_setMinimum(uint16_t micros);
 uint16_t PE_Servo180_getMaximum();
 
 void PE_Servo180_setMaximum(uint16_t micros);
+
+inline void PE_Servo180_ISR(uint8_t channelN);
+
+__attribute__((weak))
+void inline PE_Servo180_pinSet(uint8_t channel, uint8_t motor);
+
+__attribute__((weak))
+void inline PE_Servo180_pinClr(uint8_t channel, uint8_t motor);
 
 #ifdef __cplusplus
 }
