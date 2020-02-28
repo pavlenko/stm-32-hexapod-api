@@ -7,6 +7,20 @@ extern "C" {
 
 #include <stdint.h>
 
+typedef enum PE_SpiderV2_LegMode_t {
+    PE_SPIDER_V2_LEG_MODE_GROUNDED,
+    PE_SPIDER_V2_LEG_MODE_FLOATING,
+} PE_SpiderV2_LegMode_t;
+
+typedef enum PE_SpiderV2_LegPos_t {
+    PE_SPIDER_V2_LEG_POS_FL,
+    PE_SPIDER_V2_LEG_POS_FR,
+    PE_SPIDER_V2_LEG_POS_ML,
+    PE_SPIDER_V2_LEG_POS_MR,
+    PE_SPIDER_V2_LEG_POS_BL,
+    PE_SPIDER_V2_LEG_POS_BR,
+} PE_SpiderV2_LegPos_t;
+
 typedef struct PE_SpiderV2_t PE_SpiderV2_t;
 
 typedef struct PE_SpiderV2_Point2D_t {
