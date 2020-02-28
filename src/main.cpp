@@ -3,7 +3,7 @@
 //
 
 #include <V1/Movement.hpp>
-#include <V2/hexapod.h>
+#include <hexapod.h>
 #include "main.h"
 
 int main()
