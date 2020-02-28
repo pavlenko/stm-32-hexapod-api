@@ -1,5 +1,6 @@
 include_directories("${CMAKE_CURRENT_LIST_DIR}/lib/PE_FSM/src")
 include_directories("${CMAKE_CURRENT_LIST_DIR}/lib/HP/src")
+include_directories("${CMAKE_CURRENT_LIST_DIR}/lib/PE_SpiderV2/src")
 
 include_directories("$ENV{HOME}/.platformio/packages/tool-unity")
 

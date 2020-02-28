@@ -59,7 +59,10 @@ typedef struct PE_SpiderV2_t {
     PE_SpiderV2_moving_t moving;
     PE_SpiderV2_State_t *prevState;
     PE_SpiderV2_State_t *nextState;
+    uint32_t millis;
 } PE_SpiderV2_t;
+
+void PE_SpiderV2_dispatch(PE_SpiderV2_t *spider, uint32_t millis);
 
 #ifdef __cplusplus
 }
