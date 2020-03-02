@@ -34,6 +34,16 @@ typedef struct PE_SpiderV2_Point3D_t {
     float z;
 } PE_SpiderV2_Point3D_t;
 
+typedef struct PE_SpiderV2_LegConfig_t {
+    PE_SpiderV2_Point3D_t mount;
+    PE_SpiderV2_Point3D_t target;
+} PE_SpiderV2_LegConfig_t;
+
+typedef struct PE_SpiderV2_LegTarget_t {
+    PE_SpiderV2_Point3D_t target;
+    uint16_t angles[3];
+} PE_SpiderV2_LegTarget_t;
+
 typedef struct PE_SpiderV2_remote_t {
     float moveX;
     float moveY;
@@ -55,6 +65,8 @@ typedef struct PE_SpiderV2_State_t {
 } PE_SpiderV2_State_t;
 
 typedef struct PE_SpiderV2_t {
+    PE_SpiderV2_LegConfig_t legConfig[6];
+    PE_SpiderV2_LegTarget_t legTarget[6];
     PE_SpiderV2_remote_t remote;
     PE_SpiderV2_moving_t moving;
     PE_SpiderV2_State_t *prevState;
