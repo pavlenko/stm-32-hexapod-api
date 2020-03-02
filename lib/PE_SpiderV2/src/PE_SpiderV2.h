@@ -56,8 +56,8 @@ typedef struct PE_SpiderV2_State_s {
 
 typedef struct PE_SpiderV2_s {
     PE_SpiderV2_Point2D_t legMounts[6];
-    PE_SpiderV2_Point2D_t legSources[6];
-    PE_SpiderV2_Point2D_t legTargets[6];
+    PE_SpiderV2_Point3D_t legSources[6];
+    PE_SpiderV2_Point3D_t legTargets[6];
     PE_SpiderV2_remote_t remote;
     PE_SpiderV2_moving_t moving;
     PE_SpiderV2_State_t *prevState;
