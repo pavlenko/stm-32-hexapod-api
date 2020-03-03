@@ -1,13 +1,6 @@
 #include "PE_SpiderV2.h"
 
-//TODO maybe remove millis from dispatch
-void PE_SpiderV2_dispatch(PE_SpiderV2_t *spider, uint32_t millis) {
-    if (millis - spider->millis < 20) {
-        return;
-    }
-
-    spider->millis = millis;
-
+void PE_SpiderV2_dispatch(PE_SpiderV2_t *spider) {
     if (spider->currState != spider->nextState) {
         spider->currState = spider->nextState;
 
