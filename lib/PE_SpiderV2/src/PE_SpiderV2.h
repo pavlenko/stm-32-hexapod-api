@@ -68,6 +68,15 @@ void PE_SpiderV2_handlerInit_onEntering(PE_SpiderV2_t *spider);
 void PE_SpiderV2_handlerIdle_onEntering(PE_SpiderV2_t *spider);
 void PE_SpiderV2_handlerIdle_onDispatch(PE_SpiderV2_t *spider);
 
+void PE_SpiderV2_handlerMove1_onEntering(PE_SpiderV2_t *spider);
+void PE_SpiderV2_handlerMove2_onEntering(PE_SpiderV2_t *spider);
+void PE_SpiderV2_handlerMove3_onEntering(PE_SpiderV2_t *spider);
+void PE_SpiderV2_handlerMove4_onEntering(PE_SpiderV2_t *spider);
+void PE_SpiderV2_handlerMove5_onEntering(PE_SpiderV2_t *spider);
+void PE_SpiderV2_handlerMove6_onEntering(PE_SpiderV2_t *spider);
+void PE_SpiderV2_handlerMove7_onEntering(PE_SpiderV2_t *spider);
+void PE_SpiderV2_handlerMove8_onEntering(PE_SpiderV2_t *spider);
+
 void PE_SpiderV2_initialize(PE_SpiderV2_t *spider);
 void PE_SpiderV2_dispatch(PE_SpiderV2_t *spider);
 
