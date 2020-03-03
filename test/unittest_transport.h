@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#include <stdio.h>
+
 void unittest_uart_begin();
 void unittest_uart_putchar(char c);
 void unittest_uart_flush();
