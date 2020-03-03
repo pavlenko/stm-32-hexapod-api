@@ -47,7 +47,7 @@ typedef struct PE_SpiderV2_moving_s {
     PE_SpiderV2_Point2D_t rotateZBy;
 } PE_SpiderV2_moving_t;
 
-typedef void (*PE_SpiderV2_StateHandler_t) ();
+typedef void (*PE_SpiderV2_StateHandler_t) (PE_SpiderV2_t *spider);
 
 typedef struct PE_SpiderV2_State_s {
     PE_SpiderV2_StateHandler_t onEntering;

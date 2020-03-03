@@ -5,11 +5,11 @@ void PE_SpiderV2_dispatch(PE_SpiderV2_t *spider) {
         spider->currState = spider->nextState;
 
         if (spider->currState && spider->currState->onEntering) {
-            spider->currState->onEntering();
+            spider->currState->onEntering(spider);
         }
     }
 
     if (spider->currState && spider->currState->onDispatch) {
-        spider->currState->onDispatch();
+        spider->currState->onDispatch(spider);
     }
 }
