@@ -48,6 +48,7 @@ typedef struct PE_SpiderV2_moving_s {
 } PE_SpiderV2_moving_t;
 
 typedef void (*PE_SpiderV2_StateHandler_t) (PE_SpiderV2_t *spider);
+typedef void (*PE_SpiderV2_Calculate_t) (PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode);
 
 typedef struct PE_SpiderV2_State_s {
     PE_SpiderV2_StateHandler_t onEntering;
@@ -62,7 +63,13 @@ typedef struct PE_SpiderV2_s {
     PE_SpiderV2_moving_t moving;
     PE_SpiderV2_State_t *currState;
     PE_SpiderV2_State_t *nextState;
+    PE_SpiderV2_Calculate_t calculate;
 } PE_SpiderV2_t;
+
+void PE_SpiderV2_calculateMovingLinear(PE_SpiderV2_remote_t *remote, PE_SpiderV2_moving_t *moving);
+void PE_SpiderV2_calculateMovingRotate(PE_SpiderV2_remote_t *remote, PE_SpiderV2_moving_t *moving);
+void PE_SpiderV2_calculateTargetLinear(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode);
+void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode);
 
 void PE_SpiderV2_handlerInit_onEntering(PE_SpiderV2_t *spider);
 void PE_SpiderV2_handlerIdle_onEntering(PE_SpiderV2_t *spider);
