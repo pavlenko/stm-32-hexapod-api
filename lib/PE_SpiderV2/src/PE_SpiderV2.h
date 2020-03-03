@@ -64,7 +64,15 @@ typedef struct PE_SpiderV2_s {
     PE_SpiderV2_State_t *nextState;
 } PE_SpiderV2_t;
 
+void PE_SpiderV2_handlerInit_onEntering(PE_SpiderV2_t *spider);
+void PE_SpiderV2_handlerIdle_onEntering(PE_SpiderV2_t *spider);
+void PE_SpiderV2_handlerIdle_onDispatch(PE_SpiderV2_t *spider);
+
+void PE_SpiderV2_initialize(PE_SpiderV2_t *spider);
 void PE_SpiderV2_dispatch(PE_SpiderV2_t *spider);
+
+extern PE_SpiderV2_State_t PE_SpiderV2_stateInit;
+extern PE_SpiderV2_State_t PE_SpiderV2_stateIdle;
 
 #ifdef __cplusplus
 }

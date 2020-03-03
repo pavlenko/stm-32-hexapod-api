@@ -11,3 +11,4 @@ include_directories("${CMAKE_CURRENT_LIST_DIR}/test/HP_calculateTargetLinear")
 include_directories("${CMAKE_CURRENT_LIST_DIR}/test/HP_calculateTargetRotate")
 
 include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_SpiderV2_dispatch")
+include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_SpiderV2_initialize")

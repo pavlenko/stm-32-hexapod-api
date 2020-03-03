@@ -6,7 +6,7 @@
 #include "main.h"
 #include "led.h"
 
-//PE_SpiderV2_t spider;
+PE_SpiderV2_t spider;
 
 void SystemClock_Config(void);
 
@@ -14,16 +14,12 @@ int main()
 {
     HAL_Init();
     SystemClock_Config();
-    //HP_initialize();
-
     MX_LED_Init();
 
-    uint32_t millis = 0;
+    PE_SpiderV2_initialize(&spider);
 
     while (1) {
-        //HP_dispatch(millis);
-        //PE_SpiderV2_dispatch(&spider, millis);
-        millis++;
+        PE_SpiderV2_dispatch(&spider);
 
         MX_LED_ON(0);
         HAL_Delay(500);
