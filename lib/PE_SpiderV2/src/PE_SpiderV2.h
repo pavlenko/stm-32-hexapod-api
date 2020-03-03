@@ -90,6 +90,15 @@ void PE_SpiderV2_dispatch(PE_SpiderV2_t *spider);
 extern PE_SpiderV2_State_t PE_SpiderV2_stateInit;
 extern PE_SpiderV2_State_t PE_SpiderV2_stateIdle;
 
+extern PE_SpiderV2_State_t PE_SpiderV2_stateMove1;
+extern PE_SpiderV2_State_t PE_SpiderV2_stateMove2;
+extern PE_SpiderV2_State_t PE_SpiderV2_stateMove3;
+extern PE_SpiderV2_State_t PE_SpiderV2_stateMove4;
+extern PE_SpiderV2_State_t PE_SpiderV2_stateMove5;
+extern PE_SpiderV2_State_t PE_SpiderV2_stateMove6;
+extern PE_SpiderV2_State_t PE_SpiderV2_stateMove7;
+extern PE_SpiderV2_State_t PE_SpiderV2_stateMove8;
+
 #ifdef __cplusplus
 }
 #endif

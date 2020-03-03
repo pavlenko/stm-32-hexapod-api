@@ -20,6 +20,8 @@ PE_SpiderV2_State_t PE_SpiderV2_stateMove6 = {PE_SpiderV2_handlerMove6_onEnterin
 PE_SpiderV2_State_t PE_SpiderV2_stateMove7 = {PE_SpiderV2_handlerMove7_onEntering, NULL};
 PE_SpiderV2_State_t PE_SpiderV2_stateMove8 = {PE_SpiderV2_handlerMove8_onEntering, NULL};
 
+float PE_SpiderV2_calculateAngleByOppositeSide(float adjacentSideA, float adjacentSideB, float oppositeSide);
+
 void PE_SpiderV2_calculateMovingLinear(PE_SpiderV2_remote_t *remote, PE_SpiderV2_moving_t *moving) {
     if (remote->moveX == 0 && remote->moveY == 0) {
         moving->moveByX = 0;
@@ -58,8 +60,47 @@ void PE_SpiderV2_calculateMovingRotate(PE_SpiderV2_remote_t *remote, PE_SpiderV2
     }
 }
 
-void PE_SpiderV2_calculateTargetLinear(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode) {}
-void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode) {}
+void PE_SpiderV2_calculateTargetLinear(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode) {
+    spider->legTargets[leg].x = spider->legSources[leg].x + spider->moving.moveByX * step;
+    spider->legTargets[leg].y = spider->legSources[leg].y + spider->moving.moveByY * step;
+
+    if (mode == PE_SPIDER_V2_LEG_MODE_FLOATING) {
+        spider->legTargets[leg].z = spider->legSources[leg].z;
+    } else {
+        spider->legTargets[leg].z = spider->legSources[leg].z + ((float) -spider->moving.height);
+    }
+}
+
+void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode) {
+    // Calculate leg rotation radius
+    float radius = hypotf(
+        spider->moving.rotateZBy.x - spider->legSources[leg].x,
+        spider->moving.rotateZBy.y - spider->legSources[leg].y
+    );
+
+    // Calculate leg rotation angle
+    float stepAngle = PE_SpiderV2_calculateAngleByOppositeSide(radius, radius, step);
+
+    // Calculate basic angle
+    float baseAngle = acosf((spider->moving.rotateZBy.x - spider->legSources[leg].x) / radius);
+
+    // Calculate result angle
+    float diffAngle;
+    if (step < 0) {
+        diffAngle = baseAngle - stepAngle;
+    } else {
+        diffAngle = baseAngle + stepAngle;
+    }
+
+    spider->legTargets[leg].x = spider->legSources[leg].x + step * sinf(diffAngle);
+    spider->legTargets[leg].y = spider->legSources[leg].y + step * cosf(diffAngle);
+
+    if (mode == PE_SPIDER_V2_LEG_MODE_FLOATING) {
+        spider->legTargets[leg].z = spider->legSources[leg].z;
+    } else {
+        spider->legTargets[leg].z = spider->legSources[leg].z + ((float) -spider->moving.height);
+    }
+}
 
 void PE_SpiderV2_handlerInit_onEntering(PE_SpiderV2_t *spider) {
     //TODO HP_calculateInit(&moving);
@@ -153,4 +194,11 @@ void PE_SpiderV2_dispatch(PE_SpiderV2_t *spider) {
     if (spider->currState && spider->currState->onDispatch) {
         spider->currState->onDispatch(spider);
     }
+}
+
+float PE_SpiderV2_calculateAngleByOppositeSide(float adjacentSideA, float adjacentSideB, float oppositeSide) {
+    return acosf(
+            (adjacentSideA * adjacentSideA + adjacentSideB * adjacentSideB - oppositeSide * oppositeSide) /
+            (2 * adjacentSideA * adjacentSideB)
+    );
 }
