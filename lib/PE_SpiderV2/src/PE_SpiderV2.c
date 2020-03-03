@@ -146,9 +146,22 @@ void PE_SpiderV2_handlerMove3_onEntering(PE_SpiderV2_t *spider) {
 }
 
 void PE_SpiderV2_handlerMove4_onEntering(PE_SpiderV2_t *spider) {
-    //TODO HP_calculateStep4(&moving);
     PE_SpiderV2_calculateMovingLinear(&spider->remote, &spider->moving);
     PE_SpiderV2_calculateMovingRotate(&spider->remote, &spider->moving);
+
+    if (spider->remote.rotateZ != 0) {
+        spider->calculate = PE_SpiderV2_calculateTargetRotate;
+    } else {
+        spider->calculate = PE_SpiderV2_calculateTargetLinear;
+    }
+
+    spider->calculate(spider, PE_SPIDER_V2_LEG_POS_FL, 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
+    spider->calculate(spider, PE_SPIDER_V2_LEG_POS_FR, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
+    spider->calculate(spider, PE_SPIDER_V2_LEG_POS_ML, 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
+    spider->calculate(spider, PE_SPIDER_V2_LEG_POS_MR, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
+    spider->calculate(spider, PE_SPIDER_V2_LEG_POS_BL, 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
+    spider->calculate(spider, PE_SPIDER_V2_LEG_POS_BR, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
+
     spider->nextState = &PE_SpiderV2_stateMove5;
 }
 
