@@ -2,6 +2,9 @@
 #include <unity.h>
 #include <stdio.h>
 
+void setUp() {}
+void tearDown() {}
+
 void test_HP_calculateTargetRotateXY1() {
     HP_Moving_t moving = {0, 0, 0, 100, 0};
     HP_Leg_t leg = {0,0,0,10,0,0,0,0,0};

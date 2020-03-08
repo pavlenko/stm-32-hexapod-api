@@ -1,6 +1,9 @@
 #include <hexapod.h>
 #include <unity.h>
 
+void setUp() {}
+void tearDown() {}
+
 void test_HP_calculateRotationCenterNoMove() {
     HP_Remote_t remote;
     HP_Moving_t moving;

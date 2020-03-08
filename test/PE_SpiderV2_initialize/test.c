@@ -1,6 +1,9 @@
 #include <PE_SpiderV2.h>
 #include <unity.h>
 
+void setUp() {}
+void tearDown() {}
+
 void test_PE_SpiderV2_initialize() {
     PE_SpiderV2_t spider;
 

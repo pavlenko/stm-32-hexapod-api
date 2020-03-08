@@ -1,6 +1,9 @@
 #include <hexapod.h>
 #include <unity.h>
 
+void setUp() {}
+void tearDown() {}
+
 void test_HP_calculateTargetLinearX() {
     HP_Moving_t moving = {0, 1, 0, 0, 0};
     HP_Leg_t leg = {0,0,0,20, 20, 20};

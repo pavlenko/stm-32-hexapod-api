@@ -1,6 +1,9 @@
 #include <hexapod.h>
 #include <unity.h>
 
+void setUp() {}
+void tearDown() {}
+
 void test_HP_calculateLinearNoMove() {
     HP_Remote_t remote = {0, 0};
     HP_Moving_t moving;
