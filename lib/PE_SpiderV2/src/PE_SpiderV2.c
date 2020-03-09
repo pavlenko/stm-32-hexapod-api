@@ -102,6 +102,20 @@ void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos
     }
 }
 
+void PE_SpiderV2_calculateDegree(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg) {
+    //TODO calculate horizontal and vertical distance from mount to target
+    //TODO calculate degree based on distances by cosine formula
+
+    PE_SpiderV2_Point2D_t offsetC2F = {.x = 24, .y = 0};
+    PE_SpiderV2_Point2D_t offsetF2T = {.x = 24, .y = 0};
+
+    // Calculate horizontal distance mount - target
+    float h_distance = hypotf(spider->legTargets[leg].x, spider->legTargets[leg].y);
+
+    // Calculate coxa angle
+    float c_angle = atanf(spider->legTargets[leg].y / spider->legTargets[leg].x) + (float) M_PI_2;
+}
+
 void PE_SpiderV2_handlerInit_onEntering(PE_SpiderV2_t *spider) {
     PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_FL, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
     PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_FR, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
