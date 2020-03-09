@@ -103,12 +103,23 @@ void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos
 }
 
 void PE_SpiderV2_handlerInit_onEntering(PE_SpiderV2_t *spider) {
-    //TODO HP_calculateInit(&moving);
+    PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_FL, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
+    PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_FR, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
+    PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_ML, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
+    PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_MR, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
+    PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_BL, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
+    PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_BR, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
+
     spider->nextState = &PE_SpiderV2_stateIdle;
 }
 
 void PE_SpiderV2_handlerIdle_onEntering(PE_SpiderV2_t *spider) {
-    //TODO HP_calculateIdle(&moving);
+    PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_FL, 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
+    PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_FR, 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
+    PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_ML, 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
+    PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_MR, 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
+    PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_BL, 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
+    PE_SpiderV2_calculateTargetLinear(spider, PE_SPIDER_V2_LEG_POS_BR, 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
 }
 
 void PE_SpiderV2_handlerIdle_onDispatch(PE_SpiderV2_t *spider) {
