@@ -103,31 +103,33 @@ void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos
 }
 
 void PE_SpiderV2_calculateDegree(
-    PE_SpiderV2_moving_t *moving,
     PE_SpiderV2_Point3D_t *target,
     PE_SpiderV2_Point3D_t *mount,
     PE_SpiderV2_LegConfig_t *config,
     PE_SpiderV2_LegDegree_t *degree
 ) {
-    PE_SpiderV2_Point3D_t local = {target->x - mount->x, target->y - mount->y, target->z};
+    PE_SpiderV2_Point3D_t local = {target->x - mount->x, target->y - mount->y, target->z - mount->z};
 
     // Calculate horizontal distance mount - target
     float h_distance = hypotf(local.x, local.y);
 
+    // Calculate horizontal distance coxa - target
+    float c_distance = h_distance - config->cLength;
+
     // Calculate vertical distance in millimeters
-    float v_distance = sqrtf(SQR(h_distance - config->cLength) + SQR(moving->height - local.z));
+    float v_distance = sqrtf((c_distance * c_distance) + (local.z * local.z));
 
     // Calculate femur add angle from z to v_distance axis in radians
-    float f_add_angle = atan((h_distance - S_THICKNESS) / (hp_body_height - (*point).z));
+    float f_add_angle = atanf((h_distance - config->cLength) / local.z);
 
     // Calculate coxa angle
     degree->cDegree = (uint16_t) (atanf(local.y / local.x) + (float) M_PI_2);
 
     // Calculate femur angle in radians
-    degree->fDegree = acos((SQR(config->fLength) + SQR(v_distance) - SQR(config->tLength)) / (2 * config->fLength * v_distance)) + f_add_angle;
+    degree->fDegree = PE_SpiderV2_calculateAngleByOppositeSide(config->fLength, v_distance, config->tLength) + f_add_angle;
 
     // Calculate tiba angle in radians
-    degree->tDegree = acos((SQR(config->tLength) + SQR(config->fLength) - SQR(v_distance)) / (2 * config->tLength * config->fLength));
+    degree->tDegree = PE_SpiderV2_calculateAngleByOppositeSide(config->tLength, config->fLength, v_distance);
 }
 
 void PE_SpiderV2_handlerInit_onEntering(PE_SpiderV2_t *spider) {
