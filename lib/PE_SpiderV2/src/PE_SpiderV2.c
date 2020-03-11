@@ -112,7 +112,8 @@ void PE_SpiderV2_calculateDegree(
 
     // Calculate horizontal distance mount - target
     float h_distance = hypotf(local.x, local.y);
-
+    degree->debug1 = local.x;
+    degree->debug2 = local.y;
     // Calculate horizontal distance coxa - target
     float c_distance = h_distance - config->cLength;
 

@@ -44,6 +44,8 @@ typedef struct PE_SpiderV2_LegDegree_s {
     float cDegree;
     float fDegree;
     float tDegree;
+    float debug1;
+    float debug2;
 } PE_SpiderV2_LegDegree_t;
 
 typedef struct PE_SpiderV2_remote_s {

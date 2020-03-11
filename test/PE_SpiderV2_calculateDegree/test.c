@@ -2,6 +2,12 @@
 #include <stdio.h>
 #include <unity.h>
 
+#define SIN_45 0.85
+
+const float C_LENGTH = 28;
+const float F_LENGTH = 70;
+const float T_LENGTH = 52;
+
 void setUp() {}
 void tearDown() {}
 
@@ -10,12 +16,14 @@ float convertRadianToDegree(float value) {
 }
 
 void test_PE_SpiderV2_calculateDegree_1() {
-    PE_SpiderV2_Point3D_t target   = {-20, 20, -10};
-    PE_SpiderV2_Point3D_t mount    = {-10, 10, 0};
-    PE_SpiderV2_LegConfig_t config = {5, 10, 10};
+    PE_SpiderV2_Point3D_t target   = {-100 * SIN_45, 100 * SIN_45, -50};
+    PE_SpiderV2_Point3D_t mount    = {0, 0, 0};
+    PE_SpiderV2_LegConfig_t config = {C_LENGTH, F_LENGTH, T_LENGTH};
     PE_SpiderV2_LegDegree_t degree = {0, 0, 0};
 
     PE_SpiderV2_calculateDegree(&target, &mount, &config, &degree);
+
+    printf("%f\n%f\n\n", degree.debug1, degree.debug2);
 
     printf(
         "%f\n%f\n%f\n",
