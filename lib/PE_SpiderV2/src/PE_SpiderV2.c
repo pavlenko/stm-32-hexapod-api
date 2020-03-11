@@ -111,20 +111,21 @@ void PE_SpiderV2_calculateDegree(
     PE_SpiderV2_Point3D_t local = {target->x - mount->x, target->y - mount->y, target->z - mount->z};
 
     // Calculate horizontal distance mount - target
-    float h_distance = hypotf(local.x, local.y);
-    degree->debug1 = local.x;
-    degree->debug2 = local.y;
+    float h_distance = hypotf(local.x, local.y);//ok
+
     // Calculate horizontal distance coxa - target
-    float c_distance = h_distance - config->cLength;
+    float c_distance = h_distance - config->cLength;//ok
 
     // Calculate vertical distance in millimeters
-    float v_distance = sqrtf((c_distance * c_distance) + (local.z * local.z));
+    float v_distance = hypotf(c_distance, local.z);//ok
 
     // Calculate femur add angle from z to v_distance axis in radians
-    float f_add_angle = atanf((h_distance - config->cLength) / local.z);
-
+    float f_add_angle = atanf(c_distance / local.z);
+    degree->debug1 = f_add_angle;
+    degree->debug2 = c_distance;
+    degree->debug3 = v_distance;
     // Calculate coxa angle
-    degree->cDegree = atanf(local.y / local.x) + (float) M_PI_2;//TODO <-- move corrections outside
+    degree->cDegree = atanf(local.y / local.x)/* + (float) M_PI_2*/;//TODO <-- move corrections outside
 
     // Calculate femur angle in radians
     degree->fDegree = PE_SpiderV2_calculateAngleByOppositeSide(config->fLength, v_distance, config->tLength) + f_add_angle;
