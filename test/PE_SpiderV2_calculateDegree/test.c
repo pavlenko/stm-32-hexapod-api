@@ -23,7 +23,7 @@ void test_PE_SpiderV2_calculateDegree_1() {
 
     PE_SpiderV2_calculateDegree(&target, &mount, &config, &degree);
 
-    printf("%f\n%f\n%f\n\n", degree.debug1, degree.debug2, degree.debug3);
+    printf("%f\n%f\n%f\n\n", convertRadianToDegree(degree.debug1), degree.debug2, degree.debug3);
 
     printf(
         "%f\n%f\n%f\n",

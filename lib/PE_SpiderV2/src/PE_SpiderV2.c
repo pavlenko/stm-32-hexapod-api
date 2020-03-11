@@ -120,10 +120,8 @@ void PE_SpiderV2_calculateDegree(
     float v_distance = hypotf(c_distance, local.z);//ok
 
     // Calculate femur add angle from z to v_distance axis in radians
-    float f_add_angle = atanf(c_distance / local.z);
-    degree->debug1 = f_add_angle;
-    degree->debug2 = c_distance;
-    degree->debug3 = v_distance;
+    float f_add_angle = fabsf(atanf(c_distance / local.z));//ok
+
     // Calculate coxa angle
     degree->cDegree = atanf(local.y / local.x)/* + (float) M_PI_2*/;//TODO <-- move corrections outside
 
