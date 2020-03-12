@@ -111,25 +111,39 @@ void PE_SpiderV2_calculateDegree(
     PE_SpiderV2_Point3D_t local = {target->x - mount->x, target->y - mount->y, target->z - mount->z};
 
     // Calculate horizontal distance mount - target
-    float h_distance = hypotf(local.x, local.y);//ok
+    float h_distance = hypotf(local.x, local.y);
 
     // Calculate horizontal distance coxa - target
-    float c_distance = h_distance - config->cLength;//ok
+    float c_distance = h_distance - config->cLength;
 
     // Calculate vertical distance in millimeters
-    float v_distance = hypotf(c_distance, local.z);//ok
+    float v_distance;
+    if (c_distance > config->fLength + config->tLength) {
+        c_distance = config->fLength + config->tLength;
+        v_distance = 0;
+    } else {
+        v_distance = hypotf(c_distance, local.z);
+    }
 
     // Calculate femur add angle from z to v_distance axis in radians
-    float f_add_angle = fabsf(atanf(c_distance / local.z));//ok
+    float f_add_angle = fabsf(atanf(c_distance / local.z));
 
     // Calculate coxa angle
-    degree->cDegree = atanf(local.y / local.x)/* + (float) M_PI_2*/;//TODO <-- move corrections outside
+    degree->cDegree = atanf(local.y / local.x) + (float) M_PI_2;
 
-    // Calculate femur angle in radians
-    degree->fDegree = PE_SpiderV2_calculateAngleByOppositeSide(config->fLength, v_distance, config->tLength) + f_add_angle;
+    if (v_distance > 0) {
+        // Calculate femur angle in radians
+        degree->fDegree = PE_SpiderV2_calculateAngleByOppositeSide(config->fLength, v_distance, config->tLength) + f_add_angle;
 
-    // Calculate tiba angle in radians
-    degree->tDegree = PE_SpiderV2_calculateAngleByOppositeSide(config->tLength, config->fLength, v_distance);
+        // Calculate tiba angle in radians
+        degree->tDegree = PE_SpiderV2_calculateAngleByOppositeSide(config->tLength, config->fLength, v_distance);
+    } else {
+        // Calculate femur angle in radians IF not possible to reach target
+        degree->fDegree = f_add_angle;
+
+        // Calculate tiba angle in radians IF not possible to reach target
+        degree->tDegree = (float) M_PI;
+    }
 }
 
 void PE_SpiderV2_handlerInit_onEntering(PE_SpiderV2_t *spider) {
