@@ -106,6 +106,11 @@ void PE_SpiderV2_handlerMove8_onEntering(PE_SpiderV2_t *spider);
 void PE_SpiderV2_initialize(PE_SpiderV2_t *spider);
 void PE_SpiderV2_dispatch(PE_SpiderV2_t *spider);
 
+extern const float PE_SpiderV2_ROTATE_RADIUS;
+
+extern const float PE_SpiderV2_STEP_PART_X1;
+extern const float PE_SpiderV2_STEP_PART_X2;
+
 extern PE_SpiderV2_State_t PE_SpiderV2_stateInit;
 extern PE_SpiderV2_State_t PE_SpiderV2_stateIdle;
 
