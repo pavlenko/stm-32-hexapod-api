@@ -68,6 +68,9 @@ void inline PE_Servo180_pinSet(uint8_t channel, uint8_t motor);
 __attribute__((weak))
 void inline PE_Servo180_pinClr(uint8_t channel, uint8_t motor);
 
+// Weak function definition
+void EX_weak_function();
+
 #ifdef __cplusplus
 }
 #endif

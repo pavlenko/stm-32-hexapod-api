@@ -62,3 +62,6 @@ void inline PE_Servo180_pinClr(uint8_t channel, uint8_t motor) {
     (void) channel;
     (void) motor;
 }
+
+// Weak function default implementation fol allow override
+__attribute__((weak)) void EX_weak_function() {}
