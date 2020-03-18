@@ -2,6 +2,11 @@
 
 #include <stdio.h>
 
+//TODO mode:
+// multi-servo timer with one compare channel
+// multi-servo timer with servo per compare channel
+// dispatch timer with period 1us ... 1/8us
+
 typedef struct {
     uint8_t active;
     uint16_t ticks;
