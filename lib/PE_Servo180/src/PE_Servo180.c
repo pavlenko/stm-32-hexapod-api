@@ -55,6 +55,8 @@ inline void PE_Servo180_ISR(uint8_t channelN) {
         } else {
             *(channel.compare) = *(channel.counter) + 4;
         }
+
+        channels[channelN].servoN = -1;
     }
 }
 
