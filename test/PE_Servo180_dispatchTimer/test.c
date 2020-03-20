@@ -3,7 +3,10 @@
 #include <unity.h>
 
 void test_PE_Servo180_dispatchTimer_0() {
-    PE_Servo180_Timer_t timer;
+    volatile uint16_t compare;
+    volatile uint16_t counter;
+
+    PE_Servo180_Timer_t timer = {.compare = &compare, .counter = &counter};
 
     PE_Servo180_dispatchTimer(&timer);
 }
