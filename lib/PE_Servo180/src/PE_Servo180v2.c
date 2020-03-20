@@ -2,6 +2,9 @@
 
 #include <stddef.h>
 
+#define PE_Servo180_MOTOR_PER_TIMER 8
+#define PE_Servo180_REFRESH_INTERVAL 20000
+
 PE_Servo180_Status_t PE_Servo180_attachTimer(PE_Servo180_t *servo, PE_Servo180_Timer_t *timer) {
     PE_Servo180_Timer_t **t;
 
@@ -73,4 +76,41 @@ void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value) {
     }
 
     motor->ticks = value;//TODO convert to ticks
+}
+
+void PE_Servo180_dispatchTimer(PE_Servo180_Timer_t *timer) {
+    if (timer->index < 0) {
+        *(timer->counter) = 0;
+    } else if (timer->motors[timer->index] != NULL) {
+        PE_Servo180_setMotorPin0(timer->motors[timer->index]->ID);
+    }
+
+    timer->index++;
+
+    if (timer->index < PE_Servo180_MOTOR_PER_TIMER) {
+        if (timer->motors[timer->index] != NULL) {
+            *(timer->compare) = *(timer->counter) + timer->motors[timer->index]->ticks;
+            PE_Servo180_setMotorPin1(timer->motors[timer->index]->ID);
+        }
+    } else {
+        uint16_t refresh = PE_Servo180_REFRESH_INTERVAL;//TODO convert to ticks
+
+        if (*(timer->counter) < (refresh + 4)) {
+            *(timer->compare) = refresh;
+        } else {
+            *(timer->compare) = *(timer->counter) + 4;
+        }
+
+        timer->index = -1;
+    }
+}
+
+__attribute__((weak))
+void PE_Servo180_setMotorPin0(uint8_t id) {
+    (void) id;
+}
+
+__attribute__((weak))
+void PE_Servo180_setMotorPin1(uint8_t id) {
+    (void) id;
 }

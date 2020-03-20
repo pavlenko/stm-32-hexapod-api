@@ -14,7 +14,7 @@ typedef struct PE_Servo180_Timer_s PE_Servo180_Timer_t;
 typedef struct PE_Servo180_Motor_s PE_Servo180_Motor_t;
 
 typedef struct PE_Servo180_Motor_s {
-    uint8_t index;// private, are this needed???
+    uint8_t ID;// public
     uint16_t ticks;// private
     uint16_t value;// private
     uint16_t min;// public
@@ -22,8 +22,9 @@ typedef struct PE_Servo180_Motor_s {
 } PE_Servo180_Motor_t;
 
 typedef struct PE_Servo180_Timer_s {
-    uint8_t index;// private, are this needed???
+    int8_t index;// private
     PE_Servo180_Timer_t *next;// private
+    PE_Servo180_Motor_t **motors;
     volatile uint16_t *compare;// public
     volatile uint16_t *counter;// public
 } PE_Servo180_Timer_t;
@@ -61,6 +62,29 @@ void PE_Servo180_setDegree(PE_Servo180_Motor_t *motor, uint16_t value);
  * @param value
  */
 void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value);
+
+/**
+ * Dispatch timer motors this may call from mcu timer compare interrupt
+ *
+ * @param timer
+ */
+void PE_Servo180_dispatchTimer(PE_Servo180_Timer_t *timer);
+
+/**
+ * Set motor pin to HIGH
+ * WARNING: This function must be redefined in user code to manipulate GPIO
+ *
+ * @param id
+ */
+void PE_Servo180_setMotorPin0(uint8_t id);
+
+/**
+ * Set motor pin to LOW
+ * WARNING: This function must be redefined in user code to manipulate GPIO
+ *
+ * @param id
+ */
+void PE_Servo180_setMotorPin1(uint8_t id);
 
 #ifdef __cplusplus
 }
