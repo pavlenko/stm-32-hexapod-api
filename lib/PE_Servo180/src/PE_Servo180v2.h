@@ -7,6 +7,7 @@ extern "C" {
 
 #include <stdint.h>
 
+#define PE_Servo180_MOTOR_PER_TIMER 8
 #define PE_Servo180_MOTOR_MIN 500
 #define PE_Servo180_MOTOR_MAX 2500
 
@@ -21,10 +22,13 @@ typedef struct PE_Servo180_Motor_s {
     uint16_t max;// public
 } PE_Servo180_Motor_t;
 
+typedef PE_Servo180_Motor_t *PE_Servo180_Motor_p;
+
 typedef struct PE_Servo180_Timer_s {
-    int8_t index;// private
+    int8_t motorIndex;
+    uint8_t motorCount;
+    PE_Servo180_Motor_p motorItems[PE_Servo180_MOTOR_PER_TIMER];
     PE_Servo180_Timer_t *next;// private
-    PE_Servo180_Motor_t **motors;
     volatile uint16_t *compare;// public
     volatile uint16_t *counter;// public
 } PE_Servo180_Timer_t;
