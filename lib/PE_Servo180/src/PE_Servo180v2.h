@@ -7,6 +7,9 @@ extern "C" {
 
 #include <stdint.h>
 
+#define PE_Servo180_MOTOR_MIN 500
+#define PE_Servo180_MOTOR_MAX 2500
+
 typedef struct PE_Servo180_Timer_s PE_Servo180_Timer_t;
 typedef struct PE_Servo180_Motor_s PE_Servo180_Motor_t;
 
