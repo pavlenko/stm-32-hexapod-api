@@ -39,3 +39,15 @@ PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_t *servo, PE_Servo180_M
 PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_t *servo, PE_Servo180_Motor_t *motor) {
     return PE_Servo180_SUCCESS;
 }
+
+void PE_Servo180_setDegree(PE_Servo180_Motor_t *motor, uint16_t value) {
+    if (value > 180) {
+        value = 180;
+    }
+
+    PE_Servo180_setMicros(motor, value * 11.1);
+}
+
+void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value) {
+    motor->ticks = value;//TODO convert to ticks
+}
