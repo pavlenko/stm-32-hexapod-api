@@ -7,6 +7,7 @@ extern "C" {
 
 #include <stdint.h>
 
+#define PE_Servo180_REFRESH_INTERVAL 20000
 #define PE_Servo180_MOTOR_PER_TIMER 8
 #define PE_Servo180_MOTOR_MIN 500
 #define PE_Servo180_MOTOR_MAX 2500

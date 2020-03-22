@@ -2,8 +2,6 @@
 
 #include <stddef.h>
 
-#define PE_Servo180_REFRESH_INTERVAL 20000
-
 PE_Servo180_Status_t PE_Servo180_attachTimer(PE_Servo180_t *servo, PE_Servo180_Timer_t *timer) {
     PE_Servo180_Timer_t **t;
 
