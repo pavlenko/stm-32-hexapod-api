@@ -16,7 +16,8 @@ typedef struct PE_Servo180_Timer_s PE_Servo180_Timer_t;
 typedef struct PE_Servo180_Motor_s PE_Servo180_Motor_t;
 
 typedef struct PE_Servo180_Motor_s {
-    uint8_t ID;// public
+    uint8_t attached: 1;
+    uint8_t ID: 7;// public
     uint16_t ticks;// private
     uint16_t value;// private
     uint16_t min;// public
@@ -44,13 +45,9 @@ typedef enum PE_Servo180_Status_s {
     PE_Servo180_FAILURE,
 } PE_Servo180_Status_t;
 
-PE_Servo180_Status_t PE_Servo180_attachTimer(PE_Servo180_t *servo, PE_Servo180_Timer_t *timer);
+PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Servo180_Motor_t *motor);
 
-PE_Servo180_Status_t PE_Servo180_detachTimer(PE_Servo180_t *servo, PE_Servo180_Timer_t *timer);
-
-PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_t *servo, PE_Servo180_Motor_t *motor);//TODO attach motor to timer instead
-
-PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_t *servo, PE_Servo180_Motor_t *motor);//TODO attach motor to timer instead
+PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_Timer_t *timer, PE_Servo180_Motor_t *motor);
 
 /**
  * Set motor degree -> convert degree value to ticks (just set to motor->ticks)

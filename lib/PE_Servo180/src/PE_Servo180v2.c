@@ -32,7 +32,11 @@ PE_Servo180_Status_t PE_Servo180_detachTimer(PE_Servo180_t *servo, PE_Servo180_T
     return PE_Servo180_FAILURE;
 }
 
-PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_t *servo, PE_Servo180_Motor_t *motor) {
+PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Servo180_Motor_t *motor) {
+    if (timer->motorCount == PE_Servo180_MOTOR_PER_TIMER || motor->attached) {
+        return PE_Servo180_FAILURE;
+    }
+
     if (motor->min == 0) {
         motor->min = PE_Servo180_MOTOR_MIN;
     }
@@ -41,11 +45,24 @@ PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_t *servo, PE_Servo180_M
         motor->max = PE_Servo180_MOTOR_MAX;
     }
 
+    motor->attached = 1;
+    timer->motorItems[timer->motorCount] = motor;
+    timer->motorCount++;
+
     return PE_Servo180_SUCCESS;
 }
 
-PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_t *servo, PE_Servo180_Motor_t *motor) {
-    return PE_Servo180_SUCCESS;
+PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_Timer_t *timer, PE_Servo180_Motor_t *motor) {
+    uint8_t index;
+
+    for (index = 0; index < timer->motorCount; index++) {
+        if (timer->motorItems[index] == motor) {
+            timer->motorItems[index] = NULL;
+            return PE_Servo180_SUCCESS;
+        }
+    }
+
+    return PE_Servo180_FAILURE;
 }
 
 int PE_Servo180_mapRange(int value, int srcMin, int srcMax, int dstMin, int dstMax) {
