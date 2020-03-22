@@ -50,6 +50,14 @@ PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Serv
 PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_Timer_t *timer, PE_Servo180_Motor_t *motor);
 
 /**
+ * Set motor radian -> convert radian value to ticks (just set to motor->ticks)
+ *
+ * @param motor
+ * @param value
+ */
+void PE_Servo180_setRadian(PE_Servo180_Motor_t *motor, float value);
+
+/**
  * Set motor degree -> convert degree value to ticks (just set to motor->ticks)
  *
  * @param motor

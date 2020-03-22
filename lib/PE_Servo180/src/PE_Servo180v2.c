@@ -1,5 +1,6 @@
 #include "PE_Servo180v2.h"
 
+#include <math.h>
 #include <stddef.h>
 
 PE_Servo180_Status_t PE_Servo180_attachTimer(PE_Servo180_t *servo, PE_Servo180_Timer_t *timer) {
@@ -68,6 +69,20 @@ PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_Timer_t *timer, PE_Serv
 float PE_Servo180_mapRange(float value, float srcMin, float srcMax, float dstMin, float dstMax) {
     float slope = (dstMax - dstMin) / (srcMax - srcMin);
     return dstMin + slope * (value - srcMin);
+}
+
+void PE_Servo180_setRadian(PE_Servo180_Motor_t *motor, float value) {
+    if (value < 0) {
+        value = 0;
+    }
+
+    if (value > M_PI) {
+        value = M_PI;
+    }
+
+    value = (uint16_t) PE_Servo180_mapRange(value, 0, M_PI, motor->min, motor->max);
+
+    PE_Servo180_setMicros(motor, value);
 }
 
 void PE_Servo180_setDegree(PE_Servo180_Motor_t *motor, uint16_t value) {
