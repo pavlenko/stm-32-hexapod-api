@@ -65,8 +65,8 @@ PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_Timer_t *timer, PE_Serv
     return PE_Servo180_FAILURE;
 }
 
-int PE_Servo180_mapRange(int value, int srcMin, int srcMax, int dstMin, int dstMax) {
-    int slope = (dstMax - dstMin) / (srcMax - srcMin);
+float PE_Servo180_mapRange(float value, float srcMin, float srcMax, float dstMin, float dstMax) {
+    float slope = (dstMax - dstMin) / (srcMax - srcMin);
     return dstMin + slope * (value - srcMin);
 }
 
@@ -75,7 +75,7 @@ void PE_Servo180_setDegree(PE_Servo180_Motor_t *motor, uint16_t value) {
         value = 180;
     }
 
-    value = PE_Servo180_mapRange(value, 0, 180, motor->min, motor->max);
+    value = (uint16_t) PE_Servo180_mapRange(value, 0, 180, motor->min, motor->max);
 
     PE_Servo180_setMicros(motor, value);
 }
