@@ -1,5 +1,5 @@
-#ifndef STM_32_HEXAPOD_API_PE_SERVO180V2_H
-#define STM_32_HEXAPOD_API_PE_SERVO180V2_H
+#ifndef STM_32_HEXAPOD_API_PE_SERVO180_H
+#define STM_32_HEXAPOD_API_PE_SERVO180_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,9 +11,6 @@ extern "C" {
 #define PE_Servo180_MOTOR_PER_TIMER 8
 #define PE_Servo180_MOTOR_MIN 500
 #define PE_Servo180_MOTOR_MAX 2500
-
-typedef struct PE_Servo180_Timer_s PE_Servo180_Timer_t;
-typedef struct PE_Servo180_Motor_s PE_Servo180_Motor_t;
 
 typedef struct PE_Servo180_Motor_s {
     uint8_t attached: 1;
@@ -30,23 +27,27 @@ typedef struct PE_Servo180_Timer_s {
     int8_t motorIndex;
     uint8_t motorCount;
     PE_Servo180_Motor_p motorItems[PE_Servo180_MOTOR_PER_TIMER];
-    PE_Servo180_Timer_t *next;// private
     volatile uint16_t *compare;// public
     volatile uint16_t *counter;// public
 } PE_Servo180_Timer_t;
-
-typedef struct PE_Servo180_s {
-    PE_Servo180_Timer_t *timer;
-    PE_Servo180_Motor_t *motor;
-} PE_Servo180_t;
 
 typedef enum PE_Servo180_Status_s {
     PE_Servo180_SUCCESS,
     PE_Servo180_FAILURE,
 } PE_Servo180_Status_t;
 
+/**
+ * @param timer
+ * @param motor
+ * @return
+ */
 PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Servo180_Motor_t *motor);
 
+/**
+ * @param timer
+ * @param motor
+ * @return
+ */
 PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_Timer_t *timer, PE_Servo180_Motor_t *motor);
 
 /**
@@ -100,4 +101,4 @@ void PE_Servo180_setMotorPin1(uint8_t id);
 }
 #endif
 
-#endif //STM_32_HEXAPOD_API_PE_SERVO180V2_H
+#endif //STM_32_HEXAPOD_API_PE_SERVO180_H
