@@ -21,6 +21,7 @@ typedef enum PE_SpiderV2_LegPos_s {
     PE_SPIDER_V2_LEG_POS_BR,
 } PE_SpiderV2_LegPos_t;
 
+typedef struct PE_SpiderV2_Leg_s PE_SpiderV2_Leg_t;
 typedef struct PE_SpiderV2_s PE_SpiderV2_t;
 
 typedef struct PE_SpiderV2_Point2D_s {
@@ -48,7 +49,7 @@ typedef struct PE_SpiderV2_Moving_s {
 } PE_SpiderV2_Moving_t;
 
 typedef void (*PE_SpiderV2_StateHandler_t) (PE_SpiderV2_t *spider);
-typedef void (*PE_SpiderV2_Calculate_t) (PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode);
+typedef void (*PE_SpiderV2_Calculate_t) (PE_SpiderV2_Moving_t *moving, PE_SpiderV2_Leg_t *leg, float step, PE_SpiderV2_LegMode_t mode);
 
 typedef struct PE_SpiderV2_State_s {
     PE_SpiderV2_StateHandler_t onEntering;
