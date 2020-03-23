@@ -6,7 +6,7 @@ void tearDown() {}
 
 void test_PE_SpiderV2_calculateTargetLinearX() {
     PE_SpiderV2_t spider;
-    spider.moving        = (PE_SpiderV2_moving_t) {0, 1, 0, 0, 0};
+    spider.moving        = (PE_SpiderV2_Moving_t) {0, 1, 0, 0, 0};
     spider.legMounts[0]  = (PE_SpiderV2_Point3D_t) {0, 0, 0};
     spider.legSources[0] = (PE_SpiderV2_Point3D_t) {20, 20, 20};
 
@@ -23,7 +23,7 @@ void test_PE_SpiderV2_calculateTargetLinearX() {
 
 void test_PE_SpiderV2_calculateTargetLinearY() {
     PE_SpiderV2_t spider;
-    spider.moving        = (PE_SpiderV2_moving_t) {0, 0, 1, 0, 0};
+    spider.moving        = (PE_SpiderV2_Moving_t) {0, 0, 1, 0, 0};
     spider.legMounts[0]  = (PE_SpiderV2_Point3D_t) {0, 0, 0};
     spider.legSources[0] = (PE_SpiderV2_Point3D_t) {20, 20, 20};
 
@@ -40,7 +40,7 @@ void test_PE_SpiderV2_calculateTargetLinearY() {
 
 void test_PE_SpiderV2_calculateTargetLinearZ() {
     PE_SpiderV2_t spider;
-    spider.moving        = (PE_SpiderV2_moving_t) {10, 0, 0, 0, 0};
+    spider.moving        = (PE_SpiderV2_Moving_t) {10, 0, 0, 0, 0};
     spider.legMounts[0]  = (PE_SpiderV2_Point3D_t) {0, 0, 0};
     spider.legSources[0] = (PE_SpiderV2_Point3D_t) {20, 20, -20};
 

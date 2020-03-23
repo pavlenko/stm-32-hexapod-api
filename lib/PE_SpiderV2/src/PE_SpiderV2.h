@@ -50,14 +50,14 @@ typedef struct PE_SpiderV2_remote_s {
     float moveX;
     float moveY;
     int8_t rotateZ;
-} PE_SpiderV2_remote_t;
+} PE_SpiderV2_Remote_t;
 
 typedef struct PE_SpiderV2_moving_s {
     uint16_t height;
     float moveByX;
     float moveByY;
     PE_SpiderV2_Point2D_t rotateZBy;
-} PE_SpiderV2_moving_t;
+} PE_SpiderV2_Moving_t;
 
 typedef void (*PE_SpiderV2_StateHandler_t) (PE_SpiderV2_t *spider);
 typedef void (*PE_SpiderV2_Calculate_t) (PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode);
@@ -67,19 +67,32 @@ typedef struct PE_SpiderV2_State_s {
     PE_SpiderV2_StateHandler_t onDispatch;
 } PE_SpiderV2_State_t;
 
+typedef struct PE_SpiderV2_Leg_s {
+    float cLength;
+    float fLength;
+    float tLength;
+    PE_SpiderV2_Point3D_t mnt;
+    PE_SpiderV2_Point3D_t src;
+    PE_SpiderV2_Point3D_t dst;
+    float cDegree;
+    float fDegree;
+    float tDegree;
+} PE_SpiderV2_Leg_t;
+
 typedef struct PE_SpiderV2_s {
+    PE_SpiderV2_Leg_t legs[6];
     PE_SpiderV2_Point3D_t legMounts[6];
     PE_SpiderV2_Point3D_t legSources[6];
     PE_SpiderV2_Point3D_t legTargets[6];
-    PE_SpiderV2_remote_t remote;
-    PE_SpiderV2_moving_t moving;
+    PE_SpiderV2_Remote_t remote;
+    PE_SpiderV2_Moving_t moving;
     PE_SpiderV2_State_t *currState;
     PE_SpiderV2_State_t *nextState;
     PE_SpiderV2_Calculate_t calculate;
 } PE_SpiderV2_t;
 
-void PE_SpiderV2_calculateMovingLinear(PE_SpiderV2_remote_t *remote, PE_SpiderV2_moving_t *moving);
-void PE_SpiderV2_calculateMovingRotate(PE_SpiderV2_remote_t *remote, PE_SpiderV2_moving_t *moving);
+void PE_SpiderV2_calculateMovingLinear(PE_SpiderV2_Remote_t *remote, PE_SpiderV2_Moving_t *moving);
+void PE_SpiderV2_calculateMovingRotate(PE_SpiderV2_Remote_t *remote, PE_SpiderV2_Moving_t *moving);
 void PE_SpiderV2_calculateTargetLinear(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode);
 void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode);
 

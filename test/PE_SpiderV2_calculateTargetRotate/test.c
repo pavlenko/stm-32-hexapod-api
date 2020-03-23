@@ -7,7 +7,7 @@ void tearDown() {}
 
 void test_PE_SpiderV2_calculateTargetRotateXY1() {
     PE_SpiderV2_t spider;
-    spider.moving        = (PE_SpiderV2_moving_t) {0, 0, 0, 100, 0};
+    spider.moving        = (PE_SpiderV2_Moving_t) {0, 0, 0, 100, 0};
     spider.legMounts[0]  = (PE_SpiderV2_Point3D_t) {0, 0, 0};
     spider.legSources[0] = (PE_SpiderV2_Point3D_t) {10,0,0};
     spider.legTargets[0] = (PE_SpiderV2_Point3D_t) {0, 0, 0};
@@ -20,7 +20,7 @@ void test_PE_SpiderV2_calculateTargetRotateXY1() {
 
 void test_PE_SpiderV2_calculateTargetRotateXY2() {
     PE_SpiderV2_t spider;
-    spider.moving        = (PE_SpiderV2_moving_t) {0, 0, 0, -100, 0};
+    spider.moving        = (PE_SpiderV2_Moving_t) {0, 0, 0, -100, 0};
     spider.legMounts[0]  = (PE_SpiderV2_Point3D_t) {0, 0, 0};
     spider.legSources[0] = (PE_SpiderV2_Point3D_t) {10,0,0};
     spider.legTargets[0] = (PE_SpiderV2_Point3D_t) {0, 0, 0};
@@ -33,7 +33,7 @@ void test_PE_SpiderV2_calculateTargetRotateXY2() {
 
 void test_PE_SpiderV2_calculateTargetRotateZ() {
     PE_SpiderV2_t spider;
-    spider.moving        = (PE_SpiderV2_moving_t) {10, 0, 0, 0, 0};
+    spider.moving        = (PE_SpiderV2_Moving_t) {10, 0, 0, 0, 0};
     spider.legMounts[0]  = (PE_SpiderV2_Point3D_t) {0, 0, 0};
     spider.legSources[0] = (PE_SpiderV2_Point3D_t) {20, 20, -20};
 

@@ -22,7 +22,7 @@ PE_SpiderV2_State_t PE_SpiderV2_stateMove8 = {PE_SpiderV2_handlerMove8_onEnterin
 
 float PE_SpiderV2_calculateAngleByOppositeSide(float adjacentSideA, float adjacentSideB, float oppositeSide);
 
-void PE_SpiderV2_calculateMovingLinear(PE_SpiderV2_remote_t *remote, PE_SpiderV2_moving_t *moving) {
+void PE_SpiderV2_calculateMovingLinear(PE_SpiderV2_Remote_t *remote, PE_SpiderV2_Moving_t *moving) {
     if (remote->moveX == 0 && remote->moveY == 0) {
         moving->moveByX = 0;
         moving->moveByY = 0;
@@ -34,7 +34,7 @@ void PE_SpiderV2_calculateMovingLinear(PE_SpiderV2_remote_t *remote, PE_SpiderV2
     }
 }
 
-void PE_SpiderV2_calculateMovingRotate(PE_SpiderV2_remote_t *remote, PE_SpiderV2_moving_t *moving) {
+void PE_SpiderV2_calculateMovingRotate(PE_SpiderV2_Remote_t *remote, PE_SpiderV2_Moving_t *moving) {
     if (remote->moveX == 0 && remote->moveY == 0) {
         moving->rotateZBy.x = 0;
         moving->rotateZBy.y = 0;

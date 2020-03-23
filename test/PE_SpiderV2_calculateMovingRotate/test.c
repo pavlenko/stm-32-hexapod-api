@@ -5,16 +5,16 @@ void setUp() {}
 void tearDown() {}
 
 void test_PE_SpiderV2_calculateRotationCenterNoMove() {
-    PE_SpiderV2_remote_t remote;
-    PE_SpiderV2_moving_t moving;
+    PE_SpiderV2_Remote_t remote;
+    PE_SpiderV2_Moving_t moving;
 
-    remote = (PE_SpiderV2_remote_t) {0, 0, 1};
+    remote = (PE_SpiderV2_Remote_t) {0, 0, 1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT_EQUAL(0, moving.rotateZBy.x);
     TEST_ASSERT_EQUAL(0, moving.rotateZBy.y);
 
-    remote = (PE_SpiderV2_remote_t) {0, 0, -1};
+    remote = (PE_SpiderV2_Remote_t) {0, 0, -1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT_EQUAL(0, moving.rotateZBy.x);
@@ -22,16 +22,16 @@ void test_PE_SpiderV2_calculateRotationCenterNoMove() {
 }
 
 void test_PE_SpiderV2_calculateRotationCenterMoveX() {
-    PE_SpiderV2_remote_t remote;
-    PE_SpiderV2_moving_t moving;
+    PE_SpiderV2_Remote_t remote;
+    PE_SpiderV2_Moving_t moving;
 
-    remote = (PE_SpiderV2_remote_t) {10, 0, 1};
+    remote = (PE_SpiderV2_Remote_t) {10, 0, 1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT_EQUAL(0, moving.rotateZBy.x);
     TEST_ASSERT_EQUAL(PE_SpiderV2_ROTATE_RADIUS, moving.rotateZBy.y);
 
-    remote = (PE_SpiderV2_remote_t) {10, 0, -1};
+    remote = (PE_SpiderV2_Remote_t) {10, 0, -1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT_EQUAL(0, moving.rotateZBy.x);
@@ -39,16 +39,16 @@ void test_PE_SpiderV2_calculateRotationCenterMoveX() {
 }
 
 void test_PE_SpiderV2_calculateRotationCenterMoveY() {
-    PE_SpiderV2_remote_t remote;
-    PE_SpiderV2_moving_t moving;
+    PE_SpiderV2_Remote_t remote;
+    PE_SpiderV2_Moving_t moving;
 
-    remote = (PE_SpiderV2_remote_t) {0, 10, 1};
+    remote = (PE_SpiderV2_Remote_t) {0, 10, 1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT_EQUAL(PE_SpiderV2_ROTATE_RADIUS, moving.rotateZBy.x);
     TEST_ASSERT_EQUAL(0, moving.rotateZBy.y);
 
-    remote = (PE_SpiderV2_remote_t) {0, 10, -1};
+    remote = (PE_SpiderV2_Remote_t) {0, 10, -1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT_EQUAL(-PE_SpiderV2_ROTATE_RADIUS, moving.rotateZBy.x);
@@ -56,16 +56,16 @@ void test_PE_SpiderV2_calculateRotationCenterMoveY() {
 }
 
 void test_PE_SpiderV2_calculateRotationCenterMoveXY1() {
-    PE_SpiderV2_remote_t remote;
-    PE_SpiderV2_moving_t moving;
+    PE_SpiderV2_Remote_t remote;
+    PE_SpiderV2_Moving_t moving;
 
-    remote = (PE_SpiderV2_remote_t) {2, 3, 1};
+    remote = (PE_SpiderV2_Remote_t) {2, 3, 1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT(0 < moving.rotateZBy.x)
     TEST_ASSERT(0 > moving.rotateZBy.y)
 
-    remote = (PE_SpiderV2_remote_t) {2, 3, -1};
+    remote = (PE_SpiderV2_Remote_t) {2, 3, -1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT(0 > moving.rotateZBy.x)
@@ -73,16 +73,16 @@ void test_PE_SpiderV2_calculateRotationCenterMoveXY1() {
 }
 
 void test_PE_SpiderV2_calculateRotationCenterMoveXY2() {
-    PE_SpiderV2_remote_t remote;
-    PE_SpiderV2_moving_t moving;
+    PE_SpiderV2_Remote_t remote;
+    PE_SpiderV2_Moving_t moving;
 
-    remote = (PE_SpiderV2_remote_t) {-2, 3, 1};
+    remote = (PE_SpiderV2_Remote_t) {-2, 3, 1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT(0 < moving.rotateZBy.x)
     TEST_ASSERT(0 < moving.rotateZBy.y)
 
-    remote = (PE_SpiderV2_remote_t) {-2, 3, -1};
+    remote = (PE_SpiderV2_Remote_t) {-2, 3, -1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT(0 > moving.rotateZBy.x)
@@ -90,16 +90,16 @@ void test_PE_SpiderV2_calculateRotationCenterMoveXY2() {
 }
 
 void test_PE_SpiderV2_calculateRotationCenterMoveXY3() {
-    PE_SpiderV2_remote_t remote;
-    PE_SpiderV2_moving_t moving;
+    PE_SpiderV2_Remote_t remote;
+    PE_SpiderV2_Moving_t moving;
 
-    remote = (PE_SpiderV2_remote_t) {-2, -3, 1};
+    remote = (PE_SpiderV2_Remote_t) {-2, -3, 1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT(0 < moving.rotateZBy.x)
     TEST_ASSERT(0 > moving.rotateZBy.y)
 
-    remote = (PE_SpiderV2_remote_t) {-2, -3, -1};
+    remote = (PE_SpiderV2_Remote_t) {-2, -3, -1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT(0 > moving.rotateZBy.x)
@@ -107,16 +107,16 @@ void test_PE_SpiderV2_calculateRotationCenterMoveXY3() {
 }
 
 void test_PE_SpiderV2_calculateRotationCenterMoveXY4() {
-    PE_SpiderV2_remote_t remote;
-    PE_SpiderV2_moving_t moving;
+    PE_SpiderV2_Remote_t remote;
+    PE_SpiderV2_Moving_t moving;
 
-    remote = (PE_SpiderV2_remote_t) {2, -3, 1};
+    remote = (PE_SpiderV2_Remote_t) {2, -3, 1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT(0 < moving.rotateZBy.x)
     TEST_ASSERT(0 < moving.rotateZBy.y)
 
-    remote = (PE_SpiderV2_remote_t) {2, -3, -1};
+    remote = (PE_SpiderV2_Remote_t) {2, -3, -1};
     PE_SpiderV2_calculateMovingRotate(&remote, &moving);
 
     TEST_ASSERT(0 > moving.rotateZBy.x)

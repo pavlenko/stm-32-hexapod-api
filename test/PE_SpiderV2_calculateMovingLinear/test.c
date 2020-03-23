@@ -5,8 +5,8 @@ void setUp() {}
 void tearDown() {}
 
 void test_PE_SpiderV2_calculateLinearNoMove() {
-    PE_SpiderV2_remote_t remote = {0, 0};
-    PE_SpiderV2_moving_t moving;
+    PE_SpiderV2_Remote_t remote = {0, 0};
+    PE_SpiderV2_Moving_t moving;
 
     PE_SpiderV2_calculateMovingLinear(&remote, &moving);
 
@@ -15,16 +15,16 @@ void test_PE_SpiderV2_calculateLinearNoMove() {
 }
 
 void test_PE_SpiderV2_calculateLinearMoveX() {
-    PE_SpiderV2_remote_t remote;
-    PE_SpiderV2_moving_t moving;
+    PE_SpiderV2_Remote_t remote;
+    PE_SpiderV2_Moving_t moving;
 
-    remote = (PE_SpiderV2_remote_t) {10, 0};
+    remote = (PE_SpiderV2_Remote_t) {10, 0};
     PE_SpiderV2_calculateMovingLinear(&remote, &moving);
 
     TEST_ASSERT_EQUAL(1, moving.moveByX);
     TEST_ASSERT_EQUAL(0, moving.moveByY);
 
-    remote = (PE_SpiderV2_remote_t) {-10, 0};
+    remote = (PE_SpiderV2_Remote_t) {-10, 0};
     PE_SpiderV2_calculateMovingLinear(&remote, &moving);
 
     TEST_ASSERT_EQUAL(-1, moving.moveByX);
@@ -32,16 +32,16 @@ void test_PE_SpiderV2_calculateLinearMoveX() {
 }
 
 void test_PE_SpiderV2_calculateLinearMoveY() {
-    PE_SpiderV2_remote_t remote;
-    PE_SpiderV2_moving_t moving;
+    PE_SpiderV2_Remote_t remote;
+    PE_SpiderV2_Moving_t moving;
 
-    remote = (PE_SpiderV2_remote_t) {0, 10};
+    remote = (PE_SpiderV2_Remote_t) {0, 10};
     PE_SpiderV2_calculateMovingLinear(&remote, &moving);
 
     TEST_ASSERT_EQUAL(0, moving.moveByX);
     TEST_ASSERT_EQUAL(1, moving.moveByY);
 
-    remote = (PE_SpiderV2_remote_t) {0, -10};
+    remote = (PE_SpiderV2_Remote_t) {0, -10};
     PE_SpiderV2_calculateMovingLinear(&remote, &moving);
 
     TEST_ASSERT_EQUAL(0, moving.moveByX);
@@ -49,28 +49,28 @@ void test_PE_SpiderV2_calculateLinearMoveY() {
 }
 
 void test_PE_SpiderV2_calculateLinearMoveXY() {
-    PE_SpiderV2_remote_t remote;
-    PE_SpiderV2_moving_t moving;
+    PE_SpiderV2_Remote_t remote;
+    PE_SpiderV2_Moving_t moving;
 
-    remote = (PE_SpiderV2_remote_t) {10, 10};
+    remote = (PE_SpiderV2_Remote_t) {10, 10};
     PE_SpiderV2_calculateMovingLinear(&remote, &moving);
 
     TEST_ASSERT_EQUAL(M_SQRT1_2, moving.moveByX);
     TEST_ASSERT_EQUAL(M_SQRT1_2, moving.moveByY);
 
-    remote = (PE_SpiderV2_remote_t) {-10, 10};
+    remote = (PE_SpiderV2_Remote_t) {-10, 10};
     PE_SpiderV2_calculateMovingLinear(&remote, &moving);
 
     TEST_ASSERT_EQUAL(-M_SQRT1_2, moving.moveByX);
     TEST_ASSERT_EQUAL(M_SQRT1_2, moving.moveByY);
 
-    remote = (PE_SpiderV2_remote_t) {10, -10};
+    remote = (PE_SpiderV2_Remote_t) {10, -10};
     PE_SpiderV2_calculateMovingLinear(&remote, &moving);
 
     TEST_ASSERT_EQUAL(M_SQRT1_2, moving.moveByX);
     TEST_ASSERT_EQUAL(-M_SQRT1_2, moving.moveByY);
 
-    remote = (PE_SpiderV2_remote_t) {-10, -10};
+    remote = (PE_SpiderV2_Remote_t) {-10, -10};
     PE_SpiderV2_calculateMovingLinear(&remote, &moving);
 
     TEST_ASSERT_EQUAL(-M_SQRT1_2, moving.moveByX);
