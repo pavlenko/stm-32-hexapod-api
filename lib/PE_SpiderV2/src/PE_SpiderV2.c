@@ -73,18 +73,18 @@ void PE_SpiderV2_calculateTargetLinear(PE_SpiderV2_Moving_t *moving, PE_SpiderV2
     PE_SpiderV2_calculateDegree(leg);
 }
 
-void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode) {
+void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_Moving_t *moving, PE_SpiderV2_Leg_t *leg, float step, PE_SpiderV2_LegMode_t mode) {
     // Calculate leg rotation radius
     float radius = hypotf(
-        spider->moving.rotateZBy.x - spider->legSources[leg].x,
-        spider->moving.rotateZBy.y - spider->legSources[leg].y
+        moving->rotateZBy.x - leg->src.x,
+        moving->rotateZBy.y - leg->src.y
     );
 
     // Calculate leg rotation angle
     float stepAngle = PE_SpiderV2_calculateAngleByOppositeSide(radius, radius, step);
 
     // Calculate basic angle
-    float baseAngle = acosf((spider->moving.rotateZBy.x - spider->legSources[leg].x) / radius);
+    float baseAngle = acosf((moving->rotateZBy.x - leg->src.x) / radius);
 
     // Calculate result angle
     float diffAngle;
@@ -94,14 +94,16 @@ void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos
         diffAngle = baseAngle + stepAngle;
     }
 
-    spider->legTargets[leg].x = spider->legSources[leg].x + step * sinf(diffAngle);
-    spider->legTargets[leg].y = spider->legSources[leg].y + step * cosf(diffAngle);
+    leg->dst.x = leg->src.x + step * sinf(diffAngle);
+    leg->dst.y = leg->src.y + step * cosf(diffAngle);
 
     if (mode == PE_SPIDER_V2_LEG_MODE_FLOATING) {
-        spider->legTargets[leg].z = spider->legSources[leg].z;
+        leg->dst.z = leg->src.z;
     } else {
-        spider->legTargets[leg].z = spider->legSources[leg].z + ((float) -spider->moving.height);
+        leg->dst.z = leg->src.z + ((float) -moving->height);
     }
+
+    PE_SpiderV2_calculateDegree(leg);
 }
 
 void PE_SpiderV2_calculateDegree(PE_SpiderV2_Leg_t *leg) {
