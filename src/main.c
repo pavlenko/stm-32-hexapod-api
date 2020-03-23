@@ -2,9 +2,22 @@
 // Created by master on 29.01.20.
 //
 
+#include <PE_Servo180.h>
 #include <PE_SpiderV2.h>
 #include "main.h"
 #include "led.h"
+#include "tim.h"
+
+TIM_HandleTypeDef TIM_Handle;
+
+PE_Servo180_Timer_t timer1;
+
+PE_Servo180_Motor_t motor1 = {.ID = 0};
+PE_Servo180_Motor_t motor2 = {.ID = 1};
+PE_Servo180_Motor_t motor3 = {.ID = 2};
+PE_Servo180_Motor_t motor4 = {.ID = 3};
+PE_Servo180_Motor_t motor5 = {.ID = 4};
+PE_Servo180_Motor_t motor6 = {.ID = 5};
 
 PE_SpiderV2_t spider;
 
@@ -15,6 +28,17 @@ int main()
     HAL_Init();
     SystemClock_Config();
     MX_LED_Init();
+    MX_TIM_PWM_Init(TIM4, &TIM_Handle);
+
+    timer1.counter = (volatile uint16_t *) TIM1->CNT;
+    timer1.compare = (volatile uint16_t *) TIM1->CCR1;
+
+    PE_Servo180_attachMotor(&timer1, &motor1);
+    PE_Servo180_attachMotor(&timer1, &motor2);
+    PE_Servo180_attachMotor(&timer1, &motor3);
+    PE_Servo180_attachMotor(&timer1, &motor4);
+    PE_Servo180_attachMotor(&timer1, &motor5);
+    PE_Servo180_attachMotor(&timer1, &motor6);
 
     PE_SpiderV2_initialize(&spider);
 
@@ -25,18 +49,44 @@ int main()
     spider.remote.moveY   = 1;
     spider.remote.rotateZ = 1;
 
+    HAL_TIM_Base_Start_IT(&TIM_Handle);
+
     while (1) {
         last = HAL_GetTick();
-        if (last - start > 40) {
+        if (last - start > 100) {
             start = last;
             MX_LED_ON(2);
             PE_SpiderV2_dispatch(&spider);
+
+            PE_Servo180_setRadian(&motor1, spider.legs[PE_SPIDER_V2_LEG_POS_FL].cDegree);
+            PE_Servo180_setRadian(&motor2, spider.legs[PE_SPIDER_V2_LEG_POS_FR].cDegree);
+            PE_Servo180_setRadian(&motor3, spider.legs[PE_SPIDER_V2_LEG_POS_ML].cDegree);
+            PE_Servo180_setRadian(&motor4, spider.legs[PE_SPIDER_V2_LEG_POS_MR].cDegree);
+            PE_Servo180_setRadian(&motor5, spider.legs[PE_SPIDER_V2_LEG_POS_BL].cDegree);
+            PE_Servo180_setRadian(&motor6, spider.legs[PE_SPIDER_V2_LEG_POS_BR].cDegree);
         }
 
         //MX_LED_ON(0);
         //HAL_Delay(500);
         MX_LED_OFF(0);
         //HAL_Delay(500);
+    }
+}
+
+void TIM4_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&TIM_Handle);
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *tim) {
+    if (tim->Instance == TIM4) {
+        //MX_LED_ON(5);
+    }
+}
+
+void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *tim) {
+    if (tim->Instance == TIM4) {
+        //MX_LED_ON(5);
+        PE_Servo180_dispatchTimer(&timer1);
     }
 }
 
