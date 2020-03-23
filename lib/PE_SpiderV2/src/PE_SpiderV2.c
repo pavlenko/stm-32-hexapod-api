@@ -102,24 +102,19 @@ void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos
     }
 }
 
-void PE_SpiderV2_calculateDegree(
-    PE_SpiderV2_Point3D_t *target,
-    PE_SpiderV2_Point3D_t *mount,
-    PE_SpiderV2_LegConfig_t *config,
-    PE_SpiderV2_LegDegree_t *degree
-) {
-    PE_SpiderV2_Point3D_t local = {target->x - mount->x, target->y - mount->y, target->z - mount->z};
+void PE_SpiderV2_calculateDegree(PE_SpiderV2_Leg_t *leg) {
+    PE_SpiderV2_Point3D_t local = {leg->dst.x - leg->mnt.x, leg->dst.y - leg->mnt.y, leg->dst.z - leg->mnt.z};
 
     // Calculate horizontal distance mount - target
     float h_distance = hypotf(local.x, local.y);
 
     // Calculate horizontal distance coxa - target
-    float c_distance = h_distance - config->cLength;
+    float c_distance = h_distance - leg->cLength;
 
     // Calculate vertical distance in millimeters
     float v_distance;
-    if (c_distance > config->fLength + config->tLength) {
-        c_distance = config->fLength + config->tLength;
+    if (c_distance > leg->fLength + leg->tLength) {
+        c_distance = leg->fLength + leg->tLength;
         v_distance = 0;
     } else {
         v_distance = hypotf(c_distance, local.z);
@@ -129,20 +124,20 @@ void PE_SpiderV2_calculateDegree(
     float f_add_angle = fabsf(atanf(c_distance / local.z));
 
     // Calculate coxa angle
-    degree->cDegree = atanf(local.y / local.x) + (float) M_PI_2;
+    leg->cDegree = atanf(local.y / local.x) + (float) M_PI_2;
 
     if (v_distance > 0) {
         // Calculate femur angle in radians
-        degree->fDegree = PE_SpiderV2_calculateAngleByOppositeSide(config->fLength, v_distance, config->tLength) + f_add_angle;
+        leg->fDegree = PE_SpiderV2_calculateAngleByOppositeSide(leg->fLength, v_distance, leg->tLength) + f_add_angle;
 
         // Calculate tiba angle in radians
-        degree->tDegree = PE_SpiderV2_calculateAngleByOppositeSide(config->tLength, config->fLength, v_distance);
+        leg->tDegree = PE_SpiderV2_calculateAngleByOppositeSide(leg->tLength, leg->fLength, v_distance);
     } else {
         // Calculate femur angle in radians IF not possible to reach target
-        degree->fDegree = f_add_angle;
+        leg->fDegree = f_add_angle;
 
         // Calculate tiba angle in radians IF not possible to reach target
-        degree->tDegree = (float) M_PI;
+        leg->tDegree = (float) M_PI;
     }
 }
 
