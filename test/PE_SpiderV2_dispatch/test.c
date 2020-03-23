@@ -1,9 +1,6 @@
 #include <PE_SpiderV2.h>
 #include <unity.h>
 
-void setUp() {}
-void tearDown() {}
-
 uint8_t executedOnEntering = 0;
 uint8_t executedOnDispatch = 0;
 

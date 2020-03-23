@@ -2,9 +2,6 @@
 #include <unity.h>
 #include <stdio.h>
 
-void setUp() {}
-void tearDown() {}
-
 void test_PE_SpiderV2_calculateTargetRotateXY1() {
     PE_SpiderV2_t spider;
     spider.moving        = (PE_SpiderV2_Moving_t) {0, 0, 0, 100, 0};

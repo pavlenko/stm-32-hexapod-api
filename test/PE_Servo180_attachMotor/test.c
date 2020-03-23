@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include <unity.h>
 
-void setUp() {}
-void tearDown() {}
-
 void test_PE_Servo180_attachMotor_0() {
     PE_Servo180_Motor_t motor = {.min = 0, .max = 0};
     PE_Servo180_Timer_t timer = {.motorCount = 0};

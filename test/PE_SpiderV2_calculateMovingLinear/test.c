@@ -1,9 +1,6 @@
 #include <PE_SpiderV2.h>
 #include <unity.h>
 
-void setUp() {}
-void tearDown() {}
-
 void test_PE_SpiderV2_calculateLinearNoMove() {
     PE_SpiderV2_Remote_t remote = {0, 0};
     PE_SpiderV2_Moving_t moving;

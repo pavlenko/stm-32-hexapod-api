@@ -1,9 +1,6 @@
 #include <PE_SpiderV2.h>
 #include <unity.h>
 
-void setUp() {}
-void tearDown() {}
-
 void test_PE_SpiderV2_calculateRotationCenterNoMove() {
     PE_SpiderV2_Remote_t remote;
     PE_SpiderV2_Moving_t moving;

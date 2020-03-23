@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include <unity.h>
 
-void setUp() {}
-void tearDown() {}
-
 uint8_t PE_Servo180_setMotorPin0ID = 0;
 void PE_Servo180_setMotorPin0(uint8_t id) {
     PE_Servo180_setMotorPin0ID = id;

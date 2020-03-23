@@ -8,19 +8,11 @@ const float C_LENGTH = 28;
 const float F_LENGTH = 70;
 const float T_LENGTH = 52;
 
-void setUp() {}
-void tearDown() {}
-
 float rad2deg(float value) {
     return value * 180 / ((float) M_PI);
 }
 
 void test_PE_SpiderV2_calculateDegree_0() {
-//    PE_SpiderV2_Point3D_t target   = {300 * SIN_45, 0, 0};
-//    PE_SpiderV2_Point3D_t mount    = {0, 0, 0};
-//    PE_SpiderV2_LegConfig_t config = {C_LENGTH, F_LENGTH, T_LENGTH};
-//    PE_SpiderV2_LegDegree_t degree = {0, 0, 0};
-
     PE_SpiderV2_Leg_t leg;
 
     leg.cLength = C_LENGTH;
@@ -40,11 +32,6 @@ void test_PE_SpiderV2_calculateDegree_0() {
  * Calculate for X>0,Y=0
  */
 void test_PE_SpiderV2_calculateDegree_1() {
-//    PE_SpiderV2_Point3D_t target   = {100, 0, 0};
-//    PE_SpiderV2_Point3D_t mount    = {0, 0, 50};
-//    PE_SpiderV2_LegConfig_t config = {C_LENGTH, F_LENGTH, T_LENGTH};
-//    PE_SpiderV2_LegDegree_t degree = {0, 0, 0};
-
     PE_SpiderV2_Leg_t leg;
 
     leg.cLength = C_LENGTH;
@@ -64,11 +51,6 @@ void test_PE_SpiderV2_calculateDegree_1() {
  * Calculate for X>0,Y>0
  */
 void test_PE_SpiderV2_calculateDegree_2() {
-//    PE_SpiderV2_Point3D_t target   = {100 * SIN_45, 100 * SIN_45, 0};
-//    PE_SpiderV2_Point3D_t mount    = {0, 0, 50};
-//    PE_SpiderV2_LegConfig_t config = {C_LENGTH, F_LENGTH, T_LENGTH};
-//    PE_SpiderV2_LegDegree_t degree = {0, 0, 0};
-
     PE_SpiderV2_Leg_t leg;
 
     leg.cLength = C_LENGTH;
@@ -88,11 +70,6 @@ void test_PE_SpiderV2_calculateDegree_2() {
  * Calculate for X>0,Y<0
  */
 void test_PE_SpiderV2_calculateDegree_3() {
-//    PE_SpiderV2_Point3D_t target   = {100 * SIN_45, -100 * SIN_45, 0};
-//    PE_SpiderV2_Point3D_t mount    = {0, 0, 50};
-//    PE_SpiderV2_LegConfig_t config = {C_LENGTH, F_LENGTH, T_LENGTH};
-//    PE_SpiderV2_LegDegree_t degree = {0, 0, 0};
-
     PE_SpiderV2_Leg_t leg;
 
     leg.cLength = C_LENGTH;
@@ -112,11 +89,6 @@ void test_PE_SpiderV2_calculateDegree_3() {
  * Calculate for X<0,Y=0
  */
 void test_PE_SpiderV2_calculateDegree_4() {
-//    PE_SpiderV2_Point3D_t target   = {-100, 0, 0};
-//    PE_SpiderV2_Point3D_t mount    = {0, 0, 50};
-//    PE_SpiderV2_LegConfig_t config = {C_LENGTH, F_LENGTH, T_LENGTH};
-//    PE_SpiderV2_LegDegree_t degree = {0, 0, 0};
-
     PE_SpiderV2_Leg_t leg;
 
     leg.cLength = C_LENGTH;
@@ -136,11 +108,6 @@ void test_PE_SpiderV2_calculateDegree_4() {
  * Calculate for X<0,Y>0
  */
 void test_PE_SpiderV2_calculateDegree_5() {
-//    PE_SpiderV2_Point3D_t target   = {-100 * SIN_45, 100 * SIN_45, 0};
-//    PE_SpiderV2_Point3D_t mount    = {0, 0, 50};
-//    PE_SpiderV2_LegConfig_t config = {C_LENGTH, F_LENGTH, T_LENGTH};
-//    PE_SpiderV2_LegDegree_t degree = {0, 0, 0};
-
     PE_SpiderV2_Leg_t leg;
 
     leg.cLength = C_LENGTH;
@@ -160,11 +127,6 @@ void test_PE_SpiderV2_calculateDegree_5() {
  * Calculate for X<0,Y<0
  */
 void test_PE_SpiderV2_calculateDegree_6() {
-//    PE_SpiderV2_Point3D_t target   = {-100 * SIN_45, -100 * SIN_45, 0};
-//    PE_SpiderV2_Point3D_t mount    = {0, 0, 50};
-//    PE_SpiderV2_LegConfig_t config = {C_LENGTH, F_LENGTH, T_LENGTH};
-//    PE_SpiderV2_LegDegree_t degree = {0, 0, 0};
-
     PE_SpiderV2_Leg_t leg;
 
     leg.cLength = C_LENGTH;

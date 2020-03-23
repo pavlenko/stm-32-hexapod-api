@@ -1,9 +1,6 @@
 #include <PE_SpiderV2.h>
 #include <unity.h>
 
-void setUp() {}
-void tearDown() {}
-
 void test_PE_SpiderV2_calculateTargetLinearX() {
     PE_SpiderV2_t spider;
     spider.moving        = (PE_SpiderV2_Moving_t) {0, 1, 0, 0, 0};
