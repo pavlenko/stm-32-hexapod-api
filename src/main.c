@@ -18,13 +18,25 @@ int main()
 
     PE_SpiderV2_initialize(&spider);
 
-    while (1) {
-        PE_SpiderV2_dispatch(&spider);
+    uint32_t start = HAL_GetTick();
+    uint32_t last;
 
-        MX_LED_ON(0);
-        HAL_Delay(500);
+    spider.remote.moveX   = 1;
+    spider.remote.moveY   = 1;
+    spider.remote.rotateZ = 1;
+
+    while (1) {
+        last = HAL_GetTick();
+        if (last - start > 40) {
+            start = last;
+            MX_LED_ON(2);
+            PE_SpiderV2_dispatch(&spider);
+        }
+
+        //MX_LED_ON(0);
+        //HAL_Delay(500);
         MX_LED_OFF(0);
-        HAL_Delay(500);
+        //HAL_Delay(500);
     }
 }
 
