@@ -60,15 +60,17 @@ void PE_SpiderV2_calculateMovingRotate(PE_SpiderV2_Remote_t *remote, PE_SpiderV2
     }
 }
 
-void PE_SpiderV2_calculateTargetLinear(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode) {
-    spider->legTargets[leg].x = spider->legSources[leg].x + spider->moving.moveByX * step;
-    spider->legTargets[leg].y = spider->legSources[leg].y + spider->moving.moveByY * step;
+void PE_SpiderV2_calculateTargetLinear(PE_SpiderV2_Moving_t *moving, PE_SpiderV2_Leg_t *leg, float step, PE_SpiderV2_LegMode_t mode) {
+    leg->dst.x = leg->src.x + moving->moveByX * step;
+    leg->dst.y = leg->src.y + moving->moveByY * step;
 
     if (mode == PE_SPIDER_V2_LEG_MODE_FLOATING) {
-        spider->legTargets[leg].z = spider->legSources[leg].z;
+        leg->dst.z = leg->src.z;
     } else {
-        spider->legTargets[leg].z = spider->legSources[leg].z + ((float) -spider->moving.height);
+        leg->dst.z = leg->src.z + ((float) -moving->height);
     }
+
+    PE_SpiderV2_calculateDegree(leg);
 }
 
 void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode) {

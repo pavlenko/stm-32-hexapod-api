@@ -2,54 +2,63 @@
 #include <unity.h>
 
 void test_PE_SpiderV2_calculateTargetLinearX() {
-    PE_SpiderV2_t spider;
-    spider.moving        = (PE_SpiderV2_Moving_t) {0, 1, 0, 0, 0};
-    spider.legMounts[0]  = (PE_SpiderV2_Point3D_t) {0, 0, 0};
-    spider.legSources[0] = (PE_SpiderV2_Point3D_t) {20, 20, 20};
+    PE_SpiderV2_Moving_t moving = {0, 1, 0, {0, 0}};
 
-    spider.legTargets[0] = (PE_SpiderV2_Point3D_t) {0, 0, 0};
-    PE_SpiderV2_calculateTargetLinear(&spider, 0, 10, PE_SPIDER_V2_LEG_MODE_FLOATING);
+    PE_SpiderV2_Leg_t leg;
 
-    TEST_ASSERT_EQUAL(30, spider.legTargets[0].x);
+    leg.mnt = (PE_SpiderV2_Point3D_t) {0, 0, 0};
+    leg.src = (PE_SpiderV2_Point3D_t) {20, 20, 20};
+    leg.dst = (PE_SpiderV2_Point3D_t) {0, 0, 0};
 
-    spider.legTargets[0] = (PE_SpiderV2_Point3D_t) {0, 0, 0};
-    PE_SpiderV2_calculateTargetLinear(&spider, 0, -10, PE_SPIDER_V2_LEG_MODE_FLOATING);
+    PE_SpiderV2_calculateTargetLinear(&moving, &leg, 10, PE_SPIDER_V2_LEG_MODE_FLOATING);
 
-    TEST_ASSERT_EQUAL(10, spider.legTargets[0].x);
+    TEST_ASSERT_EQUAL(30, leg.dst.x);
+
+    leg.dst = (PE_SpiderV2_Point3D_t) {0, 0, 0};
+
+    PE_SpiderV2_calculateTargetLinear(&moving, &leg, -10, PE_SPIDER_V2_LEG_MODE_FLOATING);
+
+    TEST_ASSERT_EQUAL(10, leg.dst.x);
 }
 
 void test_PE_SpiderV2_calculateTargetLinearY() {
-    PE_SpiderV2_t spider;
-    spider.moving        = (PE_SpiderV2_Moving_t) {0, 0, 1, 0, 0};
-    spider.legMounts[0]  = (PE_SpiderV2_Point3D_t) {0, 0, 0};
-    spider.legSources[0] = (PE_SpiderV2_Point3D_t) {20, 20, 20};
+    PE_SpiderV2_Moving_t moving = {0, 0, 1, {0, 0}};
 
-    spider.legTargets[0] = (PE_SpiderV2_Point3D_t) {0, 0, 0};
-    PE_SpiderV2_calculateTargetLinear(&spider, 0, 10, PE_SPIDER_V2_LEG_MODE_FLOATING);
+    PE_SpiderV2_Leg_t leg;
 
-    TEST_ASSERT_EQUAL(30, spider.legTargets[0].y);
+    leg.mnt = (PE_SpiderV2_Point3D_t) {0, 0, 0};
+    leg.src = (PE_SpiderV2_Point3D_t) {20, 20, 20};
+    leg.dst = (PE_SpiderV2_Point3D_t) {0, 0, 0};
 
-    spider.legTargets[0] = (PE_SpiderV2_Point3D_t) {0, 0, 0};
-    PE_SpiderV2_calculateTargetLinear(&spider, 0, -10, PE_SPIDER_V2_LEG_MODE_FLOATING);
+    PE_SpiderV2_calculateTargetLinear(&moving, &leg, 10, PE_SPIDER_V2_LEG_MODE_FLOATING);
 
-    TEST_ASSERT_EQUAL(10, spider.legTargets[0].y);
+    TEST_ASSERT_EQUAL(30, leg.dst.y);
+
+    leg.dst = (PE_SpiderV2_Point3D_t) {0, 0, 0};
+
+    PE_SpiderV2_calculateTargetLinear(&moving, &leg, -10, PE_SPIDER_V2_LEG_MODE_FLOATING);
+
+    TEST_ASSERT_EQUAL(10, leg.dst.y);
 }
 
 void test_PE_SpiderV2_calculateTargetLinearZ() {
-    PE_SpiderV2_t spider;
-    spider.moving        = (PE_SpiderV2_Moving_t) {10, 0, 0, 0, 0};
-    spider.legMounts[0]  = (PE_SpiderV2_Point3D_t) {0, 0, 0};
-    spider.legSources[0] = (PE_SpiderV2_Point3D_t) {20, 20, -20};
+    PE_SpiderV2_Moving_t moving = {10, 0, 0, {0, 0}};
 
-    spider.legTargets[0] = (PE_SpiderV2_Point3D_t) {0, 0, 0};
-    PE_SpiderV2_calculateTargetLinear(&spider, 0, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
+    PE_SpiderV2_Leg_t leg;
 
-    TEST_ASSERT_EQUAL(-20, spider.legTargets[0].z);
+    leg.mnt = (PE_SpiderV2_Point3D_t) {0, 0, 0};
+    leg.src = (PE_SpiderV2_Point3D_t) {20, 20, -20};
+    leg.dst = (PE_SpiderV2_Point3D_t) {0, 0, 0};
 
-    spider.legTargets[0] = (PE_SpiderV2_Point3D_t) {0, 0, 0};
-    PE_SpiderV2_calculateTargetLinear(&spider, 0, 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
+    PE_SpiderV2_calculateTargetLinear(&moving, &leg, 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
 
-    TEST_ASSERT_EQUAL(-30, spider.legTargets[0].z);
+    TEST_ASSERT_EQUAL(-20, leg.dst.z);
+
+    leg.dst = (PE_SpiderV2_Point3D_t) {0, 0, 0};
+
+    PE_SpiderV2_calculateTargetLinear(&moving, &leg, 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
+
+    TEST_ASSERT_EQUAL(-30, leg.dst.z);
 }
 
 int main(int argc, char **argv) {

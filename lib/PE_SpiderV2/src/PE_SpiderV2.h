@@ -34,25 +34,13 @@ typedef struct PE_SpiderV2_Point3D_s {
     float z;
 } PE_SpiderV2_Point3D_t;
 
-typedef struct PE_SpiderV2_LegConfig_s {
-    float cLength;
-    float fLength;
-    float tLength;
-} PE_SpiderV2_LegConfig_t;
-
-typedef struct PE_SpiderV2_LegDegree_s {
-    float cDegree;
-    float fDegree;
-    float tDegree;
-} PE_SpiderV2_LegDegree_t;
-
-typedef struct PE_SpiderV2_remote_s {
+typedef struct PE_SpiderV2_Remote_s {
     float moveX;
     float moveY;
     int8_t rotateZ;
 } PE_SpiderV2_Remote_t;
 
-typedef struct PE_SpiderV2_moving_s {
+typedef struct PE_SpiderV2_Moving_s {
     uint16_t height;
     float moveByX;
     float moveByY;
@@ -93,7 +81,7 @@ typedef struct PE_SpiderV2_s {
 
 void PE_SpiderV2_calculateMovingLinear(PE_SpiderV2_Remote_t *remote, PE_SpiderV2_Moving_t *moving);
 void PE_SpiderV2_calculateMovingRotate(PE_SpiderV2_Remote_t *remote, PE_SpiderV2_Moving_t *moving);
-void PE_SpiderV2_calculateTargetLinear(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode);
+void PE_SpiderV2_calculateTargetLinear(PE_SpiderV2_Moving_t *moving, PE_SpiderV2_Leg_t *leg, float step, PE_SpiderV2_LegMode_t mode);
 void PE_SpiderV2_calculateTargetRotate(PE_SpiderV2_t *spider, PE_SpiderV2_LegPos_t leg, float step, PE_SpiderV2_LegMode_t mode);
 
 void PE_SpiderV2_calculateDegree(PE_SpiderV2_Leg_t *leg);
