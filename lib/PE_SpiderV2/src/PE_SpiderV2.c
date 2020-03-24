@@ -3,6 +3,9 @@
 #include <math.h>
 #include <stddef.h>
 
+const uint32_t PE_SpiderV2_DELAY_MS_INIT = 2000;
+const uint32_t PE_SpiderV2_DELAY_MS_MOVE = 50;
+
 const float PE_SpiderV2_ROTATE_RADIUS = 680;
 
 const float PE_SpiderV2_STEP_PART_X1 = 10;
@@ -153,6 +156,7 @@ void PE_SpiderV2_handlerInit_onEntering(PE_SpiderV2_t *spider) {
     PE_SpiderV2_calculateTargetLinear(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_BL], 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
     PE_SpiderV2_calculateTargetLinear(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_BR], 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
 
+    spider->delayMs   = PE_SpiderV2_DELAY_MS_MOVE;
     spider->nextState = &PE_SpiderV2_stateIdle;
 }
 
@@ -295,6 +299,7 @@ void PE_SpiderV2_handlerMove8_onEntering(PE_SpiderV2_t *spider) {
 }
 
 void PE_SpiderV2_initialize(PE_SpiderV2_t *spider) {
+    spider->delayMs   = PE_SpiderV2_DELAY_MS_INIT;
     spider->nextState = &PE_SpiderV2_stateInit;
 }
 
@@ -304,6 +309,8 @@ void PE_SpiderV2_dispatchMs(PE_SpiderV2_t *spider, uint32_t millis) {
     }
 
     spider->startMs = millis;
+
+    PE_SpiderV2_onDispatchBefore(spider);
 
     if (spider->currState != spider->nextState) {
         spider->currState = spider->nextState;
@@ -317,11 +324,16 @@ void PE_SpiderV2_dispatchMs(PE_SpiderV2_t *spider, uint32_t millis) {
         spider->currState->onDispatch(spider);
     }
 
-    PE_SpiderV2_onDispatch(spider);
+    PE_SpiderV2_onDispatchAfter(spider);
 }
 
 __attribute__((weak))
-void PE_SpiderV2_onDispatch(PE_SpiderV2_t *spider) {
+void PE_SpiderV2_onDispatchBefore(PE_SpiderV2_t *spider) {
+    (void) spider;
+}
+
+__attribute__((weak))
+void PE_SpiderV2_onDispatchAfter(PE_SpiderV2_t *spider) {
     (void) spider;
 }
 

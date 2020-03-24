@@ -33,7 +33,7 @@ Motor_Pin_t motorPins[] = {
     {GPIOA, 5},
 };
 
-PE_SpiderV2_t spider;
+PE_SpiderV2_t spiderV2;
 
 void SystemClock_Config(void);
 
@@ -54,37 +54,36 @@ int main()
     PE_Servo180_attachMotor(&timer1, &motor5);
     PE_Servo180_attachMotor(&timer1, &motor6);
 
-    PE_SpiderV2_initialize(&spider);
+    PE_SpiderV2_initialize(&spiderV2);
 
-    uint32_t start = HAL_GetTick();
-    uint32_t last;
-
-    spider.remote.moveX   = 1;
-    spider.remote.moveY   = 1;
-    spider.remote.rotateZ = 1;
+    spiderV2.remote.moveX   = 1;
+    spiderV2.remote.moveY   = 1;
+    spiderV2.remote.rotateZ = 1;
 
     HAL_TIM_Base_Start_IT(&TIM_Handle);
 
     while (1) {
-        last = HAL_GetTick();
-        if (last - start > 100) {
-            start = last;
-            MX_LED_ON(2);
-            PE_SpiderV2_dispatchMs(&spider, 0);
-
-            PE_Servo180_setRadian(&motor1, spider.legs[PE_SPIDER_V2_LEG_POS_FL].cDegree);
-            PE_Servo180_setRadian(&motor2, spider.legs[PE_SPIDER_V2_LEG_POS_FR].cDegree);
-            PE_Servo180_setRadian(&motor3, spider.legs[PE_SPIDER_V2_LEG_POS_ML].cDegree);
-            PE_Servo180_setRadian(&motor4, spider.legs[PE_SPIDER_V2_LEG_POS_MR].cDegree);
-            PE_Servo180_setRadian(&motor5, spider.legs[PE_SPIDER_V2_LEG_POS_BL].cDegree);
-            PE_Servo180_setRadian(&motor6, spider.legs[PE_SPIDER_V2_LEG_POS_BR].cDegree);
-        }
+        PE_SpiderV2_dispatchMs(&spiderV2, HAL_GetTick());
 
         //MX_LED_ON(0);
         //HAL_Delay(500);
         MX_LED_OFF(0);
         //HAL_Delay(500);
     }
+}
+
+void PE_SpiderV2_onDispatchBefore(PE_SpiderV2_t *spider) {
+    (void) spider;
+    MX_LED_ON(2);
+}
+
+void PE_SpiderV2_onDispatchAfter(PE_SpiderV2_t *spider) {
+    PE_Servo180_setRadian(&motor1, spider->legs[PE_SPIDER_V2_LEG_POS_FL].cDegree);
+    PE_Servo180_setRadian(&motor2, spider->legs[PE_SPIDER_V2_LEG_POS_FR].cDegree);
+    PE_Servo180_setRadian(&motor3, spider->legs[PE_SPIDER_V2_LEG_POS_ML].cDegree);
+    PE_Servo180_setRadian(&motor4, spider->legs[PE_SPIDER_V2_LEG_POS_MR].cDegree);
+    PE_Servo180_setRadian(&motor5, spider->legs[PE_SPIDER_V2_LEG_POS_BL].cDegree);
+    PE_Servo180_setRadian(&motor6, spider->legs[PE_SPIDER_V2_LEG_POS_BR].cDegree);
 }
 
 void PE_Servo180_setMotorPin0(uint8_t id) {
