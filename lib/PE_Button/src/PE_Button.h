@@ -1,7 +1,3 @@
-//
-// Created by master on 24.03.20.
-//
-
 #ifndef STM_32_HEXAPOD_API_PE_BUTTON_H
 #define STM_32_HEXAPOD_API_PE_BUTTON_H
 
@@ -35,20 +31,25 @@ extern "C" {
 #define PE_BUTTON_TIMEOUT_REPEAT 200U
 #endif
 
-//TODO maybe use common callbacks
-typedef void (*PE_Button_Handler_t) ();
-
-//TODO button counters & status
 typedef struct PE_Button_Key_s {
-    PE_Button_Handler_t onPress;
-    PE_Button_Handler_t onRelease;
-#if defined(PE_BUTTON_USE_HOLD_SINGULAR)
-    PE_Button_Handler_t onHoldSingular;
-#endif
-#if defined(PE_BUTTON_USE_HOLD_REPEATED)
-    PE_Button_Handler_t onHoldRepeated;
-#endif
+    uint8_t prevState: 1;
+    uint8_t currState: 1;
+    uint8_t nextState: 1;// write this outside of dispatch process
+    uint8_t trigPress: 1;
+    uint8_t trigRelease: 1;
+    uint8_t trigHold: 1;
+    uint32_t millis;
 } PE_Button_Key_t;
+
+void PE_Button_dispatch(PE_Button_Key_t *key, uint32_t millis);
+
+void PE_Button_onPress(PE_Button_Key_t *key);
+
+void PE_Button_onRelease(PE_Button_Key_t *key);
+
+void PE_Button_onHoldSingular(PE_Button_Key_t *key);
+
+void PE_Button_onHoldRepeated(PE_Button_Key_t *key);
 
 #ifdef __cplusplus
 }
