@@ -69,10 +69,9 @@ typedef struct PE_SpiderV2_Leg_s {
 } PE_SpiderV2_Leg_t;
 
 typedef struct PE_SpiderV2_s {
+    uint32_t delayMs;
+    uint32_t startMs;
     PE_SpiderV2_Leg_t legs[6];
-    PE_SpiderV2_Point3D_t legMounts[6];
-    PE_SpiderV2_Point3D_t legSources[6];
-    PE_SpiderV2_Point3D_t legTargets[6];
     PE_SpiderV2_Remote_t remote;
     PE_SpiderV2_Moving_t moving;
     PE_SpiderV2_State_t *currState;
@@ -101,7 +100,8 @@ void PE_SpiderV2_handlerMove7_onEntering(PE_SpiderV2_t *spider);
 void PE_SpiderV2_handlerMove8_onEntering(PE_SpiderV2_t *spider);
 
 void PE_SpiderV2_initialize(PE_SpiderV2_t *spider);
-void PE_SpiderV2_dispatch(PE_SpiderV2_t *spider);
+void PE_SpiderV2_dispatchMs(PE_SpiderV2_t *spider);
+void PE_SpiderV2_onDispatch(PE_SpiderV2_t *spider);
 
 extern const float PE_SpiderV2_ROTATE_RADIUS;
 

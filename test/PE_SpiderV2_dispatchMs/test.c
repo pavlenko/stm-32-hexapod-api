@@ -21,8 +21,8 @@ void test_PE_SpiderV2_dispatch_1() {
     executedOnEntering = 0;
     executedOnDispatch = 0;
 
-    PE_SpiderV2_dispatch(&spider);
-    PE_SpiderV2_dispatch(&spider);
+    PE_SpiderV2_dispatchMs(&spider);
+    PE_SpiderV2_dispatchMs(&spider);
 
     TEST_ASSERT_EQUAL(NULL, spider.currState);
 
@@ -40,8 +40,8 @@ void test_PE_SpiderV2_dispatch_2() {
     executedOnEntering = 0;
     executedOnDispatch = 0;
 
-    PE_SpiderV2_dispatch(&spider);
-    PE_SpiderV2_dispatch(&spider);
+    PE_SpiderV2_dispatchMs(&spider);
+    PE_SpiderV2_dispatchMs(&spider);
 
     TEST_ASSERT_EQUAL(&state, spider.currState);
 
@@ -59,8 +59,8 @@ void test_PE_SpiderV2_dispatch_3() {
     executedOnEntering = 0;
     executedOnDispatch = 0;
 
-    PE_SpiderV2_dispatch(&spider);
-    PE_SpiderV2_dispatch(&spider);
+    PE_SpiderV2_dispatchMs(&spider);
+    PE_SpiderV2_dispatchMs(&spider);
 
     TEST_ASSERT_EQUAL(&state, spider.currState);
 
@@ -78,8 +78,8 @@ void test_PE_SpiderV2_dispatch_4() {
     executedOnEntering = 0;
     executedOnDispatch = 0;
 
-    PE_SpiderV2_dispatch(&spider);
-    PE_SpiderV2_dispatch(&spider);
+    PE_SpiderV2_dispatchMs(&spider);
+    PE_SpiderV2_dispatchMs(&spider);
 
     TEST_ASSERT_EQUAL(&state, spider.currState);
 
@@ -97,8 +97,8 @@ void test_PE_SpiderV2_dispatch_5() {
     executedOnEntering = 0;
     executedOnDispatch = 0;
 
-    PE_SpiderV2_dispatch(&spider);
-    PE_SpiderV2_dispatch(&spider);
+    PE_SpiderV2_dispatchMs(&spider);
+    PE_SpiderV2_dispatchMs(&spider);
 
     TEST_ASSERT_EQUAL(&state, spider.currState);
 
@@ -116,8 +116,8 @@ void test_PE_SpiderV2_dispatch_6() {
     executedOnEntering = 0;
     executedOnDispatch = 0;
 
-    PE_SpiderV2_dispatch(&spider);
-    PE_SpiderV2_dispatch(&spider);
+    PE_SpiderV2_dispatchMs(&spider);
+    PE_SpiderV2_dispatchMs(&spider);
 
     TEST_ASSERT_EQUAL(&state, spider.currState);
 

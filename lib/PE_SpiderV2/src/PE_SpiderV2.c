@@ -298,7 +298,7 @@ void PE_SpiderV2_initialize(PE_SpiderV2_t *spider) {
     spider->nextState = &PE_SpiderV2_stateInit;
 }
 
-void PE_SpiderV2_dispatch(PE_SpiderV2_t *spider) {
+void PE_SpiderV2_dispatchMs(PE_SpiderV2_t *spider) {
     if (spider->currState != spider->nextState) {
         spider->currState = spider->nextState;
 
@@ -310,6 +310,13 @@ void PE_SpiderV2_dispatch(PE_SpiderV2_t *spider) {
     if (spider->currState && spider->currState->onDispatch) {
         spider->currState->onDispatch(spider);
     }
+
+    PE_SpiderV2_onDispatch(spider);
+}
+
+__attribute__((weak))
+void PE_SpiderV2_onDispatch(PE_SpiderV2_t *spider) {
+    (void) spider;
 }
 
 float PE_SpiderV2_calculateAngleByOppositeSide(float adjacentSideA, float adjacentSideB, float oppositeSide) {
