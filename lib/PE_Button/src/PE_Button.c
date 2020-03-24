@@ -1,6 +1,6 @@
 #include "PE_Button.h"
 
-void PE_Button_dispatch(PE_Button_Key_t *key, uint8_t state, uint32_t millis) {
+void PE_Button_dispatchKey(PE_Button_Key_t *key, uint8_t state, uint32_t millis) {
     // Save previous state
     key->prevState = key->currState;
 

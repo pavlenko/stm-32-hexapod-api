@@ -30,7 +30,7 @@ void test_PE_SpiderV2_dispatch_0() {
 
     onDispatch = 0;
 
-    PE_SpiderV2_dispatchMs(&spider, 10);
+    PE_SpiderV2_refreshMs(&spider, 10);
 
     TEST_ASSERT_EQUAL(0, onDispatch);
 }
@@ -45,7 +45,7 @@ void test_PE_SpiderV2_dispatch_1() {
 
     onDispatch = 0;
 
-    PE_SpiderV2_dispatchMs(&spider, 30);
+    PE_SpiderV2_refreshMs(&spider, 30);
 
     TEST_ASSERT_EQUAL(1, onDispatch);
 }
@@ -61,8 +61,8 @@ void test_PE_SpiderV2_dispatch_2() {
     executedOnEntering = 0;
     executedOnDispatch = 0;
 
-    PE_SpiderV2_dispatchMs(&spider, 0);
-    PE_SpiderV2_dispatchMs(&spider, 0);
+    PE_SpiderV2_refreshMs(&spider, 0);
+    PE_SpiderV2_refreshMs(&spider, 0);
 
     TEST_ASSERT_EQUAL(NULL, spider.currState);
 
@@ -82,8 +82,8 @@ void test_PE_SpiderV2_dispatch_3() {
     executedOnEntering = 0;
     executedOnDispatch = 0;
 
-    PE_SpiderV2_dispatchMs(&spider, 0);
-    PE_SpiderV2_dispatchMs(&spider, 0);
+    PE_SpiderV2_refreshMs(&spider, 0);
+    PE_SpiderV2_refreshMs(&spider, 0);
 
     TEST_ASSERT_EQUAL(&state, spider.currState);
 
@@ -103,8 +103,8 @@ void test_PE_SpiderV2_dispatch_4() {
     executedOnEntering = 0;
     executedOnDispatch = 0;
 
-    PE_SpiderV2_dispatchMs(&spider, 0);
-    PE_SpiderV2_dispatchMs(&spider, 0);
+    PE_SpiderV2_refreshMs(&spider, 0);
+    PE_SpiderV2_refreshMs(&spider, 0);
 
     TEST_ASSERT_EQUAL(&state, spider.currState);
 
@@ -124,8 +124,8 @@ void test_PE_SpiderV2_dispatch_5() {
     executedOnEntering = 0;
     executedOnDispatch = 0;
 
-    PE_SpiderV2_dispatchMs(&spider, 0);
-    PE_SpiderV2_dispatchMs(&spider, 0);
+    PE_SpiderV2_refreshMs(&spider, 0);
+    PE_SpiderV2_refreshMs(&spider, 0);
 
     TEST_ASSERT_EQUAL(&state, spider.currState);
 
@@ -145,8 +145,8 @@ void test_PE_SpiderV2_dispatch_6() {
     executedOnEntering = 0;
     executedOnDispatch = 0;
 
-    PE_SpiderV2_dispatchMs(&spider, 0);
-    PE_SpiderV2_dispatchMs(&spider, 0);
+    PE_SpiderV2_refreshMs(&spider, 0);
+    PE_SpiderV2_refreshMs(&spider, 0);
 
     TEST_ASSERT_EQUAL(&state, spider.currState);
 
@@ -166,8 +166,8 @@ void test_PE_SpiderV2_dispatch_7() {
     executedOnEntering = 0;
     executedOnDispatch = 0;
 
-    PE_SpiderV2_dispatchMs(&spider, 0);
-    PE_SpiderV2_dispatchMs(&spider, 0);
+    PE_SpiderV2_refreshMs(&spider, 0);
+    PE_SpiderV2_refreshMs(&spider, 0);
 
     TEST_ASSERT_EQUAL(&state, spider.currState);
 

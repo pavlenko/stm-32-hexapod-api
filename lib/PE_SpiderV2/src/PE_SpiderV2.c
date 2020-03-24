@@ -303,7 +303,7 @@ void PE_SpiderV2_initialize(PE_SpiderV2_t *spider) {
     spider->nextState = &PE_SpiderV2_stateInit;
 }
 
-void PE_SpiderV2_dispatchMs(PE_SpiderV2_t *spider, uint32_t millis) {
+void PE_SpiderV2_refreshMs(PE_SpiderV2_t *spider, uint32_t millis) {
     if (millis - spider->startMs < spider->delayMs) {
         return;
     }
@@ -316,15 +316,17 @@ void PE_SpiderV2_dispatchMs(PE_SpiderV2_t *spider, uint32_t millis) {
         spider->currState = spider->nextState;
 
         if (spider->currState && spider->currState->onEntering) {
+            PE_SpiderV2_refreshOnEntering(spider);
             spider->currState->onEntering(spider);
         }
     }
 
     if (spider->currState && spider->currState->onDispatch) {
+        PE_SpiderV2_refreshOnDispatch(spider);
         spider->currState->onDispatch(spider);
     }
 
-    PE_SpiderV2_onDispatchAfter(spider);
+    PE_SpiderV2_refreshOnComplete(spider);
 }
 
 __attribute__((weak))
@@ -334,6 +336,21 @@ void PE_SpiderV2_onDispatchBefore(PE_SpiderV2_t *spider) {
 
 __attribute__((weak))
 void PE_SpiderV2_onDispatchAfter(PE_SpiderV2_t *spider) {
+    (void) spider;
+}
+
+__attribute__((weak))
+void PE_SpiderV2_refreshOnEntering(PE_SpiderV2_t *spider) {
+    (void) spider;
+}
+
+__attribute__((weak))
+void PE_SpiderV2_refreshOnDispatch(PE_SpiderV2_t *spider) {
+    (void) spider;
+}
+
+__attribute__((weak))
+void PE_SpiderV2_refreshOnComplete(PE_SpiderV2_t *spider) {
     (void) spider;
 }
 

@@ -2,6 +2,7 @@
 // Created by master on 29.01.20.
 //
 
+#include <PE_Button.h>
 #include <PE_Servo180.h>
 #include <PE_SpiderV2.h>
 #include "main.h"
@@ -33,6 +34,8 @@ Motor_Pin_t motorPins[] = {
     {GPIOA, 5},
 };
 
+PE_Button_Key_t key1;
+
 PE_SpiderV2_t spiderV2;
 
 void SystemClock_Config(void);
@@ -58,14 +61,16 @@ int main()
 
     PE_SpiderV2_initialize(&spiderV2);
 
-    spiderV2.remote.moveX   = 1;
-    spiderV2.remote.moveY   = 1;
-    spiderV2.remote.rotateZ = 1;
+    spiderV2.remote.moveX   = 0;
+    spiderV2.remote.moveY   = 0;
+    spiderV2.remote.rotateZ = 0;
 
     HAL_TIM_Base_Start_IT(&TIM_Handle);
 
     while (1) {
-        PE_SpiderV2_dispatchMs(&spiderV2, HAL_GetTick());
+        PE_SpiderV2_refreshMs(&spiderV2, HAL_GetTick());
+
+        PE_Button_dispatchKey(&key1, HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_15) == 0, HAL_GetTick());
 
         //MX_LED_ON(0);
         //HAL_Delay(500);
@@ -74,12 +79,20 @@ int main()
     }
 }
 
-void PE_SpiderV2_onDispatchBefore(PE_SpiderV2_t *spider) {
-    (void) spider;
-    MX_LED_ON(2);
+void PE_Button_onPress(PE_Button_Key_t *key) {
+    spiderV2.remote.moveX = 1;
 }
 
-void PE_SpiderV2_onDispatchAfter(PE_SpiderV2_t *spider) {
+void PE_Button_onRelease(PE_Button_Key_t *key) {
+    spiderV2.remote.moveX = 0;
+}
+
+void PE_SpiderV2_refreshOnEntering(PE_SpiderV2_t *spider) {
+    (void) spider;
+    MX_LED_ON(5);
+}
+
+void PE_SpiderV2_refreshOnComplete(PE_SpiderV2_t *spider) {
     PE_Servo180_setRadian(&motor1, spider->legs[PE_SPIDER_V2_LEG_POS_FL].cDegree);
     PE_Servo180_setRadian(&motor2, spider->legs[PE_SPIDER_V2_LEG_POS_FR].cDegree);
     PE_Servo180_setRadian(&motor3, spider->legs[PE_SPIDER_V2_LEG_POS_ML].cDegree);
@@ -118,6 +131,7 @@ void MX_GPIO_Init() {
 
     /* GPIO clock enable */
     __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
 
     /* GPIO Configuration */
     GPIO_InitStruct.Pin   = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
@@ -125,6 +139,13 @@ void MX_GPIO_Init() {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
 
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    GPIO_InitStruct.Pin   = GPIO_PIN_15;
+    GPIO_InitStruct.Mode  = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull  = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 }
 
 /**
