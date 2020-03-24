@@ -298,7 +298,13 @@ void PE_SpiderV2_initialize(PE_SpiderV2_t *spider) {
     spider->nextState = &PE_SpiderV2_stateInit;
 }
 
-void PE_SpiderV2_dispatchMs(PE_SpiderV2_t *spider) {
+void PE_SpiderV2_dispatchMs(PE_SpiderV2_t *spider, uint32_t millis) {
+    if (millis - spider->startMs < spider->delayMs) {
+        return;
+    }
+
+    spider->startMs = millis;
+
     if (spider->currState != spider->nextState) {
         spider->currState = spider->nextState;
 

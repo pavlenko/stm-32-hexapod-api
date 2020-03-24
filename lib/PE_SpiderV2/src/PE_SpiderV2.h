@@ -100,7 +100,7 @@ void PE_SpiderV2_handlerMove7_onEntering(PE_SpiderV2_t *spider);
 void PE_SpiderV2_handlerMove8_onEntering(PE_SpiderV2_t *spider);
 
 void PE_SpiderV2_initialize(PE_SpiderV2_t *spider);
-void PE_SpiderV2_dispatchMs(PE_SpiderV2_t *spider);
+void PE_SpiderV2_dispatchMs(PE_SpiderV2_t *spider, uint32_t millis);
 void PE_SpiderV2_onDispatch(PE_SpiderV2_t *spider);
 
 extern const float PE_SpiderV2_ROTATE_RADIUS;

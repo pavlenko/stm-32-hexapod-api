@@ -70,7 +70,7 @@ int main()
         if (last - start > 100) {
             start = last;
             MX_LED_ON(2);
-            PE_SpiderV2_dispatchMs(&spider);
+            PE_SpiderV2_dispatchMs(&spider, 0);
 
             PE_Servo180_setRadian(&motor1, spider.legs[PE_SPIDER_V2_LEG_POS_FL].cDegree);
             PE_Servo180_setRadian(&motor2, spider.legs[PE_SPIDER_V2_LEG_POS_FR].cDegree);
