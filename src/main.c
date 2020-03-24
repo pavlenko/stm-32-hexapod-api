@@ -49,8 +49,8 @@ int main()
     MX_LED_Init();
     MX_TIM_PWM_Init(TIM4, &TIM_Handle);
 
-    timer1.counter = (volatile uint16_t *) TIM1->CNT;
-    timer1.compare = (volatile uint16_t *) TIM1->CCR1;
+    timer1.counter = (volatile uint16_t *) TIM_Handle.Instance->CNT;
+    timer1.compare = (volatile uint16_t *) TIM_Handle.Instance->CCR1;
 
     PE_Servo180_attachMotor(&timer1, &motor1);
     PE_Servo180_attachMotor(&timer1, &motor2);
