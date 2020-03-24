@@ -8,6 +8,11 @@
 #include "led.h"
 #include "tim.h"
 
+typedef struct {
+    GPIO_TypeDef *port;
+    uint8_t      pin;
+} Motor_Pin_t;
+
 TIM_HandleTypeDef TIM_Handle;
 
 PE_Servo180_Timer_t timer1;
@@ -18,6 +23,15 @@ PE_Servo180_Motor_t motor3 = {.ID = 2};
 PE_Servo180_Motor_t motor4 = {.ID = 3};
 PE_Servo180_Motor_t motor5 = {.ID = 4};
 PE_Servo180_Motor_t motor6 = {.ID = 5};
+
+Motor_Pin_t motorPins[] = {
+    {GPIOA, 0},
+    {GPIOA, 1},
+    {GPIOA, 2},
+    {GPIOA, 3},
+    {GPIOA, 4},
+    {GPIOA, 5},
+};
 
 PE_SpiderV2_t spider;
 
@@ -71,6 +85,14 @@ int main()
         MX_LED_OFF(0);
         //HAL_Delay(500);
     }
+}
+
+void PE_Servo180_setMotorPin0(uint8_t id) {
+    motorPins[id].port->BSRR = (1u << (motorPins[id].pin + 16u));
+}
+
+void PE_Servo180_setMotorPin1(uint8_t id) {
+    motorPins[id].port->BSRR = (1u << motorPins[id].pin);
 }
 
 void TIM4_IRQHandler(void) {
