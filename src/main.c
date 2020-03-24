@@ -36,11 +36,13 @@ Motor_Pin_t motorPins[] = {
 PE_SpiderV2_t spiderV2;
 
 void SystemClock_Config(void);
+void MX_GPIO_Init();
 
 int main()
 {
     HAL_Init();
     SystemClock_Config();
+    MX_GPIO_Init();
     MX_LED_Init();
     MX_TIM_PWM_Init(TIM4, &TIM_Handle);
 
@@ -109,6 +111,20 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *tim) {
         //MX_LED_ON(5);
         PE_Servo180_dispatchTimer(&timer1);
     }
+}
+
+void MX_GPIO_Init() {
+    GPIO_InitTypeDef GPIO_InitStruct;
+
+    /* GPIO clock enable */
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+
+    /* GPIO Configuration */
+    GPIO_InitStruct.Pin   = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
+    GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
 /**
