@@ -1,5 +1,5 @@
-#ifndef STM_32_HEXAPOD_API_PE_BUTTON_H
-#define STM_32_HEXAPOD_API_PE_BUTTON_H
+#ifndef PE_BUTTON_H
+#define PE_BUTTON_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,14 +34,13 @@ extern "C" {
 typedef struct PE_Button_Key_s {
     uint8_t prevState: 1;
     uint8_t currState: 1;
-    uint8_t nextState: 1;// write this outside of dispatch process
     uint8_t trigPress: 1;
     uint8_t trigRelease: 1;
     uint8_t trigHold: 1;
     uint32_t millis;
 } PE_Button_Key_t;
 
-void PE_Button_dispatch(PE_Button_Key_t *key, uint32_t millis);
+void PE_Button_dispatchKey(PE_Button_Key_t *key, uint8_t state, uint32_t millis);
 
 void PE_Button_onPress(PE_Button_Key_t *key);
 

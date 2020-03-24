@@ -1,11 +1,11 @@
 #include "PE_Button.h"
 
-void PE_Button_dispatch(PE_Button_Key_t *key, uint32_t millis) {
+void PE_Button_dispatch(PE_Button_Key_t *key, uint8_t state, uint32_t millis) {
     // Save previous state
     key->prevState = key->currState;
 
-    // Read current state and prefetch handlers & flag positions
-    key->currState = key->nextState;
+    // Read current state
+    key->currState = state;
 
     // Reset execution flags if state changed
     if (key->currState != key->prevState) {
