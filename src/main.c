@@ -5,9 +5,12 @@
 #include <PE_Button.h>
 #include <PE_Servo180.h>
 #include <PE_SpiderV2.h>
+#include <stdio.h>
 #include "main.h"
 #include "led.h"
 #include "tim.h"
+#include "usb_device.h"
+#include "usbd_cdc_if.h"
 
 typedef struct {
     GPIO_TypeDef *port;
@@ -47,6 +50,9 @@ PE_SpiderV2_t spiderV2 = {
     }
 };
 
+extern PCD_HandleTypeDef hpcd_USB_FS;
+static char str[32];
+
 void SystemClock_Config(void);
 void MX_GPIO_Init();
 
@@ -75,6 +81,8 @@ int main()
     spiderV2.remote.rotateZ = 0;
 
     HAL_TIM_Base_Start_IT(&TIM_Handle);
+
+    MX_USB_DEVICE_Init();
 
     while (1) {
         PE_SpiderV2_refreshMs(&spiderV2, HAL_GetTick());
@@ -108,6 +116,9 @@ void PE_SpiderV2_refreshOnComplete(PE_SpiderV2_t *spider) {
     PE_Servo180_setRadian(&motor4, spider->legs[PE_SPIDER_V2_LEG_POS_MR].cDegree);
     PE_Servo180_setRadian(&motor5, spider->legs[PE_SPIDER_V2_LEG_POS_BL].cDegree);
     PE_Servo180_setRadian(&motor6, spider->legs[PE_SPIDER_V2_LEG_POS_BR].cDegree);
+
+    sprintf(str, "c: %f\r\n", 1.0f);
+    CDC_Transmit_FS((uint8_t *) str, 32);
 }
 
 void PE_Servo180_setTimerCompare(PE_Servo180_Timer_t *timer, uint16_t value) {
@@ -187,6 +198,7 @@ void SystemClock_Config(void)
 {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+    RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
     // Initializes the CPU clock source
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
@@ -213,6 +225,13 @@ void SystemClock_Config(void)
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
     if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK) {
+        Error_Handler(__FILE__, __LINE__);
+    }
+
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
+    PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
+
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK) {
         Error_Handler(__FILE__, __LINE__);
     }
 }
@@ -374,3 +393,17 @@ void assert_failed(uint8_t* file, uint32_t line)
     UNUSED(line);
 }
 #endif
+
+/**
+  * @brief This function handles USB low priority or CAN RX0 interrupts.
+  */
+void USB_LP_CAN1_RX0_IRQHandler(void)
+{
+    /* USER CODE BEGIN USB_LP_CAN1_RX0_IRQn 0 */
+
+    /* USER CODE END USB_LP_CAN1_RX0_IRQn 0 */
+    HAL_PCD_IRQHandler(&hpcd_USB_FS);
+    /* USER CODE BEGIN USB_LP_CAN1_RX0_IRQn 1 */
+
+    /* USER CODE END USB_LP_CAN1_RX0_IRQn 1 */
+}
