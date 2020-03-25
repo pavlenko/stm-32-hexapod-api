@@ -20,46 +20,27 @@ void MX_TIM_PWM_Init(TIM_TypeDef *tim, TIM_HandleTypeDef *handle)
     handle->Init.Period        = 20000;
     handle->Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 
-    if (HAL_TIM_Base_Init(handle) != HAL_OK) {
-        Error_Handler(__FILE__, __LINE__);
-    }
+    HAL_TIM_PWM_Init(handle);
 
     sConfigOC.OCMode     = TIM_OCMODE_PWM1;
-    sConfigOC.Pulse      = 15000;
+    sConfigOC.Pulse      = 2000;
     sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 
-    if (HAL_TIM_OC_ConfigChannel(handle, &sConfigOC, TIM_CHANNEL_1) != HAL_OK) {
-        Error_Handler(__FILE__, __LINE__);
-    }
+    HAL_TIM_PWM_ConfigChannel(handle, &sConfigOC, TIM_CHANNEL_1);
+    HAL_TIM_PWM_ConfigChannel(handle, &sConfigOC, TIM_CHANNEL_2);
+    HAL_TIM_PWM_ConfigChannel(handle, &sConfigOC, TIM_CHANNEL_3);
+    HAL_TIM_PWM_ConfigChannel(handle, &sConfigOC, TIM_CHANNEL_4);
 
     sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-    sMasterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
+    sMasterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_ENABLE;
 
-    if (HAL_TIMEx_MasterConfigSynchronization(handle, &sMasterConfig) != HAL_OK) {
-        Error_Handler(__FILE__, __LINE__);
-    }
+    HAL_TIMEx_MasterConfigSynchronization(handle, &sMasterConfig);
 
-    if (HAL_TIM_OC_Start_IT(handle, TIM_CHANNEL_1) != HAL_OK) {
-        Error_Handler(__FILE__, __LINE__);
-    }
-}
-
-void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim) {
-    if (tim->Instance == TIM4) {
-        __HAL_RCC_TIM4_CLK_ENABLE();
-
-        HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
-        HAL_NVIC_EnableIRQ(TIM4_IRQn);
-    }
-}
-
-void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim) {
-    if (tim->Instance == TIM4) {
-        __HAL_RCC_TIM4_CLK_DISABLE();
-
-        HAL_NVIC_DisableIRQ(TIM4_IRQn);
-    }
+    HAL_TIM_PWM_Start_IT(handle, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start_IT(handle, TIM_CHANNEL_2);
+    HAL_TIM_PWM_Start_IT(handle, TIM_CHANNEL_3);
+    HAL_TIM_PWM_Start_IT(handle, TIM_CHANNEL_4);
 }
 
 void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim)
@@ -106,6 +87,9 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim)
         GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 
         HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+        HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
+        HAL_NVIC_EnableIRQ(TIM4_IRQn);
     }
 }
 
