@@ -36,7 +36,16 @@ Motor_Pin_t motorPins[] = {
 
 PE_Button_Key_t key1;
 
-PE_SpiderV2_t spiderV2;
+PE_SpiderV2_t spiderV2 = {
+    .legs = {
+        {.mnt = {-85, 120, 0},  .src = {-135, 190, 0}},
+        {.mnt = {85, 120, 0},   .src = {135, 190, 0}},
+        {.mnt = {-170, 0, 0},   .src = {-270, 0, 0}},
+        {.mnt = {170, 0, 0},    .src = {270, 0, 0}},
+        {.mnt = {-85, -120, 0}, .src = {-135, -190, 0}},
+        {.mnt = {85, -120, 0},  .src = {135, -190, 0}},
+    }
+};
 
 void SystemClock_Config(void);
 void MX_GPIO_Init();
