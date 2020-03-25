@@ -79,7 +79,7 @@ void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value) {
 
 void PE_Servo180_dispatchTimer(PE_Servo180_Timer_t *timer) {
     if (timer->motorIndex < 0) {
-        *(timer->counter) = 0;
+        timer->counter2 = 0;
     } else if (timer->motorItems[timer->motorIndex] != NULL) {
         PE_Servo180_setMotorPin0(timer->motorItems[timer->motorIndex]->ID);
     }
@@ -88,16 +88,20 @@ void PE_Servo180_dispatchTimer(PE_Servo180_Timer_t *timer) {
 
     if (timer->motorCount > 0 && timer->motorIndex < PE_Servo180_MOTOR_PER_TIMER) {
         if (timer->motorItems[timer->motorIndex] != NULL) {
-            PE_Servo180_setTimerCompare(timer, *(timer->counter) + timer->motorItems[timer->motorIndex]->ticks);
+            //TODO check valid logic
+            PE_Servo180_setTimerCompare(timer, timer->counter2 + timer->motorItems[timer->motorIndex]->ticks);
+
+            timer->counter2 += timer->motorItems[timer->motorIndex]->ticks;
+
             PE_Servo180_setMotorPin1(timer->motorItems[timer->motorIndex]->ID);
         }
     } else {
         uint16_t refresh = PE_Servo180_REFRESH_INTERVAL;//TODO convert to ticks
 
-        if (*(timer->counter) < (refresh + 4)) {
-            PE_Servo180_setTimerCompare(timer, refresh);
+        if (timer->counter2 + 4 < refresh) {
+            PE_Servo180_setTimerCompare(timer, refresh - timer->counter2);
         } else {
-            PE_Servo180_setTimerCompare(timer, *(timer->counter) + 4);
+            PE_Servo180_setTimerRefresh(timer);
         }
 
         timer->motorIndex = -1;
@@ -106,7 +110,13 @@ void PE_Servo180_dispatchTimer(PE_Servo180_Timer_t *timer) {
 
 __attribute__((weak))
 void PE_Servo180_setTimerCompare(PE_Servo180_Timer_t *timer, uint16_t value) {
-    *(timer->compare) = value;
+    (void) timer;
+    (void) value;
+}
+
+__attribute__((weak))
+void PE_Servo180_setTimerRefresh(PE_Servo180_Timer_t *timer) {
+    (void) timer;
 }
 
 __attribute__((weak))

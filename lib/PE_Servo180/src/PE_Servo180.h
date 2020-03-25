@@ -29,6 +29,7 @@ typedef struct PE_Servo180_Timer_s {
     PE_Servo180_Motor_p motorItems[PE_Servo180_MOTOR_PER_TIMER];
     volatile uint16_t *compare;// public
     volatile uint16_t *counter;// public
+    volatile uint16_t counter2;// public
 } PE_Servo180_Timer_t;
 
 typedef enum PE_Servo180_Status_s {
@@ -82,6 +83,7 @@ void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value);
 void PE_Servo180_dispatchTimer(PE_Servo180_Timer_t *timer);
 
 void PE_Servo180_setTimerCompare(PE_Servo180_Timer_t *timer, uint16_t value);
+void PE_Servo180_setTimerRefresh(PE_Servo180_Timer_t *timer);
 
 /**
  * Set motor pin to HIGH

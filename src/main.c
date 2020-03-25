@@ -106,6 +106,11 @@ void PE_Servo180_setTimerCompare(PE_Servo180_Timer_t *timer, uint16_t value) {
     __HAL_TIM_SET_COMPARE(&TIM_Handle, TIM_CHANNEL_1, value);
 }
 
+void PE_Servo180_setTimerRefresh(PE_Servo180_Timer_t *timer) {
+    (void) timer;
+    HAL_TIM_GenerateEvent(&TIM_Handle, TIM_EVENTSOURCE_UPDATE);
+}
+
 void PE_Servo180_setMotorPin0(uint8_t id) {
     motorPins[id].port->BSRR = (1u << (motorPins[id].pin + 16u));
 }
