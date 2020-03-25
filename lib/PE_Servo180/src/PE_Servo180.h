@@ -81,6 +81,8 @@ void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value);
  */
 void PE_Servo180_dispatchTimer(PE_Servo180_Timer_t *timer);
 
+void PE_Servo180_setTimerCompare(PE_Servo180_Timer_t *timer, uint16_t value);
+
 /**
  * Set motor pin to HIGH
  * WARNING: This function must be redefined in user code to manipulate GPIO

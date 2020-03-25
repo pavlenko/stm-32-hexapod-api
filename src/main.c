@@ -101,6 +101,11 @@ void PE_SpiderV2_refreshOnComplete(PE_SpiderV2_t *spider) {
     PE_Servo180_setRadian(&motor6, spider->legs[PE_SPIDER_V2_LEG_POS_BR].cDegree);
 }
 
+void PE_Servo180_setTimerCompare(PE_Servo180_Timer_t *timer, uint16_t value) {
+    //*(timer->compare) = value;
+    __HAL_TIM_SET_COMPARE(&TIM_Handle, TIM_CHANNEL_1, value);
+}
+
 void PE_Servo180_setMotorPin0(uint8_t id) {
     motorPins[id].port->BSRR = (1u << (motorPins[id].pin + 16u));
 }

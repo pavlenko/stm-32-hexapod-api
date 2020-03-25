@@ -88,21 +88,25 @@ void PE_Servo180_dispatchTimer(PE_Servo180_Timer_t *timer) {
 
     if (timer->motorCount > 0 && timer->motorIndex < PE_Servo180_MOTOR_PER_TIMER) {
         if (timer->motorItems[timer->motorIndex] != NULL) {
-            *(timer->compare) = *(timer->counter) + timer->motorItems[timer->motorIndex]->ticks;//TODO set overflow
-
+            PE_Servo180_setTimerCompare(timer, *(timer->counter) + timer->motorItems[timer->motorIndex]->ticks);
             PE_Servo180_setMotorPin1(timer->motorItems[timer->motorIndex]->ID);
         }
     } else {
         uint16_t refresh = PE_Servo180_REFRESH_INTERVAL;//TODO convert to ticks
 
         if (*(timer->counter) < (refresh + 4)) {
-            *(timer->compare) = refresh;//TODO set overflow callback: __HAL_TIM_SET_AUTORELOAD(&TIM_Handle, ARR_RegisterValue);
+            PE_Servo180_setTimerCompare(timer, refresh);
         } else {
-            *(timer->compare) = *(timer->counter) + 4;//TODO refresh callback: HAL_TIM_GenerateEvent(&TIM_Handle, TIM_EVENTSOURCE_UPDATE);
+            PE_Servo180_setTimerCompare(timer, *(timer->counter) + 4);
         }
 
         timer->motorIndex = -1;
     }
+}
+
+__attribute__((weak))
+void PE_Servo180_setTimerCompare(PE_Servo180_Timer_t *timer, uint16_t value) {
+    *(timer->compare) = value;
 }
 
 __attribute__((weak))
