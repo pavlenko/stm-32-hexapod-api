@@ -101,8 +101,6 @@ void PE_SpiderV2_handlerMove8_onEntering(PE_SpiderV2_t *spider);
 
 void PE_SpiderV2_initialize(PE_SpiderV2_t *spider);
 void PE_SpiderV2_refreshMs(PE_SpiderV2_t *spider, uint32_t millis);
-void PE_SpiderV2_onDispatchBefore(PE_SpiderV2_t *spider);
-void PE_SpiderV2_onDispatchAfter(PE_SpiderV2_t *spider);
 
 void PE_SpiderV2_refreshOnEntering(PE_SpiderV2_t *spider);
 void PE_SpiderV2_refreshOnDispatch(PE_SpiderV2_t *spider);

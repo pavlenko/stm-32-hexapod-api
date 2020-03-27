@@ -4,8 +4,19 @@
 #include <stddef.h>
 
 PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Servo180_Motor_t *motor) {
-    if (timer->motorCount == PE_Servo180_MOTOR_PER_TIMER || motor->attached) {
+    if (motor == NULL) {
         return PE_Servo180_FAILURE;
+    }
+
+    if (timer->motorCount == PE_Servo180_MOTOR_PER_TIMER) {
+        return PE_Servo180_FAILURE;
+    }
+
+    uint8_t index;
+    for (index = 0; index < timer->motorCount; index++) {
+        if (timer->motorItems[index] == motor) {
+            return PE_Servo180_SUCCESS;
+        }
     }
 
     if (motor->min == 0) {
@@ -16,7 +27,8 @@ PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Serv
         motor->max = PE_Servo180_MOTOR_MAX;
     }
 
-    motor->attached = 1;
+    motor->ticks = PE_Servo180_MOTOR_MID;
+
     timer->motorItems[timer->motorCount] = motor;
     timer->motorCount++;
 
@@ -24,6 +36,10 @@ PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Serv
 }
 
 PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_Timer_t *timer, PE_Servo180_Motor_t *motor) {
+    if (motor == NULL) {
+        return PE_Servo180_FAILURE;
+    }
+
     uint8_t index;
 
     for (index = 0; index < timer->motorCount; index++) {
@@ -74,12 +90,12 @@ void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value) {
         value = motor->max;
     }
 
-    motor->ticks = value;//TODO convert to ticks
+    motor->ticks = value;
 }
 
-void PE_Servo180_dispatchTimer(PE_Servo180_Timer_t *timer) {
+void PE_Servo180_onOverflow(PE_Servo180_Timer_t *timer) {
     if (timer->motorIndex < 0) {
-        timer->counter2 = 0;
+        timer->counter = 0;
     } else if (timer->motorItems[timer->motorIndex] != NULL) {
         PE_Servo180_setMotorPin0(timer->motorItems[timer->motorIndex]->ID);
     }
@@ -87,19 +103,23 @@ void PE_Servo180_dispatchTimer(PE_Servo180_Timer_t *timer) {
     timer->motorIndex++;
 
     if (timer->motorCount > 0 && timer->motorIndex < PE_Servo180_MOTOR_PER_TIMER) {
+        uint16_t ticks;
+
         if (timer->motorItems[timer->motorIndex] != NULL) {
-            //TODO check valid logic
-            PE_Servo180_setTimerCompare(timer, timer->counter2 + timer->motorItems[timer->motorIndex]->ticks);
-
-            timer->counter2 += timer->motorItems[timer->motorIndex]->ticks;
-
             PE_Servo180_setMotorPin1(timer->motorItems[timer->motorIndex]->ID);
+            ticks = timer->motorItems[timer->motorIndex]->ticks;
+        } else {
+            ticks = 100;
         }
-    } else {
-        uint16_t refresh = PE_Servo180_REFRESH_INTERVAL;//TODO convert to ticks
 
-        if (timer->counter2 + 4 < refresh) {
-            PE_Servo180_setTimerCompare(timer, refresh - timer->counter2);
+        PE_Servo180_setTimerOverflow(timer, ticks);
+
+        timer->counter += ticks;
+    } else {
+        uint16_t refresh = PE_Servo180_REFRESH_INTERVAL;
+
+        if (timer->counter + 4 < refresh) {
+            PE_Servo180_setTimerOverflow(timer, refresh - timer->counter);
         } else {
             PE_Servo180_setTimerRefresh(timer);
         }
@@ -109,7 +129,7 @@ void PE_Servo180_dispatchTimer(PE_Servo180_Timer_t *timer) {
 }
 
 __attribute__((weak))
-void PE_Servo180_setTimerCompare(PE_Servo180_Timer_t *timer, uint16_t value) {
+void PE_Servo180_setTimerOverflow(PE_Servo180_Timer_t *timer, uint16_t value) {
     (void) timer;
     (void) value;
 }

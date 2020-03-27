@@ -1,7 +1,3 @@
-//
-// Created by master on 29.01.20.
-//
-
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -22,7 +18,6 @@ void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
 void Error_Handler(const char *, int);
-void USB_LP_CAN1_RX0_IRQHandler(void);
 
 #ifdef __cplusplus
 }

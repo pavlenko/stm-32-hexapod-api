@@ -36,11 +36,6 @@ void MX_TIM_PWM_Init(TIM_TypeDef *tim, TIM_HandleTypeDef *handle)
     sMasterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_ENABLE;
 
     HAL_TIMEx_MasterConfigSynchronization(handle, &sMasterConfig);
-
-    HAL_TIM_PWM_Start_IT(handle, TIM_CHANNEL_1);
-    HAL_TIM_PWM_Start_IT(handle, TIM_CHANNEL_2);
-    HAL_TIM_PWM_Start_IT(handle, TIM_CHANNEL_3);
-    HAL_TIM_PWM_Start_IT(handle, TIM_CHANNEL_4);
 }
 
 void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim)

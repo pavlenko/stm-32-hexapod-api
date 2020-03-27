@@ -1,16 +1,9 @@
-//
-// Created by master on 29.01.20.
-//
-
 #include <PE_Button.h>
 #include <PE_Servo180.h>
 #include <PE_SpiderV2.h>
-#include <stdio.h>
 #include "main.h"
 #include "led.h"
 #include "tim.h"
-#include "usb_device.h"
-#include "usbd_cdc_if.h"
 
 typedef struct {
     GPIO_TypeDef *port;
@@ -50,9 +43,6 @@ PE_SpiderV2_t spiderV2 = {
     }
 };
 
-extern PCD_HandleTypeDef hpcd_USB_FS;
-static char str[32];
-
 void SystemClock_Config(void);
 void MX_GPIO_Init();
 
@@ -64,9 +54,6 @@ int main()
     MX_LED_Init();
     MX_TIM_PWM_Init(TIM4, &TIM_Handle);
 
-    //timer1.counter = (volatile uint16_t *) TIM_Handle.Instance->CNT;
-    //timer1.compare = (volatile uint16_t *) TIM_Handle.Instance->CCR1;
-
     PE_Servo180_attachMotor(&timer1, &motor1);
     PE_Servo180_attachMotor(&timer1, &motor2);
     PE_Servo180_attachMotor(&timer1, &motor3);
@@ -74,15 +61,19 @@ int main()
     PE_Servo180_attachMotor(&timer1, &motor5);
     PE_Servo180_attachMotor(&timer1, &motor6);
 
+    PE_Servo180_setDegree(&motor1, 90);
+
+    HAL_TIM_Base_Start_IT(&TIM_Handle);
+    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_2);
+    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_3);
+    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_4);
+
     PE_SpiderV2_initialize(&spiderV2);
 
     spiderV2.remote.moveX   = 0;
-    spiderV2.remote.moveY   = 0;
+    spiderV2.remote.moveY   = 1;
     spiderV2.remote.rotateZ = 0;
-
-    HAL_TIM_Base_Start_IT(&TIM_Handle);
-
-    MX_USB_DEVICE_Init();
 
     while (1) {
         PE_SpiderV2_refreshMs(&spiderV2, HAL_GetTick());
@@ -106,7 +97,7 @@ void PE_Button_onRelease(PE_Button_Key_t *key) {
 
 void PE_SpiderV2_refreshOnEntering(PE_SpiderV2_t *spider) {
     (void) spider;
-    MX_LED_ON(5);
+    MX_LED_ON(1);
 }
 
 void PE_SpiderV2_refreshOnComplete(PE_SpiderV2_t *spider) {
@@ -116,19 +107,17 @@ void PE_SpiderV2_refreshOnComplete(PE_SpiderV2_t *spider) {
     PE_Servo180_setRadian(&motor4, spider->legs[PE_SPIDER_V2_LEG_POS_MR].cDegree);
     PE_Servo180_setRadian(&motor5, spider->legs[PE_SPIDER_V2_LEG_POS_BL].cDegree);
     PE_Servo180_setRadian(&motor6, spider->legs[PE_SPIDER_V2_LEG_POS_BR].cDegree);
-
-    sprintf(str, "c: %f\r\n", 1.0f);
-    CDC_Transmit_FS((uint8_t *) str, 32);
 }
 
-void PE_Servo180_setTimerCompare(PE_Servo180_Timer_t *timer, uint16_t value) {
-    //*(timer->compare) = value;
-    __HAL_TIM_SET_COMPARE(&TIM_Handle, TIM_CHANNEL_1, value);
+void PE_Servo180_setTimerOverflow(PE_Servo180_Timer_t *timer, uint16_t value) {
+    __HAL_TIM_SET_AUTORELOAD(&TIM_Handle, value);
+    (void) timer;
+    (void) value;
 }
 
 void PE_Servo180_setTimerRefresh(PE_Servo180_Timer_t *timer) {
-    (void) timer;
     HAL_TIM_GenerateEvent(&TIM_Handle, TIM_EVENTSOURCE_UPDATE);
+    (void) timer;
 }
 
 void PE_Servo180_setMotorPin0(uint8_t id) {
@@ -145,16 +134,17 @@ void TIM4_IRQHandler(void) {
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *tim) {
     if (tim->Instance == TIM4) {
-        //MX_LED_ON(5);
+        MX_LED_ON(0);
+        PE_Servo180_onOverflow(&timer1);
     }
 }
 
-void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *tim) {
-    if (tim->Instance == TIM4) {
-        //MX_LED_ON(5);
-        PE_Servo180_dispatchTimer(&timer1);
-    }
-}
+//void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *tim) {
+//    if (tim->Instance == TIM4) {
+//        //MX_LED_ON(1);
+//        //PE_Servo180_dispatch(&timer1);
+//    }
+//}
 
 void MX_GPIO_Init() {
     GPIO_InitTypeDef GPIO_InitStruct;
@@ -166,7 +156,7 @@ void MX_GPIO_Init() {
     /* GPIO Configuration */
     GPIO_InitStruct.Pin   = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
     GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
@@ -393,17 +383,3 @@ void assert_failed(uint8_t* file, uint32_t line)
     UNUSED(line);
 }
 #endif
-
-/**
-  * @brief This function handles USB low priority or CAN RX0 interrupts.
-  */
-void USB_LP_CAN1_RX0_IRQHandler(void)
-{
-    /* USER CODE BEGIN USB_LP_CAN1_RX0_IRQn 0 */
-
-    /* USER CODE END USB_LP_CAN1_RX0_IRQn 0 */
-    HAL_PCD_IRQHandler(&hpcd_USB_FS);
-    /* USER CODE BEGIN USB_LP_CAN1_RX0_IRQn 1 */
-
-    /* USER CODE END USB_LP_CAN1_RX0_IRQn 1 */
-}

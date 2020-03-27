@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 const uint32_t PE_SpiderV2_DELAY_MS_INIT = 2000;
-const uint32_t PE_SpiderV2_DELAY_MS_MOVE = 500;
+const uint32_t PE_SpiderV2_DELAY_MS_MOVE = 50;
 
 const float PE_SpiderV2_ROTATE_RADIUS = 680;
 
@@ -310,8 +310,6 @@ void PE_SpiderV2_refreshMs(PE_SpiderV2_t *spider, uint32_t millis) {
 
     spider->startMs = millis;
 
-    PE_SpiderV2_onDispatchBefore(spider);
-
     if (spider->currState != spider->nextState) {
         spider->currState = spider->nextState;
 
@@ -327,16 +325,6 @@ void PE_SpiderV2_refreshMs(PE_SpiderV2_t *spider, uint32_t millis) {
     }
 
     PE_SpiderV2_refreshOnComplete(spider);
-}
-
-__attribute__((weak))
-void PE_SpiderV2_onDispatchBefore(PE_SpiderV2_t *spider) {
-    (void) spider;
-}
-
-__attribute__((weak))
-void PE_SpiderV2_onDispatchAfter(PE_SpiderV2_t *spider) {
-    (void) spider;
 }
 
 __attribute__((weak))
