@@ -6,12 +6,6 @@ include_directories("${CMAKE_CURRENT_LIST_DIR}/lib/PE_SpiderV2/src")
 
 include_directories("$ENV{HOME}/.platformio/packages/tool-unity")
 
-include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_Servo180_attachMotor")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_Servo180_detachMotor")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_Servo180_dispatchTimer")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_Servo180_setDegree")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_Servo180_setMicros")
-include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_Servo180_setRadian")
 include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_SpiderV2")
 include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_SpiderV2_calculateDegree")
 include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_SpiderV2_calculateMovingLinear")

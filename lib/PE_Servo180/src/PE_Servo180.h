@@ -36,6 +36,12 @@ typedef enum PE_Servo180_Status_s {
 
 /**
  * @param timer
+ * @return
+ */
+PE_Servo180_Status_t PE_Servo180_createTimer(PE_Servo180_Timer_t *timer);
+
+/**
+ * @param timer
  * @param motor
  * @return
  */

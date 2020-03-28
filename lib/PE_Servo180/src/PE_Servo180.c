@@ -3,11 +3,22 @@
 #include <math.h>
 #include <stddef.h>
 
-PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Servo180_Motor_t *motor) {
-    if (motor == NULL) {
-        return PE_Servo180_FAILURE;
+float PE_Servo180_mapRange(float value, float srcMin, float srcMax, float dstMin, float dstMax);
+
+PE_Servo180_Status_t PE_Servo180_createTimer(PE_Servo180_Timer_t *timer) {
+    timer->motorIndex = -1;
+    timer->motorCount = 0;
+    timer->counter    = 0;
+
+    uint8_t index;
+    for (index = 0; index < PE_Servo180_MOTOR_PER_TIMER; index++) {
+        timer->motorItems[index] = NULL;
     }
 
+    return PE_Servo180_SUCCESS;
+}
+
+PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Servo180_Motor_t *motor) {
     if (timer->motorCount == PE_Servo180_MOTOR_PER_TIMER) {
         return PE_Servo180_FAILURE;
     }
@@ -15,7 +26,7 @@ PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Serv
     uint8_t index;
     for (index = 0; index < timer->motorCount; index++) {
         if (timer->motorItems[index] == motor) {
-            return PE_Servo180_SUCCESS;
+            return PE_Servo180_FAILURE;
         }
     }
 
@@ -36,10 +47,6 @@ PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Serv
 }
 
 PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_Timer_t *timer, PE_Servo180_Motor_t *motor) {
-    if (motor == NULL) {
-        return PE_Servo180_FAILURE;
-    }
-
     uint8_t index;
 
     for (index = 0; index < timer->motorCount; index++) {
@@ -50,11 +57,6 @@ PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_Timer_t *timer, PE_Serv
     }
 
     return PE_Servo180_FAILURE;
-}
-
-float PE_Servo180_mapRange(float value, float srcMin, float srcMax, float dstMin, float dstMax) {
-    float slope = (dstMax - dstMin) / (srcMax - srcMin);
-    return dstMin + slope * (value - srcMin);
 }
 
 void PE_Servo180_setRadian(PE_Servo180_Motor_t *motor, float value) {
@@ -126,6 +128,11 @@ void PE_Servo180_onOverflow(PE_Servo180_Timer_t *timer) {
 
         timer->motorIndex = -1;
     }
+}
+
+float PE_Servo180_mapRange(float value, float srcMin, float srcMax, float dstMin, float dstMax) {
+    float slope = (dstMax - dstMin) / (srcMax - srcMin);
+    return dstMin + slope * (value - srcMin);
 }
 
 __attribute__((weak))

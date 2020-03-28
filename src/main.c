@@ -54,6 +54,7 @@ int main()
     MX_LED_Init();
     MX_TIM_PWM_Init(TIM4, &TIM_Handle);
 
+    PE_Servo180_createTimer(&timer1);
     PE_Servo180_attachMotor(&timer1, &motor1);
     PE_Servo180_attachMotor(&timer1, &motor2);
     PE_Servo180_attachMotor(&timer1, &motor3);
