@@ -14,10 +14,12 @@ extern "C" {
 #define PE_Servo180_MOTOR_MAX 2500
 
 typedef struct PE_Servo180_Motor_s {
-    uint8_t ID;
+    uint8_t reverse: 1;
+    uint8_t ID: 7;
     uint16_t ticks;
     uint16_t min;
     uint16_t max;
+    int16_t comp;
 } PE_Servo180_Motor_t;
 
 typedef PE_Servo180_Motor_t *PE_Servo180_Motor_p;

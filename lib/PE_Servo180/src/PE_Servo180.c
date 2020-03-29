@@ -92,6 +92,12 @@ void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value) {
         value = motor->max;
     }
 
+    if (motor->reverse) {
+        value = (motor->max + motor->min) - value;
+    }
+
+    value += motor->comp;
+
     motor->ticks = value;
 }
 

@@ -14,12 +14,12 @@ TIM_HandleTypeDef TIM_Handle;
 
 PE_Servo180_Timer_t timer1;
 
-PE_Servo180_Motor_t motor1 = {.ID = 0};
-PE_Servo180_Motor_t motor2 = {.ID = 1};
-PE_Servo180_Motor_t motor3 = {.ID = 2};
-PE_Servo180_Motor_t motor4 = {.ID = 3};
-PE_Servo180_Motor_t motor5 = {.ID = 4};
-PE_Servo180_Motor_t motor6 = {.ID = 5};
+PE_Servo180_Motor_t motor1 = {.ID = 0, .reverse = 0};
+PE_Servo180_Motor_t motor2 = {.ID = 1, .reverse = 1, .comp = 700};
+PE_Servo180_Motor_t motor3 = {.ID = 2, .reverse = 0};
+PE_Servo180_Motor_t motor4 = {.ID = 3, .reverse = 0};
+PE_Servo180_Motor_t motor5 = {.ID = 4, .reverse = 0};
+PE_Servo180_Motor_t motor6 = {.ID = 5, .reverse = 0};
 
 Motor_Pin_t motorPins[] = {
     {GPIOA, 0},
@@ -62,20 +62,18 @@ int main()
     PE_Servo180_attachMotor(&timer1, &motor5);
     PE_Servo180_attachMotor(&timer1, &motor6);
 
-    PE_Servo180_setDegree(&motor1, 90);
-
     HAL_TIM_Base_Start_IT(&TIM_Handle);
     HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_1);
-    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_2);
-    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_3);
-    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_4);
+//    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_2);
+//    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_3);
+//    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_4);
 
     if (PE_SpiderV2_initialize(&spiderV2) != PE_SPIDER_V2_STATUS_SUCCESS) {
         Error_Handler(__FILE__, __LINE__);
     }
 
     spiderV2.remote.moveX   = 0;
-    spiderV2.remote.moveY   = 1;
+    spiderV2.remote.moveY   = 0;
     spiderV2.remote.rotateZ = 0;
 
     while (1) {
@@ -105,11 +103,12 @@ void PE_SpiderV2_refreshOnEntering(PE_SpiderV2_t *spider) {
 
 void PE_SpiderV2_refreshOnComplete(PE_SpiderV2_t *spider) {
     PE_Servo180_setRadian(&motor1, spider->legs[PE_SPIDER_V2_LEG_POS_FL].cDegree);
-    PE_Servo180_setRadian(&motor2, spider->legs[PE_SPIDER_V2_LEG_POS_FR].cDegree);
-    PE_Servo180_setRadian(&motor3, spider->legs[PE_SPIDER_V2_LEG_POS_ML].cDegree);
-    PE_Servo180_setRadian(&motor4, spider->legs[PE_SPIDER_V2_LEG_POS_MR].cDegree);
-    PE_Servo180_setRadian(&motor5, spider->legs[PE_SPIDER_V2_LEG_POS_BL].cDegree);
-    PE_Servo180_setRadian(&motor6, spider->legs[PE_SPIDER_V2_LEG_POS_BR].cDegree);
+    PE_Servo180_setRadian(&motor2, spider->legs[PE_SPIDER_V2_LEG_POS_FL].fDegree);
+    PE_Servo180_setRadian(&motor3, spider->legs[PE_SPIDER_V2_LEG_POS_FL].tDegree);
+
+    PE_Servo180_setRadian(&motor4, spider->legs[PE_SPIDER_V2_LEG_POS_FR].cDegree);
+    PE_Servo180_setRadian(&motor5, spider->legs[PE_SPIDER_V2_LEG_POS_FR].fDegree);
+    PE_Servo180_setRadian(&motor6, spider->legs[PE_SPIDER_V2_LEG_POS_FR].tDegree);
 }
 
 void PE_Servo180_setTimerOverflow(PE_Servo180_Timer_t *timer, uint16_t value) {
@@ -137,7 +136,7 @@ void TIM4_IRQHandler(void) {
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *tim) {
     if (tim->Instance == TIM4) {
-        MX_LED_ON(0);
+        MX_LED_ON(1);
         PE_Servo180_onOverflow(&timer1);
     }
 }
