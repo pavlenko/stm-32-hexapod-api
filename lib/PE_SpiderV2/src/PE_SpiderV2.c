@@ -8,8 +8,8 @@ const uint32_t PE_SpiderV2_DELAY_MS_MOVE = 100;
 
 const float PE_SpiderV2_ROTATE_RADIUS = 680;
 
-const float PE_SpiderV2_STEP_PART_X1 = 10;
-const float PE_SpiderV2_STEP_PART_X2 = 20;
+const float PE_SpiderV2_STEP_PART_X1 = 15;
+const float PE_SpiderV2_STEP_PART_X2 = 30;
 
 PE_SpiderV2_State_t PE_SpiderV2_stateInit = {PE_SpiderV2_handlerInit_onEntering, NULL};
 PE_SpiderV2_State_t PE_SpiderV2_stateIdle = {PE_SpiderV2_handlerIdle_onEntering, PE_SpiderV2_handlerIdle_onDispatch};
@@ -156,7 +156,7 @@ void PE_SpiderV2_handlerInit_onEntering(PE_SpiderV2_t *spider) {
     PE_SpiderV2_calculateTargetLinear(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_BL], 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
     PE_SpiderV2_calculateTargetLinear(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_BR], 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
 
-    spider->delayMs   = PE_SpiderV2_DELAY_MS_MOVE;
+    spider->delayMs   = PE_SpiderV2_DELAY_MS_INIT;
     spider->nextState = &PE_SpiderV2_stateIdle;
 }
 
@@ -167,6 +167,8 @@ void PE_SpiderV2_handlerIdle_onEntering(PE_SpiderV2_t *spider) {
     PE_SpiderV2_calculateTargetLinear(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_MR], 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
     PE_SpiderV2_calculateTargetLinear(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_BL], 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
     PE_SpiderV2_calculateTargetLinear(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_BR], 0, PE_SPIDER_V2_LEG_MODE_GROUNDED);
+
+    spider->delayMs = PE_SpiderV2_DELAY_MS_MOVE;
 }
 
 void PE_SpiderV2_handlerIdle_onDispatch(PE_SpiderV2_t *spider) {
@@ -309,7 +311,7 @@ PE_SpiderV2_Status_t PE_SpiderV2_initialize(PE_SpiderV2_t *spider) {
         //TODO check possibility of destination
     }
 
-    spider->delayMs   = PE_SpiderV2_DELAY_MS_INIT;
+    spider->delayMs   = 0;
     spider->nextState = &PE_SpiderV2_stateInit;
 
     return PE_SPIDER_V2_STATUS_SUCCESS;

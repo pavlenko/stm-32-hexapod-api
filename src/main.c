@@ -15,7 +15,7 @@ TIM_HandleTypeDef TIM_Handle;
 PE_Servo180_Timer_t timer1;
 
 PE_Servo180_Motor_t motor1 = {.ID = 0, .reverse = 0};
-PE_Servo180_Motor_t motor2 = {.ID = 1, .reverse = 1, .comp = 700};
+PE_Servo180_Motor_t motor2 = {.ID = 1, .reverse = 0};
 PE_Servo180_Motor_t motor3 = {.ID = 2, .reverse = 0};
 PE_Servo180_Motor_t motor4 = {.ID = 3, .reverse = 0};
 PE_Servo180_Motor_t motor5 = {.ID = 4, .reverse = 0};
@@ -33,6 +33,7 @@ Motor_Pin_t motorPins[] = {
 PE_Button_Key_t key1;
 
 PE_SpiderV2_t spiderV2 = {
+    .moving = {.height = 50},
     .legs = {
         {.cLength = 28, .fLength = 69, .tLength = 52, .mnt = {-85, 120, 0},  .src = {-135, 190, 0}},
         {.cLength = 28, .fLength = 69, .tLength = 52, .mnt = {85, 120, 0},   .src = {135, 190, 0}},
@@ -64,9 +65,6 @@ int main()
 
     HAL_TIM_Base_Start_IT(&TIM_Handle);
     HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_1);
-//    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_2);
-//    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_3);
-//    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_4);
 
     if (PE_SpiderV2_initialize(&spiderV2) != PE_SPIDER_V2_STATUS_SUCCESS) {
         Error_Handler(__FILE__, __LINE__);
@@ -136,7 +134,7 @@ void TIM4_IRQHandler(void) {
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *tim) {
     if (tim->Instance == TIM4) {
-        MX_LED_ON(1);
+        MX_LED_ON(0);
         PE_Servo180_onOverflow(&timer1);
     }
 }
