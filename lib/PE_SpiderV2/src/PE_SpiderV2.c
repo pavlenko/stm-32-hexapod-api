@@ -298,9 +298,21 @@ void PE_SpiderV2_handlerMove8_onEntering(PE_SpiderV2_t *spider) {
     spider->nextState = &PE_SpiderV2_stateMove1;
 }
 
-void PE_SpiderV2_initialize(PE_SpiderV2_t *spider) {
+PE_SpiderV2_Status_t PE_SpiderV2_initialize(PE_SpiderV2_t *spider) {
+    uint8_t index;
+
+    for (index = 0; index < 6; index++) {
+        if (spider->legs[index].cLength == 0 || spider->legs[index].fLength == 0 || spider->legs[index].tLength == 0) {
+            return PE_SPIDER_V2_STATUS_FAILURE;
+        }
+
+        //TODO check possibility of destination
+    }
+
     spider->delayMs   = PE_SpiderV2_DELAY_MS_INIT;
     spider->nextState = &PE_SpiderV2_stateInit;
+
+    return PE_SPIDER_V2_STATUS_SUCCESS;
 }
 
 void PE_SpiderV2_refreshMs(PE_SpiderV2_t *spider, uint32_t millis) {

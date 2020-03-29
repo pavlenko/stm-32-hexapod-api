@@ -34,12 +34,12 @@ PE_Button_Key_t key1;
 
 PE_SpiderV2_t spiderV2 = {
     .legs = {
-        {.mnt = {-85, 120, 0},  .src = {-135, 190, 0}},
-        {.mnt = {85, 120, 0},   .src = {135, 190, 0}},
-        {.mnt = {-170, 0, 0},   .src = {-270, 0, 0}},
-        {.mnt = {170, 0, 0},    .src = {270, 0, 0}},
-        {.mnt = {-85, -120, 0}, .src = {-135, -190, 0}},
-        {.mnt = {85, -120, 0},  .src = {135, -190, 0}},
+        {.cLength = 28, .fLength = 69, .tLength = 52, .mnt = {-85, 120, 0},  .src = {-135, 190, 0}},
+        {.cLength = 28, .fLength = 69, .tLength = 52, .mnt = {85, 120, 0},   .src = {135, 190, 0}},
+        {.cLength = 28, .fLength = 69, .tLength = 52, .mnt = {-170, 0, 0},   .src = {-270, 0, 0}},
+        {.cLength = 28, .fLength = 69, .tLength = 52, .mnt = {170, 0, 0},    .src = {270, 0, 0}},
+        {.cLength = 28, .fLength = 69, .tLength = 52, .mnt = {-85, -120, 0}, .src = {-135, -190, 0}},
+        {.cLength = 28, .fLength = 69, .tLength = 52, .mnt = {85, -120, 0},  .src = {135, -190, 0}},
     }
 };
 
@@ -70,7 +70,9 @@ int main()
     HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_3);
     HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_4);
 
-    PE_SpiderV2_initialize(&spiderV2);
+    if (PE_SpiderV2_initialize(&spiderV2) != PE_SPIDER_V2_STATUS_SUCCESS) {
+        Error_Handler(__FILE__, __LINE__);
+    }
 
     spiderV2.remote.moveX   = 0;
     spiderV2.remote.moveY   = 1;

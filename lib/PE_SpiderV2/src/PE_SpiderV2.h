@@ -7,6 +7,11 @@ extern "C" {
 
 #include <stdint.h>
 
+typedef enum PE_SpiderV2_Status_s {
+    PE_SPIDER_V2_STATUS_SUCCESS,
+    PE_SPIDER_V2_STATUS_FAILURE,
+} PE_SpiderV2_Status_t;
+
 typedef enum PE_SpiderV2_LegMode_s {
     PE_SPIDER_V2_LEG_MODE_GROUNDED,
     PE_SPIDER_V2_LEG_MODE_FLOATING,
@@ -99,7 +104,7 @@ void PE_SpiderV2_handlerMove6_onEntering(PE_SpiderV2_t *spider);
 void PE_SpiderV2_handlerMove7_onEntering(PE_SpiderV2_t *spider);
 void PE_SpiderV2_handlerMove8_onEntering(PE_SpiderV2_t *spider);
 
-void PE_SpiderV2_initialize(PE_SpiderV2_t *spider);
+PE_SpiderV2_Status_t PE_SpiderV2_initialize(PE_SpiderV2_t *spider);
 void PE_SpiderV2_refreshMs(PE_SpiderV2_t *spider, uint32_t millis);
 
 void PE_SpiderV2_refreshOnEntering(PE_SpiderV2_t *spider);
