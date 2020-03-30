@@ -152,6 +152,22 @@ void PE_SpiderV2_refreshOnComplete(PE_SpiderV2_t *spider) {
     PE_Servo180_setRadian(&motor04, spider->legs[PE_SPIDER_V2_LEG_POS_FR].cDegree);
     PE_Servo180_setRadian(&motor05, spider->legs[PE_SPIDER_V2_LEG_POS_FR].fDegree);
     PE_Servo180_setRadian(&motor06, spider->legs[PE_SPIDER_V2_LEG_POS_FR].tDegree);
+
+    PE_Servo180_setRadian(&motor07, spider->legs[PE_SPIDER_V2_LEG_POS_ML].cDegree);
+    PE_Servo180_setRadian(&motor08, spider->legs[PE_SPIDER_V2_LEG_POS_ML].fDegree);
+    PE_Servo180_setRadian(&motor09, spider->legs[PE_SPIDER_V2_LEG_POS_ML].tDegree);
+
+    PE_Servo180_setRadian(&motor10, spider->legs[PE_SPIDER_V2_LEG_POS_MR].cDegree);
+    PE_Servo180_setRadian(&motor11, spider->legs[PE_SPIDER_V2_LEG_POS_MR].fDegree);
+    PE_Servo180_setRadian(&motor12, spider->legs[PE_SPIDER_V2_LEG_POS_MR].tDegree);
+
+    PE_Servo180_setRadian(&motor13, spider->legs[PE_SPIDER_V2_LEG_POS_BL].cDegree);
+    PE_Servo180_setRadian(&motor14, spider->legs[PE_SPIDER_V2_LEG_POS_BL].fDegree);
+    PE_Servo180_setRadian(&motor15, spider->legs[PE_SPIDER_V2_LEG_POS_BL].tDegree);
+
+    PE_Servo180_setRadian(&motor16, spider->legs[PE_SPIDER_V2_LEG_POS_BR].cDegree);
+    PE_Servo180_setRadian(&motor17, spider->legs[PE_SPIDER_V2_LEG_POS_BR].fDegree);
+    PE_Servo180_setRadian(&motor18, spider->legs[PE_SPIDER_V2_LEG_POS_BR].tDegree);
 }
 
 void PE_Servo180_setTimerOverflow(PE_Servo180_Timer_t *timer, uint16_t value) {
