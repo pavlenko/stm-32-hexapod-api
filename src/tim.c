@@ -40,48 +40,25 @@ void MX_TIM_PWM_Init(TIM_TypeDef *tim, TIM_HandleTypeDef *handle)
 
 void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim)
 {
-    GPIO_InitTypeDef GPIO_InitStruct;
-
-    if (tim->Instance == TIM1) {
-        /* GPIO clock enable */
-        __HAL_RCC_GPIOA_CLK_ENABLE();
-
+    if (tim->Instance == TIM2) {
         /* Peripheral clock enable */
-        __HAL_RCC_TIM1_CLK_ENABLE();
+        __HAL_RCC_TIM2_CLK_ENABLE();
 
-        /**
-         * TIM GPIO Configuration
-         * PA8  ------> TIM_CH1
-         * PA9  ------> TIM_CH2
-         * PA10 ------> TIM_CH3
-         * PA11 ------> TIM_CH4
-         */
-        GPIO_InitStruct.Pin   = GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11;
-        GPIO_InitStruct.Mode  = GPIO_MODE_AF_PP;
-        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+        HAL_NVIC_SetPriority(TIM2_IRQn, 0, 0);
+        HAL_NVIC_EnableIRQ(TIM2_IRQn);
+    }
 
-        HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    if (tim->Instance == TIM3) {
+        /* Peripheral clock enable */
+        __HAL_RCC_TIM3_CLK_ENABLE();
+
+        HAL_NVIC_SetPriority(TIM3_IRQn, 0, 0);
+        HAL_NVIC_EnableIRQ(TIM3_IRQn);
     }
 
     if (tim->Instance == TIM4) {
-        /* GPIO clock enable */
-        __HAL_RCC_GPIOB_CLK_ENABLE();
-
         /* Peripheral clock enable */
         __HAL_RCC_TIM4_CLK_ENABLE();
-
-        /**
-         * TIM GPIO Configuration
-         * PB6 ------> TIM_CH1
-         * PB7 ------> TIM_CH2
-         * PB8 ------> TIM_CH3
-         * PB9 ------> TIM_CH4
-         */
-        GPIO_InitStruct.Pin   = GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9;
-        GPIO_InitStruct.Mode  = GPIO_MODE_AF_PP;
-        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-
-        HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
         HAL_NVIC_SetPriority(TIM4_IRQn, 0, 0);
         HAL_NVIC_EnableIRQ(TIM4_IRQn);
@@ -90,31 +67,18 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* tim)
 
 void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* tim)
 {
-    if (tim->Instance == TIM1) {
+    if (tim->Instance == TIM2) {
         /* Peripheral clock disable */
-        __HAL_RCC_TIM1_CLK_DISABLE();
+        __HAL_RCC_TIM2_CLK_DISABLE();
+    }
 
-        /**
-         * TIM1 GPIO Configuration
-         * PA8  ------> TIM1_CH1
-         * PA9  ------> TIM1_CH2
-         * PA10 ------> TIM1_CH3
-         * PA11 ------> TIM1_CH4
-         */
-        HAL_GPIO_DeInit(GPIOA, GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11);
+    if (tim->Instance == TIM3) {
+        /* Peripheral clock disable */
+        __HAL_RCC_TIM3_CLK_DISABLE();
     }
 
     if (tim->Instance == TIM4) {
         /* Peripheral clock disable */
         __HAL_RCC_TIM4_CLK_DISABLE();
-
-        /**
-         * TIM GPIO Configuration
-         * PB6 ------> TIM_CH1
-         * PB7 ------> TIM_CH2
-         * PB8 ------> TIM_CH3
-         * PB9 ------> TIM_CH4
-         */
-        HAL_GPIO_DeInit(GPIOB, GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9);
     }
 }

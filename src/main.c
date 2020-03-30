@@ -10,7 +10,9 @@ typedef struct {
     uint8_t      pin;
 } Motor_Pin_t;
 
-TIM_HandleTypeDef TIM_Handle;
+TIM_HandleTypeDef TIM2_Handle;
+TIM_HandleTypeDef TIM3_Handle;
+TIM_HandleTypeDef TIM4_Handle;
 
 PE_Servo180_Timer_t timer1;
 PE_Servo180_Timer_t timer2;
@@ -81,7 +83,9 @@ int main()
     SystemClock_Config();
     MX_GPIO_Init();
     MX_LED_Init();
-    MX_TIM_PWM_Init(TIM4, &TIM_Handle);
+    MX_TIM_PWM_Init(TIM2, &TIM2_Handle);
+    MX_TIM_PWM_Init(TIM3, &TIM3_Handle);
+    MX_TIM_PWM_Init(TIM4, &TIM4_Handle);
 
     PE_Servo180_createTimer(&timer1);
     PE_Servo180_createTimer(&timer2);
@@ -108,8 +112,13 @@ int main()
     PE_Servo180_attachMotor(&timer3, &motor17);
     PE_Servo180_attachMotor(&timer3, &motor18);
 
-    HAL_TIM_Base_Start_IT(&TIM_Handle);
-    HAL_TIM_PWM_Start_IT(&TIM_Handle, TIM_CHANNEL_1);
+    HAL_TIM_Base_Start_IT(&TIM2_Handle);
+    HAL_TIM_Base_Start_IT(&TIM3_Handle);
+    HAL_TIM_Base_Start_IT(&TIM4_Handle);
+
+    HAL_TIM_PWM_Start_IT(&TIM2_Handle, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start_IT(&TIM3_Handle, TIM_CHANNEL_1);
+    HAL_TIM_PWM_Start_IT(&TIM4_Handle, TIM_CHANNEL_1);
 
     if (PE_SpiderV2_initialize(&spiderV2) != PE_SPIDER_V2_STATUS_SUCCESS) {
         Error_Handler(__FILE__, __LINE__);
@@ -171,13 +180,29 @@ void PE_SpiderV2_refreshOnComplete(PE_SpiderV2_t *spider) {
 }
 
 void PE_Servo180_setTimerOverflow(PE_Servo180_Timer_t *timer, uint16_t value) {
-    __HAL_TIM_SET_AUTORELOAD(&TIM_Handle, value);
+    if (timer == &timer1) {
+        __HAL_TIM_SET_AUTORELOAD(&TIM2_Handle, value);
+    }
+    if (timer == &timer2) {
+        __HAL_TIM_SET_AUTORELOAD(&TIM3_Handle, value);
+    }
+    if (timer == &timer3) {
+        __HAL_TIM_SET_AUTORELOAD(&TIM4_Handle, value);
+    }
     (void) timer;
     (void) value;
 }
 
 void PE_Servo180_setTimerRefresh(PE_Servo180_Timer_t *timer) {
-    HAL_TIM_GenerateEvent(&TIM_Handle, TIM_EVENTSOURCE_UPDATE);
+    if (timer == &timer1) {
+        HAL_TIM_GenerateEvent(&TIM2_Handle, TIM_EVENTSOURCE_UPDATE);
+    }
+    if (timer == &timer2) {
+        HAL_TIM_GenerateEvent(&TIM3_Handle, TIM_EVENTSOURCE_UPDATE);
+    }
+    if (timer == &timer3) {
+        HAL_TIM_GenerateEvent(&TIM4_Handle, TIM_EVENTSOURCE_UPDATE);
+    }
     (void) timer;
 }
 
@@ -189,14 +214,28 @@ void PE_Servo180_setMotorPin1(uint8_t id) {
     motorPins[id].port->BSRR = (1u << motorPins[id].pin);
 }
 
+void TIM2_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&TIM2_Handle);
+}
+
+void TIM3_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&TIM3_Handle);
+}
+
 void TIM4_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&TIM_Handle);
+    HAL_TIM_IRQHandler(&TIM4_Handle);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *tim) {
-    if (tim->Instance == TIM4) {
-        MX_LED_ON(0);
+    MX_LED_ON(0);
+    if (tim->Instance == TIM2) {
         PE_Servo180_onOverflow(&timer1);
+    }
+    if (tim->Instance == TIM3) {
+        PE_Servo180_onOverflow(&timer2);
+    }
+    if (tim->Instance == TIM4) {
+        PE_Servo180_onOverflow(&timer3);
     }
 }
 
