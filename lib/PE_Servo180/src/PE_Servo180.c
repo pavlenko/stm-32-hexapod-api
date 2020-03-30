@@ -39,6 +39,8 @@ PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Serv
     }
 
     motor->ticks = PE_Servo180_MOTOR_MID;
+    motor->value = PE_Servo180_MOTOR_MID;
+    motor->speed = 0;
 
     timer->motorItems[timer->motorCount] = motor;
     timer->motorCount++;
@@ -59,7 +61,7 @@ PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_Timer_t *timer, PE_Serv
     return PE_Servo180_FAILURE;
 }
 
-void PE_Servo180_setRadian(PE_Servo180_Motor_t *motor, float value) {
+void PE_Servo180_setRadian(PE_Servo180_Motor_t *motor, float value, uint16_t time) {
     if (value < 0) {
         value = 0;
     }
@@ -70,20 +72,20 @@ void PE_Servo180_setRadian(PE_Servo180_Motor_t *motor, float value) {
 
     value = (uint16_t) PE_Servo180_mapRange(value, 0, M_PI, motor->min, motor->max);
 
-    PE_Servo180_setMicros(motor, value);
+    PE_Servo180_setMicros(motor, value, time);
 }
 
-void PE_Servo180_setDegree(PE_Servo180_Motor_t *motor, uint16_t value) {
+void PE_Servo180_setDegree(PE_Servo180_Motor_t *motor, uint16_t value, uint16_t time) {
     if (value > 180) {
         value = 180;
     }
 
     value = (uint16_t) PE_Servo180_mapRange(value, 0, 180, motor->min, motor->max);
 
-    PE_Servo180_setMicros(motor, value);
+    PE_Servo180_setMicros(motor, value, time);
 }
 
-void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value) {
+void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value, uint16_t time) {
     if (value < motor->min) {
         value = motor->min;
     }
@@ -96,9 +98,24 @@ void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value) {
         value = (motor->max + motor->min) - value;
     }
 
-    value += motor->comp;
+    motor->value = value;
+
+    if (time > 0) {
+        uint16_t steps = (time / 50) + 1;
+
+        if (steps > 1) {
+            if (motor->value > motor->ticks) {
+                motor->speed = (motor->value - motor->ticks) / steps;
+            } else {
+                motor->speed = (motor->ticks - motor->value) / steps;
+            }
+
+            return;
+        }
+    }
 
     motor->ticks = value;
+    motor->speed = 0;
 }
 
 void PE_Servo180_onOverflow(PE_Servo180_Timer_t *timer) {
@@ -114,6 +131,24 @@ void PE_Servo180_onOverflow(PE_Servo180_Timer_t *timer) {
         uint16_t ticks;
 
         if (timer->motorItems[timer->motorIndex] != NULL) {
+            if (timer->motorItems[timer->motorIndex]->speed > 0) {
+                if (timer->motorItems[timer->motorIndex]->value > timer->motorItems[timer->motorIndex]->ticks) {
+                    timer->motorItems[timer->motorIndex]->ticks += timer->motorItems[timer->motorIndex]->speed;
+
+                    if (timer->motorItems[timer->motorIndex]->value <= timer->motorItems[timer->motorIndex]->ticks) {
+                        timer->motorItems[timer->motorIndex]->ticks = timer->motorItems[timer->motorIndex]->value;
+                        timer->motorItems[timer->motorIndex]->speed = 0;
+                    }
+                } else {
+                    timer->motorItems[timer->motorIndex]->ticks -= timer->motorItems[timer->motorIndex]->speed;
+
+                    if (timer->motorItems[timer->motorIndex]->value >= timer->motorItems[timer->motorIndex]->ticks) {
+                        timer->motorItems[timer->motorIndex]->ticks = timer->motorItems[timer->motorIndex]->value;
+                        timer->motorItems[timer->motorIndex]->speed = 0;
+                    }
+                }
+            }
+
             PE_Servo180_setMotorPin1(timer->motorItems[timer->motorIndex]->ID);
             ticks = timer->motorItems[timer->motorIndex]->ticks;
         } else {

@@ -17,6 +17,8 @@ typedef struct PE_Servo180_Motor_s {
     uint8_t reverse: 1;
     uint8_t ID: 7;
     uint16_t ticks;
+    uint16_t value;
+    uint16_t speed;
     uint16_t min;
     uint16_t max;
     int16_t comp;
@@ -61,24 +63,27 @@ PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_Timer_t *timer, PE_Serv
  *
  * @param motor
  * @param value
+ * @param time
  */
-void PE_Servo180_setRadian(PE_Servo180_Motor_t *motor, float value);
+void PE_Servo180_setRadian(PE_Servo180_Motor_t *motor, float value, uint16_t time);
 
 /**
  * Set motor degree -> convert degree value to ticks (just set to motor->ticks)
  *
  * @param motor
  * @param value
+ * @param time
  */
-void PE_Servo180_setDegree(PE_Servo180_Motor_t *motor, uint16_t value);
+void PE_Servo180_setDegree(PE_Servo180_Motor_t *motor, uint16_t value, uint16_t time);
 
 /**
  * Set motor micros -> convert micros value to ticks (just set to motor->ticks)
  *
  * @param motor
  * @param value
+ * @param time
  */
-void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value);
+void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value, uint16_t time);
 
 /**
  * @param timer
