@@ -155,8 +155,8 @@ void PE_SpiderV2_refreshOnEntering(PE_SpiderV2_t *spider) {
 
 void PE_SpiderV2_refreshOnComplete(PE_SpiderV2_t *spider) {
     PE_Servo180_setRadian(&motor01, spider->legs[PE_SPIDER_V2_LEG_POS_FL].cDegree, PE_SpiderV2_DELAY_MS_MOVE);
-    PE_Servo180_setRadian(&motor02, spider->legs[PE_SPIDER_V2_LEG_POS_FL].fDegree, 0);
-    PE_Servo180_setRadian(&motor03, spider->legs[PE_SPIDER_V2_LEG_POS_FL].tDegree, 0);
+    PE_Servo180_setRadian(&motor02, spider->legs[PE_SPIDER_V2_LEG_POS_FL].fDegree, PE_SpiderV2_DELAY_MS_MOVE);
+    PE_Servo180_setRadian(&motor03, spider->legs[PE_SPIDER_V2_LEG_POS_FL].tDegree, PE_SpiderV2_DELAY_MS_MOVE);
 
     PE_Servo180_setRadian(&motor04, spider->legs[PE_SPIDER_V2_LEG_POS_FR].cDegree, 0);
     PE_Servo180_setRadian(&motor05, spider->legs[PE_SPIDER_V2_LEG_POS_FR].fDegree, 0);

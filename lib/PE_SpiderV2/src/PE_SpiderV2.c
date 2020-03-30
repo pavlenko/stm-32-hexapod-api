@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 const uint32_t PE_SpiderV2_DELAY_MS_INIT = 2000;
-const uint32_t PE_SpiderV2_DELAY_MS_MOVE = 1000;
+const uint32_t PE_SpiderV2_DELAY_MS_MOVE = 250;//250|125|62.5
 
 const float PE_SpiderV2_ROTATE_RADIUS = 680;
 

@@ -98,10 +98,11 @@ void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value, uint16_t 
         value = (motor->max + motor->min) - value;
     }
 
+    motor->ticks = motor->value;
     motor->value = value;
 
     if (time > 0) {
-        uint16_t steps = (time / 50) + 1;
+        uint16_t steps = (time / 25) + 1;
 
         if (steps > 1) {
             if (motor->value > motor->ticks) {
