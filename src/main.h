@@ -8,6 +8,8 @@ extern "C" {
 #include <stdint.h>
 #include "stm32f1xx.h"
 
+#include <PE_nRF24L01.h>
+
 void NMI_Handler(void);
 void HardFault_Handler(void);
 void MemManage_Handler(void);

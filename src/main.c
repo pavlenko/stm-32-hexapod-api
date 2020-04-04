@@ -3,6 +3,7 @@
 #include <PE_SpiderV2.h>
 #include "main.h"
 #include "led.h"
+#include "nRF24.h"
 #include "spi.h"
 #include "tim.h"
 
@@ -12,6 +13,7 @@ typedef struct {
 } Motor_Pin_t;
 
 SPI_HandleTypeDef SPIn;
+PE_nRF24_t nRF24;
 
 TIM_HandleTypeDef TIM2_Handle;
 TIM_HandleTypeDef TIM3_Handle;
@@ -89,6 +91,7 @@ int main()
     MX_LED_Init();
     MX_LED_OFF(1);
     MX_SPI2_Init(&SPIn);
+    MX_nRF24_Init(&nRF24);
 
     MX_TIM_PWM_Init(TIM2, &TIM2_Handle);
     MX_TIM_PWM_Init(TIM3, &TIM3_Handle);
@@ -229,6 +232,56 @@ void PE_Servo180_setMotorPin1(uint8_t id) {
     motorPins[id].port->BSRR = (1u << motorPins[id].pin);
 }
 
+PE_nRF24_RESULT_t PE_nRF24L01_readData(PE_nRF24_t *handle, uint8_t *data, uint8_t size) {
+    (void) handle;
+
+    if (HAL_SPI_Receive(&SPIn, data, size, 1000) != HAL_OK) {
+        return PE_nRF24_RESULT_ERROR;
+    }
+
+    return PE_nRF24_RESULT_OK;
+}
+
+PE_nRF24_RESULT_t PE_nRF24L01_sendData(PE_nRF24_t *handle, uint8_t *data, uint8_t size) {
+    (void) handle;
+
+    if (HAL_SPI_Transmit(&SPIn, data, size, 1000) != HAL_OK) {
+        return PE_nRF24_RESULT_ERROR;
+    }
+
+    return PE_nRF24_RESULT_OK;
+}
+
+void PE_nRF24L01_setCE0(PE_nRF24_t *handle) {
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_RESET);
+    (void) handle;
+}
+
+void PE_nRF24L01_setCE1(PE_nRF24_t *handle) {
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_SET);
+    (void) handle;
+}
+
+void PE_nRF24L01_setSS0(PE_nRF24_t *handle) {
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
+    (void) handle;
+}
+
+void PE_nRF24L01_setSS1(PE_nRF24_t *handle) {
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
+    (void) handle;
+}
+
+void PE_nRF24L01_onRXComplete(PE_nRF24_t *handle) {
+    if (nRF24.buffer[0] != 0) {
+        spiderV2.remote.moveX = 1;
+    } else {
+        spiderV2.remote.moveX = 0;
+    }
+    (void) handle;
+    MX_LED_ON(5);
+}
+
 void TIM2_IRQHandler(void) {
     HAL_TIM_IRQHandler(&TIM2_Handle);
 }
@@ -263,7 +316,7 @@ void EXTI15_10_IRQHandler(void) {
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
     if (GPIO_Pin == GPIO_PIN_10) {
-//        PE_nRF24L01_handleIRQ(&nRF24);
+        PE_nRF24L01_handleIRQ(&nRF24);
     }
 }
 
