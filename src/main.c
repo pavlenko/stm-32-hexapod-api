@@ -308,10 +308,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *tim) {
 }
 
 void EXTI15_10_IRQHandler(void) {
-    if (EXTI->PR & GPIO_PIN_10) {
-        EXTI->PR = GPIO_PIN_10;
-        HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
-    }
+    //TODO check why not reflect to: if (EXTI->PR & GPIO_PIN_10) { EXTI->PR = GPIO_PIN_10; HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10); }
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
