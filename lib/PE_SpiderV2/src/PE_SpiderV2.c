@@ -23,6 +23,8 @@ PE_SpiderV2_State_t PE_SpiderV2_stateMove6 = {PE_SpiderV2_handlerMove6_onEnterin
 PE_SpiderV2_State_t PE_SpiderV2_stateMove7 = {PE_SpiderV2_handlerMove7_onEntering, NULL};
 PE_SpiderV2_State_t PE_SpiderV2_stateMove8 = {PE_SpiderV2_handlerMove8_onEntering, NULL};
 
+PE_SpiderV2_State_t PE_SpiderV2_stateOff = {PE_SpiderV2_handlerOff_onEntering, NULL};
+
 float PE_SpiderV2_calculateAngleByOppositeSide(float adjacentSideA, float adjacentSideB, float oppositeSide);
 
 void PE_SpiderV2_calculateMovingLinear(PE_SpiderV2_Remote_t *remote, PE_SpiderV2_Moving_t *moving) {
@@ -156,8 +158,10 @@ void PE_SpiderV2_handlerInit_onEntering(PE_SpiderV2_t *spider) {
     PE_SpiderV2_calculateTargetLinear(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_BL], 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
     PE_SpiderV2_calculateTargetLinear(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_BR], 0, PE_SPIDER_V2_LEG_MODE_FLOATING);
 
-    spider->delayMs   = PE_SpiderV2_DELAY_MS_INIT;
-    spider->nextState = &PE_SpiderV2_stateIdle;
+    if (spider->remote.off == 0) {
+        spider->delayMs   = PE_SpiderV2_DELAY_MS_INIT;
+        spider->nextState = &PE_SpiderV2_stateIdle;
+    }
 }
 
 void PE_SpiderV2_handlerIdle_onEntering(PE_SpiderV2_t *spider) {
@@ -172,7 +176,10 @@ void PE_SpiderV2_handlerIdle_onEntering(PE_SpiderV2_t *spider) {
 }
 
 void PE_SpiderV2_handlerIdle_onDispatch(PE_SpiderV2_t *spider) {
-    if (spider->remote.moveX != 0 || spider->remote.moveY != 0 || spider->remote.rotateZ != 0) {
+    if (spider->remote.off == 1) {
+        spider->delayMs   = PE_SpiderV2_DELAY_MS_MOVE * 4;
+        spider->nextState = &PE_SpiderV2_stateInit;
+    } else if (spider->remote.moveX != 0 || spider->remote.moveY != 0 || spider->remote.rotateZ != 0) {
         PE_SpiderV2_calculateMovingLinear(&spider->remote, &spider->moving);
         PE_SpiderV2_calculateMovingRotate(&spider->remote, &spider->moving);
 
@@ -216,7 +223,7 @@ void PE_SpiderV2_handlerMove3_onEntering(PE_SpiderV2_t *spider) {
     spider->calculate(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_BL], PE_SpiderV2_STEP_PART_X1, PE_SPIDER_V2_LEG_MODE_GROUNDED);
     spider->calculate(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_BR], -PE_SpiderV2_STEP_PART_X1, PE_SPIDER_V2_LEG_MODE_FLOATING);
 
-    if (spider->remote.moveX == 0 && spider->remote.moveY == 0 && spider->remote.rotateZ == 0) {
+    if (spider->remote.off == 1 || (spider->remote.moveX == 0 && spider->remote.moveY == 0 && spider->remote.rotateZ == 0)) {
         spider->nextState = &PE_SpiderV2_stateIdle;
     } else {
         spider->nextState = &PE_SpiderV2_stateMove4;
@@ -273,7 +280,7 @@ void PE_SpiderV2_handlerMove7_onEntering(PE_SpiderV2_t *spider) {
     spider->calculate(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_BL], -PE_SpiderV2_STEP_PART_X1, PE_SPIDER_V2_LEG_MODE_FLOATING);
     spider->calculate(&spider->moving, &spider->legs[PE_SPIDER_V2_LEG_POS_BR], PE_SpiderV2_STEP_PART_X1, PE_SPIDER_V2_LEG_MODE_GROUNDED);
 
-    if (spider->remote.moveX == 0 && spider->remote.moveY == 0 && spider->remote.rotateZ == 0) {
+    if (spider->remote.off == 1 || (spider->remote.moveX == 0 && spider->remote.moveY == 0 && spider->remote.rotateZ == 0)) {
         spider->nextState = &PE_SpiderV2_stateIdle;
     } else {
         spider->nextState = &PE_SpiderV2_stateMove8;
@@ -313,6 +320,8 @@ PE_SpiderV2_Status_t PE_SpiderV2_initialize(PE_SpiderV2_t *spider) {
 
     spider->delayMs   = 0;
     spider->nextState = &PE_SpiderV2_stateInit;
+
+    spider->remote = (PE_SpiderV2_Remote_t) {0, 0, 0, 0};
 
     return PE_SPIDER_V2_STATUS_SUCCESS;
 }

@@ -61,6 +61,7 @@ Motor_Pin_t motorPins[] = {
 };
 
 PE_Button_Key_t key1;
+PE_Button_Key_t key2;
 
 PE_SpiderV2_t spiderV2 = {
     .moving = {.height = 50},
@@ -132,6 +133,7 @@ int main()
         PE_SpiderV2_refreshMs(&spiderV2, HAL_GetTick());
 
         PE_Button_dispatchKey(&key1, HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_15) == 0, HAL_GetTick());
+        PE_Button_dispatchKey(&key2, HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14) == 0, HAL_GetTick());
 
         //MX_LED_ON(0);
         //HAL_Delay(500);
@@ -141,11 +143,18 @@ int main()
 }
 
 void PE_Button_onPress(PE_Button_Key_t *key) {
-    spiderV2.remote.moveX = 1;
+    if (key == &key1) {
+        spiderV2.remote.moveX = 1;
+    }
+    if (key == &key2) {
+        spiderV2.remote.off = 1;
+    }
 }
 
 void PE_Button_onRelease(PE_Button_Key_t *key) {
-    spiderV2.remote.moveX = 0;
+    if (key == &key1) {
+        spiderV2.remote.moveX = 0;
+    }
 }
 
 void PE_SpiderV2_refreshOnEntering(PE_SpiderV2_t *spider) {

@@ -44,6 +44,7 @@ typedef struct PE_SpiderV2_Remote_s {
     float moveX;
     float moveY;
     int8_t rotateZ;
+    uint8_t off;
 } PE_SpiderV2_Remote_t;
 
 typedef struct PE_SpiderV2_Moving_s {
@@ -104,6 +105,8 @@ void PE_SpiderV2_handlerMove6_onEntering(PE_SpiderV2_t *spider);
 void PE_SpiderV2_handlerMove7_onEntering(PE_SpiderV2_t *spider);
 void PE_SpiderV2_handlerMove8_onEntering(PE_SpiderV2_t *spider);
 
+void PE_SpiderV2_handlerOff_onEntering(PE_SpiderV2_t *spider);
+
 PE_SpiderV2_Status_t PE_SpiderV2_initialize(PE_SpiderV2_t *spider);
 void PE_SpiderV2_refreshMs(PE_SpiderV2_t *spider, uint32_t millis);
 
@@ -130,6 +133,8 @@ extern PE_SpiderV2_State_t PE_SpiderV2_stateMove5;
 extern PE_SpiderV2_State_t PE_SpiderV2_stateMove6;
 extern PE_SpiderV2_State_t PE_SpiderV2_stateMove7;
 extern PE_SpiderV2_State_t PE_SpiderV2_stateMove8;
+
+extern PE_SpiderV2_State_t PE_SpiderV2_stateOff;
 
 #ifdef __cplusplus
 }
