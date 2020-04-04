@@ -276,7 +276,7 @@ void MX_GPIO_Init() {
 
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin   = GPIO_PIN_15;
+    GPIO_InitStruct.Pin   = GPIO_PIN_14|GPIO_PIN_15;
     GPIO_InitStruct.Mode  = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull  = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
