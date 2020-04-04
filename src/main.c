@@ -3,12 +3,15 @@
 #include <PE_SpiderV2.h>
 #include "main.h"
 #include "led.h"
+#include "spi.h"
 #include "tim.h"
 
 typedef struct {
     GPIO_TypeDef *port;
     uint8_t      pin;
 } Motor_Pin_t;
+
+SPI_HandleTypeDef SPIn;
 
 TIM_HandleTypeDef TIM2_Handle;
 TIM_HandleTypeDef TIM3_Handle;
@@ -84,6 +87,9 @@ int main()
     SystemClock_Config();
     MX_GPIO_Init();
     MX_LED_Init();
+    MX_LED_OFF(1);
+    MX_SPI2_Init(&SPIn);
+
     MX_TIM_PWM_Init(TIM2, &TIM2_Handle);
     MX_TIM_PWM_Init(TIM3, &TIM3_Handle);
     MX_TIM_PWM_Init(TIM4, &TIM4_Handle);
@@ -248,12 +254,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *tim) {
     }
 }
 
-//void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *tim) {
-//    if (tim->Instance == TIM4) {
-//        //MX_LED_ON(1);
-//        //PE_Servo180_dispatch(&timer1);
-//    }
-//}
+void EXTI15_10_IRQHandler(void) {
+    if (EXTI->PR & GPIO_PIN_10) {
+        EXTI->PR = GPIO_PIN_10;
+        HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
+    }
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    if (GPIO_Pin == GPIO_PIN_10) {
+//        PE_nRF24L01_handleIRQ(&nRF24);
+    }
+}
 
 void MX_GPIO_Init() {
     GPIO_InitTypeDef GPIO_InitStruct;
@@ -282,6 +294,24 @@ void MX_GPIO_Init() {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
 
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+    //PB11 ------> nRF24_CE
+    //PB10 ------> nRF24_IRQ
+    GPIO_InitStruct.Pin   = GPIO_PIN_11;
+    GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_RESET);
+
+    GPIO_InitStruct.Pin   = GPIO_PIN_10;
+    GPIO_InitStruct.Mode  = GPIO_MODE_IT_FALLING;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+    HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 }
 
 /**
