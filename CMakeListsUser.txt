@@ -14,3 +14,4 @@ include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_SpiderV2_calculateTargetL
 include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_SpiderV2_calculateTargetRotate")
 include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_SpiderV2_dispatchMs")
 include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_SpiderV2_initialize")
+include_directories("${CMAKE_CURRENT_LIST_DIR}/test/PE_SpiderV2_moveY")
