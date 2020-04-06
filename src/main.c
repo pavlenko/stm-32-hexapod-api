@@ -153,7 +153,7 @@ int main()
 
 void PE_Button_onPress(PE_Button_Key_t *key) {
     if (key == &key1) {
-        spiderV2.remote.moveX = 1;
+        spiderV2.remote.moveY = 1;
     }
     if (key == &key2) {
         spiderV2.remote.off = 1;
@@ -162,7 +162,7 @@ void PE_Button_onPress(PE_Button_Key_t *key) {
 
 void PE_Button_onRelease(PE_Button_Key_t *key) {
     if (key == &key1) {
-        spiderV2.remote.moveX = 0;
+        spiderV2.remote.moveY = 0;
     }
 }
 
@@ -274,9 +274,9 @@ void PE_nRF24L01_setSS1(PE_nRF24_t *handle) {
 
 void PE_nRF24L01_onRXComplete(PE_nRF24_t *handle) {
     if (nRF24.buffer[0] != 0) {
-        spiderV2.remote.moveX = 1;
+        spiderV2.remote.moveY = 1;
     } else {
-        spiderV2.remote.moveX = 0;
+        spiderV2.remote.moveY = 0;
     }
     (void) handle;
     MX_LED_ON(5);
