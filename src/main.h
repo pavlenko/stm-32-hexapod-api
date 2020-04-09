@@ -9,6 +9,9 @@ extern "C" {
 #include "stm32f1xx.h"
 
 #include <PE_nRF24L01.h>
+#include "led.h"
+
+extern I2C_HandleTypeDef I2C2_Handle;
 
 void NMI_Handler(void);
 void HardFault_Handler(void);

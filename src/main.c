@@ -12,6 +12,7 @@ typedef struct {
     uint8_t      pin;
 } Motor_Pin_t;
 
+I2C_HandleTypeDef I2C2_Handle;
 SPI_HandleTypeDef SPIn;
 PE_nRF24_t nRF24;
 
@@ -27,8 +28,8 @@ PE_Servo180_Motor_t motor01 = {.ID = 0, .reverse = 0};
 PE_Servo180_Motor_t motor02 = {.ID = 1, .reverse = 0};
 PE_Servo180_Motor_t motor03 = {.ID = 2, .reverse = 0};
 PE_Servo180_Motor_t motor04 = {.ID = 3, .reverse = 0};
-PE_Servo180_Motor_t motor05 = {.ID = 4, .reverse = 0};
-PE_Servo180_Motor_t motor06 = {.ID = 5, .reverse = 0};
+PE_Servo180_Motor_t motor05 = {.ID = 4, .reverse = 1};
+PE_Servo180_Motor_t motor06 = {.ID = 5, .reverse = 1};
 PE_Servo180_Motor_t motor07 = {.ID = 6, .reverse = 0};
 PE_Servo180_Motor_t motor08 = {.ID = 7, .reverse = 0};
 PE_Servo180_Motor_t motor09 = {.ID = 8, .reverse = 0};
@@ -176,9 +177,9 @@ void PE_SpiderV2_refreshOnComplete(PE_SpiderV2_t *spider) {
     PE_Servo180_setRadian(&motor02, spider->legs[PE_SPIDER_V2_LEG_POS_FL].fDegree, PE_SpiderV2_DELAY_MS_MOVE);
     PE_Servo180_setRadian(&motor03, spider->legs[PE_SPIDER_V2_LEG_POS_FL].tDegree, PE_SpiderV2_DELAY_MS_MOVE);
 
-    PE_Servo180_setRadian(&motor04, spider->legs[PE_SPIDER_V2_LEG_POS_FR].cDegree, 0);
-    PE_Servo180_setRadian(&motor05, spider->legs[PE_SPIDER_V2_LEG_POS_FR].fDegree, 0);
-    PE_Servo180_setRadian(&motor06, spider->legs[PE_SPIDER_V2_LEG_POS_FR].tDegree, 0);
+    PE_Servo180_setRadian(&motor04, spider->legs[PE_SPIDER_V2_LEG_POS_FR].cDegree, PE_SpiderV2_DELAY_MS_MOVE);
+    PE_Servo180_setRadian(&motor05, spider->legs[PE_SPIDER_V2_LEG_POS_FR].fDegree, PE_SpiderV2_DELAY_MS_MOVE);
+    PE_Servo180_setRadian(&motor06, spider->legs[PE_SPIDER_V2_LEG_POS_FR].tDegree, PE_SpiderV2_DELAY_MS_MOVE);
 
     PE_Servo180_setRadian(&motor07, spider->legs[PE_SPIDER_V2_LEG_POS_ML].cDegree, 0);
     PE_Servo180_setRadian(&motor08, spider->legs[PE_SPIDER_V2_LEG_POS_ML].fDegree, 0);
