@@ -9,7 +9,7 @@ PE_Button_Key_t key1;
 PE_Button_Key_t key2;
 
 PE_SpiderV2_t spiderV2 = {
-    .moving = {.height = 50},
+    .moving = {.height = 80},
     .legs = {
         {.cLength = 28, .fLength = 69, .tLength = 52, .mnt = {-85, 120, 0},  .src = {-135, 190, 0}},
         {.cLength = 28, .fLength = 69, .tLength = 52, .mnt = {85, 120, 0},   .src = {135, 190, 0}},
@@ -198,6 +198,8 @@ void HAL_MspInit(void)
 
     /* Power interface clock enable */
     __HAL_RCC_PWR_CLK_ENABLE();
+
+    __HAL_AFIO_REMAP_SWJ_NOJTAG();
 }
 
 /**
