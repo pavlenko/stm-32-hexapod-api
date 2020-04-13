@@ -28,7 +28,6 @@ typedef struct {
     uint8_t      pin;
 } Motor_Pin_t;
 
-//TODO complete reconfigure
 Motor_Pin_t motorPins[] = {
     {GPIOA, 0},
     {GPIOA, 1},
@@ -46,16 +45,19 @@ Motor_Pin_t motorPins[] = {
     {GPIOA, 9},
     {GPIOA, 10},
     //A11
+    {GPIOA, 12},
+    {GPIOA, 15},
     {GPIOB, 3},
-    {GPIOB, 4},
+    //B4
     {GPIOB, 5},
-
     {GPIOB, 6},
     {GPIOB, 7},
-    {GPIOB, 8},
+    //B8
 };
 
 void MX_Servo180_Init(void) {
+    GPIO_InitTypeDef gpio;
+
     PE_Servo180_createTimer(&timer1);
     PE_Servo180_createTimer(&timer2);
     PE_Servo180_createTimer(&timer3);
@@ -83,6 +85,40 @@ void MX_Servo180_Init(void) {
     PE_Servo180_attachMotor(&timer3, &motor16);
     PE_Servo180_attachMotor(&timer3, &motor17);
     PE_Servo180_attachMotor(&timer3, &motor18);
+
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+
+    gpio.Pin = GPIO_PIN_0
+            | GPIO_PIN_1
+            | GPIO_PIN_2
+            | GPIO_PIN_3
+            | GPIO_PIN_4
+            | GPIO_PIN_5
+            | GPIO_PIN_6
+            | GPIO_PIN_7
+            | GPIO_PIN_8
+            | GPIO_PIN_9
+            | GPIO_PIN_10
+            | GPIO_PIN_11
+            | GPIO_PIN_12
+            | GPIO_PIN_15;
+
+    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
+    gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+    HAL_GPIO_Init(GPIOA, &gpio);
+
+    gpio.Pin = GPIO_PIN_3
+            | GPIO_PIN_4
+            | GPIO_PIN_5
+            | GPIO_PIN_6
+            | GPIO_PIN_7
+            | GPIO_PIN_8;
+
+    gpio.Mode  = GPIO_MODE_OUTPUT_PP;
+    gpio.Speed = GPIO_SPEED_FREQ_HIGH;
+
+    HAL_GPIO_Init(GPIOB, &gpio);
 }
 
 void PE_Servo180_setTimerOverflow(PE_Servo180_Timer_t *timer, uint16_t value) {
