@@ -9,6 +9,8 @@ typedef enum {
     I2C_STATUS_FAILURE = 0x05U,
 } I2C_Status_t;
 
+I2C_HandleTypeDef I2C2_Handle;
+
 I2C_Status_t I2C2_Status;
 uint8_t *I2C2_rxBufferData;
 uint8_t I2C2_rxBufferSize;

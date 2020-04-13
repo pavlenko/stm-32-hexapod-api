@@ -1,70 +1,9 @@
-#include <PE_Button.h>
-#include <PE_Servo180.h>
-#include <PE_SpiderV2.h>
 #include "main.h"
 #include "led.h"
 #include "nRF24.h"
+#include "servo180.h"
 #include "spi.h"
 #include "tim.h"
-
-typedef struct {
-    GPIO_TypeDef *port;
-    uint8_t      pin;
-} Motor_Pin_t;
-
-I2C_HandleTypeDef I2C2_Handle;
-SPI_HandleTypeDef SPIn;
-PE_nRF24_t nRF24;
-
-TIM_HandleTypeDef TIM2_Handle;
-TIM_HandleTypeDef TIM3_Handle;
-TIM_HandleTypeDef TIM4_Handle;
-
-PE_Servo180_Timer_t timer1;
-PE_Servo180_Timer_t timer2;
-PE_Servo180_Timer_t timer3;
-
-PE_Servo180_Motor_t motor01 = {.ID = 0, .reverse = 0};
-PE_Servo180_Motor_t motor02 = {.ID = 1, .reverse = 0};
-PE_Servo180_Motor_t motor03 = {.ID = 2, .reverse = 0};
-PE_Servo180_Motor_t motor04 = {.ID = 3, .reverse = 0};
-PE_Servo180_Motor_t motor05 = {.ID = 4, .reverse = 1};
-PE_Servo180_Motor_t motor06 = {.ID = 5, .reverse = 1};
-PE_Servo180_Motor_t motor07 = {.ID = 6, .reverse = 0};
-PE_Servo180_Motor_t motor08 = {.ID = 7, .reverse = 0};
-PE_Servo180_Motor_t motor09 = {.ID = 8, .reverse = 0};
-PE_Servo180_Motor_t motor10 = {.ID = 9, .reverse = 0};
-PE_Servo180_Motor_t motor11 = {.ID = 10, .reverse = 0};
-PE_Servo180_Motor_t motor12 = {.ID = 11, .reverse = 0};
-PE_Servo180_Motor_t motor13 = {.ID = 12, .reverse = 0};
-PE_Servo180_Motor_t motor14 = {.ID = 13, .reverse = 0};
-PE_Servo180_Motor_t motor15 = {.ID = 14, .reverse = 0};
-PE_Servo180_Motor_t motor16 = {.ID = 15, .reverse = 0};
-PE_Servo180_Motor_t motor17 = {.ID = 16, .reverse = 0};
-PE_Servo180_Motor_t motor18 = {.ID = 17, .reverse = 0};
-
-Motor_Pin_t motorPins[] = {
-    {GPIOA, 0},
-    {GPIOA, 1},
-    {GPIOA, 2},
-    {GPIOA, 3},
-    {GPIOA, 4},
-    {GPIOA, 5},
-
-    {GPIOA, 6},
-    {GPIOA, 7},
-    {GPIOA, 8},
-    {GPIOA, 9},
-    {GPIOA, 10},
-    {GPIOA, 11},
-
-    {GPIOB, 3},
-    {GPIOB, 4},
-    {GPIOB, 5},
-    {GPIOB, 6},
-    {GPIOB, 7},
-    {GPIOB, 8},
-};
 
 PE_Button_Key_t key1;
 PE_Button_Key_t key2;
@@ -91,37 +30,14 @@ int main()
     MX_GPIO_Init();
     MX_LED_Init();
     MX_LED_OFF(1);
-    MX_SPI2_Init(&SPIn);
-    MX_nRF24_Init(&nRF24);
+    //MX_SPI2_Init(&SPIn);
+    //MX_nRF24_Init(&nRF24);
 
     MX_TIM_PWM_Init(TIM2, &TIM2_Handle);
     MX_TIM_PWM_Init(TIM3, &TIM3_Handle);
     MX_TIM_PWM_Init(TIM4, &TIM4_Handle);
 
-    PE_Servo180_createTimer(&timer1);
-    PE_Servo180_createTimer(&timer2);
-    PE_Servo180_createTimer(&timer3);
-
-    PE_Servo180_attachMotor(&timer1, &motor01);
-    PE_Servo180_attachMotor(&timer1, &motor02);
-    PE_Servo180_attachMotor(&timer1, &motor03);
-    PE_Servo180_attachMotor(&timer1, &motor04);
-    PE_Servo180_attachMotor(&timer1, &motor05);
-    PE_Servo180_attachMotor(&timer1, &motor06);
-
-    PE_Servo180_attachMotor(&timer2, &motor07);
-    PE_Servo180_attachMotor(&timer2, &motor08);
-    PE_Servo180_attachMotor(&timer2, &motor09);
-    PE_Servo180_attachMotor(&timer2, &motor10);
-    PE_Servo180_attachMotor(&timer2, &motor11);
-    PE_Servo180_attachMotor(&timer2, &motor12);
-
-    PE_Servo180_attachMotor(&timer3, &motor13);
-    PE_Servo180_attachMotor(&timer3, &motor14);
-    PE_Servo180_attachMotor(&timer3, &motor15);
-    PE_Servo180_attachMotor(&timer3, &motor16);
-    PE_Servo180_attachMotor(&timer3, &motor17);
-    PE_Servo180_attachMotor(&timer3, &motor18);
+    MX_Servo180_Init();
 
     HAL_TIM_Base_Start_IT(&TIM2_Handle);
     HAL_TIM_Base_Start_IT(&TIM3_Handle);
@@ -198,127 +114,6 @@ void PE_SpiderV2_refreshOnComplete(PE_SpiderV2_t *spider) {
     PE_Servo180_setRadian(&motor18, spider->legs[PE_SPIDER_V2_LEG_POS_BR].tDegree, PE_SpiderV2_DELAY_MS_MOVE);
 }
 
-void PE_Servo180_setTimerOverflow(PE_Servo180_Timer_t *timer, uint16_t value) {
-    if (timer == &timer1) {
-        __HAL_TIM_SET_AUTORELOAD(&TIM2_Handle, value);
-    }
-    if (timer == &timer2) {
-        __HAL_TIM_SET_AUTORELOAD(&TIM3_Handle, value);
-    }
-    if (timer == &timer3) {
-        __HAL_TIM_SET_AUTORELOAD(&TIM4_Handle, value);
-    }
-    (void) timer;
-    (void) value;
-}
-
-void PE_Servo180_setTimerRefresh(PE_Servo180_Timer_t *timer) {
-    if (timer == &timer1) {
-        HAL_TIM_GenerateEvent(&TIM2_Handle, TIM_EVENTSOURCE_UPDATE);
-    }
-    if (timer == &timer2) {
-        HAL_TIM_GenerateEvent(&TIM3_Handle, TIM_EVENTSOURCE_UPDATE);
-    }
-    if (timer == &timer3) {
-        HAL_TIM_GenerateEvent(&TIM4_Handle, TIM_EVENTSOURCE_UPDATE);
-    }
-    (void) timer;
-}
-
-void PE_Servo180_setMotorPin0(uint8_t id) {
-    motorPins[id].port->BSRR = (1u << (motorPins[id].pin + 16u));
-}
-
-void PE_Servo180_setMotorPin1(uint8_t id) {
-    motorPins[id].port->BSRR = (1u << motorPins[id].pin);
-}
-
-PE_nRF24_RESULT_t PE_nRF24L01_readData(PE_nRF24_t *handle, uint8_t *data, uint8_t size) {
-    (void) handle;
-
-    if (HAL_SPI_Receive(&SPIn, data, size, 1000) != HAL_OK) {
-        return PE_nRF24_RESULT_ERROR;
-    }
-
-    return PE_nRF24_RESULT_OK;
-}
-
-PE_nRF24_RESULT_t PE_nRF24L01_sendData(PE_nRF24_t *handle, uint8_t *data, uint8_t size) {
-    (void) handle;
-
-    if (HAL_SPI_Transmit(&SPIn, data, size, 1000) != HAL_OK) {
-        return PE_nRF24_RESULT_ERROR;
-    }
-
-    return PE_nRF24_RESULT_OK;
-}
-
-void PE_nRF24L01_setCE0(PE_nRF24_t *handle) {
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_RESET);
-    (void) handle;
-}
-
-void PE_nRF24L01_setCE1(PE_nRF24_t *handle) {
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_SET);
-    (void) handle;
-}
-
-void PE_nRF24L01_setSS0(PE_nRF24_t *handle) {
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_RESET);
-    (void) handle;
-}
-
-void PE_nRF24L01_setSS1(PE_nRF24_t *handle) {
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_12, GPIO_PIN_SET);
-    (void) handle;
-}
-
-void PE_nRF24L01_onRXComplete(PE_nRF24_t *handle) {
-    if (nRF24.buffer[0] != 0) {
-        spiderV2.remote.moveY = 1;
-    } else {
-        spiderV2.remote.moveY = 0;
-    }
-    (void) handle;
-    MX_LED_ON(5);
-}
-
-void TIM2_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&TIM2_Handle);
-}
-
-void TIM3_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&TIM3_Handle);
-}
-
-void TIM4_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&TIM4_Handle);
-}
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *tim) {
-    MX_LED_ON(0);
-    if (tim->Instance == TIM2) {
-        PE_Servo180_onOverflow(&timer1);
-    }
-    if (tim->Instance == TIM3) {
-        PE_Servo180_onOverflow(&timer2);
-    }
-    if (tim->Instance == TIM4) {
-        PE_Servo180_onOverflow(&timer3);
-    }
-}
-
-void EXTI15_10_IRQHandler(void) {
-    //TODO check why not reflect to: if (EXTI->PR & GPIO_PIN_10) { EXTI->PR = GPIO_PIN_10; HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10); }
-    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
-}
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-    if (GPIO_Pin == GPIO_PIN_10) {
-        PE_nRF24L01_handleIRQ(&nRF24);
-    }
-}
-
 void MX_GPIO_Init() {
     GPIO_InitTypeDef GPIO_InitStruct;
 
@@ -346,24 +141,6 @@ void MX_GPIO_Init() {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
 
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-    //PB11 ------> nRF24_CE
-    //PB10 ------> nRF24_IRQ
-    GPIO_InitStruct.Pin   = GPIO_PIN_11;
-    GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_11, GPIO_PIN_RESET);
-
-    GPIO_InitStruct.Pin   = GPIO_PIN_10;
-    GPIO_InitStruct.Mode  = GPIO_MODE_IT_FALLING;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-    HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
-    HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 }
 
 /**

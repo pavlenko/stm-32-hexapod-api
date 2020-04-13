@@ -1,5 +1,7 @@
 #include "spi.h"
 
+SPI_HandleTypeDef SPIn;
+
 /**
   * @brief SPI1 Initialization Function
   * @param None

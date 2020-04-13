@@ -9,6 +9,10 @@
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
+TIM_HandleTypeDef TIM2_Handle;
+TIM_HandleTypeDef TIM3_Handle;
+TIM_HandleTypeDef TIM4_Handle;
+
 void MX_TIM_PWM_Init(TIM_TypeDef *tim, TIM_HandleTypeDef *handle)
 {
     TIM_OC_InitTypeDef sConfigOC;
@@ -81,4 +85,16 @@ void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* tim)
         /* Peripheral clock disable */
         __HAL_RCC_TIM4_CLK_DISABLE();
     }
+}
+
+void TIM2_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&TIM2_Handle);
+}
+
+void TIM3_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&TIM3_Handle);
+}
+
+void TIM4_IRQHandler(void) {
+    HAL_TIM_IRQHandler(&TIM4_Handle);
 }
