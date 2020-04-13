@@ -10,16 +10,16 @@ PE_Servo180_Motor_t motor03 = {.ID = 2, .reverse = 0};
 PE_Servo180_Motor_t motor04 = {.ID = 3, .reverse = 0};
 PE_Servo180_Motor_t motor05 = {.ID = 4, .reverse = 1};
 PE_Servo180_Motor_t motor06 = {.ID = 5, .reverse = 1};
-PE_Servo180_Motor_t motor07 = {.ID = 6, .reverse = 0};
-PE_Servo180_Motor_t motor08 = {.ID = 7, .reverse = 0};
-PE_Servo180_Motor_t motor09 = {.ID = 8, .reverse = 0};
+PE_Servo180_Motor_t motor07 = {.ID = 6, .reverse = 1};
+PE_Servo180_Motor_t motor08 = {.ID = 7, .reverse = 1};
+PE_Servo180_Motor_t motor09 = {.ID = 8, .reverse = 1};
 PE_Servo180_Motor_t motor10 = {.ID = 9, .reverse = 0};
-PE_Servo180_Motor_t motor11 = {.ID = 10, .reverse = 0};
-PE_Servo180_Motor_t motor12 = {.ID = 11, .reverse = 0};
+PE_Servo180_Motor_t motor11 = {.ID = 10, .reverse = 1};
+PE_Servo180_Motor_t motor12 = {.ID = 11, .reverse = 1};
 PE_Servo180_Motor_t motor13 = {.ID = 12, .reverse = 0};
 PE_Servo180_Motor_t motor14 = {.ID = 13, .reverse = 0};
 PE_Servo180_Motor_t motor15 = {.ID = 14, .reverse = 0};
-PE_Servo180_Motor_t motor16 = {.ID = 15, .reverse = 0};
+PE_Servo180_Motor_t motor16 = {.ID = 15, .reverse = 1};
 PE_Servo180_Motor_t motor17 = {.ID = 16, .reverse = 0};
 PE_Servo180_Motor_t motor18 = {.ID = 17, .reverse = 0};
 
@@ -113,7 +113,11 @@ void MX_Servo180_Init(void) {
             | GPIO_PIN_5
             | GPIO_PIN_6
             | GPIO_PIN_7
-            | GPIO_PIN_8;
+            | GPIO_PIN_8
+            | GPIO_PIN_12
+            | GPIO_PIN_13
+            | GPIO_PIN_14
+            | GPIO_PIN_15;
 
     gpio.Mode  = GPIO_MODE_OUTPUT_PP;
     gpio.Speed = GPIO_SPEED_FREQ_HIGH;
