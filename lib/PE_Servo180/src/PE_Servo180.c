@@ -5,6 +5,8 @@
 
 float PE_Servo180_mapRange(float value, float srcMin, float srcMax, float dstMin, float dstMax);
 
+float PE_Servo180_limitRange(float value, float limitMin, float limitMax);
+
 PE_Servo180_Status_t PE_Servo180_createTimer(PE_Servo180_Timer_t *timer) {
     timer->motorIndex = -1;
     timer->motorCount = 0;
@@ -62,24 +64,14 @@ PE_Servo180_Status_t PE_Servo180_detachMotor(PE_Servo180_Timer_t *timer, PE_Serv
 }
 
 void PE_Servo180_setRadian(PE_Servo180_Motor_t *motor, float value, uint16_t time) {
-    if (value < 0) {
-        value = 0;
-    }
-
-    if (value > M_PI) {
-        value = M_PI;
-    }
-
+    value = (uint16_t) PE_Servo180_limitRange(value, 0, M_PI);
     value = (uint16_t) PE_Servo180_mapRange(value, 0, M_PI, motor->calibMin, motor->calibMax);
 
     PE_Servo180_setMicros(motor, value, time);
 }
 
 void PE_Servo180_setDegree(PE_Servo180_Motor_t *motor, uint16_t value, uint16_t time) {
-    if (value > 180) {
-        value = 180;
-    }
-
+    value = (uint16_t) PE_Servo180_limitRange(value, 0, 180);
     value = (uint16_t) PE_Servo180_mapRange(value, 0, 180, motor->calibMin, motor->calibMax);
 
     PE_Servo180_setMicros(motor, value, time);
@@ -97,6 +89,8 @@ void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value, uint16_t 
     if (motor->reverse) {
         value = (motor->calibMax + motor->calibMin) - value;
     }
+
+    value = (uint16_t) PE_Servo180_limitRange(value, motor->limitMin, motor->limitMax);
 
     motor->ticks = motor->value;
     motor->value = value;
@@ -175,6 +169,18 @@ void PE_Servo180_onOverflow(PE_Servo180_Timer_t *timer) {
 float PE_Servo180_mapRange(float value, float srcMin, float srcMax, float dstMin, float dstMax) {
     float slope = (dstMax - dstMin) / (srcMax - srcMin);
     return dstMin + slope * (value - srcMin);
+}
+
+float PE_Servo180_limitRange(float value, float limitMin, float limitMax) {
+    if (value < limitMin) {
+        return limitMin;
+    }
+
+    if (value > limitMax) {
+        return limitMax;
+    }
+
+    return value;
 }
 
 __attribute__((weak))
