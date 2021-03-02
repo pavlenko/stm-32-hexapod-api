@@ -42,6 +42,14 @@ PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Serv
         motor->calibMax = PE_Servo180_MOTOR_MAX;
     }
 
+    if (motor->limitMin == 0) {
+        motor->limitMin = motor->calibMin;
+    }
+
+    if (motor->limitMax == 0) {
+        motor->limitMax = motor->calibMax;
+    }
+
     motor->ticks = PE_Servo180_MOTOR_MID;
     motor->value = PE_Servo180_MOTOR_MID;
     motor->speed = 0;
