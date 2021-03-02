@@ -30,12 +30,12 @@ PE_Servo180_Status_t PE_Servo180_attachMotor(PE_Servo180_Timer_t *timer, PE_Serv
         }
     }
 
-    if (motor->min == 0) {
-        motor->min = PE_Servo180_MOTOR_MIN;
+    if (motor->calibMin == 0) {
+        motor->calibMin = PE_Servo180_MOTOR_MIN;
     }
 
-    if (motor->max == 0) {
-        motor->max = PE_Servo180_MOTOR_MAX;
+    if (motor->calibMax == 0) {
+        motor->calibMax = PE_Servo180_MOTOR_MAX;
     }
 
     motor->ticks = PE_Servo180_MOTOR_MID;
@@ -70,7 +70,7 @@ void PE_Servo180_setRadian(PE_Servo180_Motor_t *motor, float value, uint16_t tim
         value = M_PI;
     }
 
-    value = (uint16_t) PE_Servo180_mapRange(value, 0, M_PI, motor->min, motor->max);
+    value = (uint16_t) PE_Servo180_mapRange(value, 0, M_PI, motor->calibMin, motor->calibMax);
 
     PE_Servo180_setMicros(motor, value, time);
 }
@@ -80,22 +80,22 @@ void PE_Servo180_setDegree(PE_Servo180_Motor_t *motor, uint16_t value, uint16_t 
         value = 180;
     }
 
-    value = (uint16_t) PE_Servo180_mapRange(value, 0, 180, motor->min, motor->max);
+    value = (uint16_t) PE_Servo180_mapRange(value, 0, 180, motor->calibMin, motor->calibMax);
 
     PE_Servo180_setMicros(motor, value, time);
 }
 
 void PE_Servo180_setMicros(PE_Servo180_Motor_t *motor, uint16_t value, uint16_t time) {
-    if (value < motor->min) {
-        value = motor->min;
+    if (value < motor->calibMin) {
+        value = motor->calibMin;
     }
 
-    if (value > motor->max) {
-        value = motor->max;
+    if (value > motor->calibMax) {
+        value = motor->calibMax;
     }
 
     if (motor->reverse) {
-        value = (motor->max + motor->min) - value;
+        value = (motor->calibMax + motor->calibMin) - value;
     }
 
     motor->ticks = motor->value;

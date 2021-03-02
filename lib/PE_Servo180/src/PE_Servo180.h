@@ -19,9 +19,10 @@ typedef struct PE_Servo180_Motor_s {
     uint16_t ticks;
     uint16_t value;
     uint16_t speed;
-    uint16_t min;
-    uint16_t max;
-    int16_t comp;
+    uint16_t calibMin;
+    uint16_t calibMax;
+    uint16_t limitMin;
+    uint16_t limitMax;
 } PE_Servo180_Motor_t;
 
 typedef PE_Servo180_Motor_t *PE_Servo180_Motor_p;
