@@ -20,14 +20,10 @@ void PE_PWM_dispatchTick(PE_PWM_Timer_t *timer) {
 
     timer->counter++;
 
-    // Loop through all channels, if tick match - set 0, else - set 1
+    // Loop through all channels, if tick match - set 0
     for (i = 0; i < PE_PWM_CHANNEL_PER_TIMER; i++) {
-        if (timer->items[timer->index] != NULL) {
-            if (timer->items[timer->index]->ticks == timer->counter) {
-                PE_PWM_setChannelPin0(timer->items[timer->index]->ID);
-            } else {
-                PE_PWM_setChannelPin1(timer->items[timer->index]->ID);
-            }
+        if (timer->items[timer->index] != NULL && timer->items[timer->index]->ticks == timer->counter) {
+            PE_PWM_setChannelPin0(timer->items[timer->index]->ID);
         }
     }
 }
