@@ -18,11 +18,11 @@ typedef PE_PWM_Channel_t *PE_PWM_Channel_p;
 
 typedef struct PE_PWM_Timer_s {
     volatile uint16_t counter;
-    int8_t index;
-    uint8_t count;
-    PE_PWM_Channel_p items[PE_PWM_CHANNEL_PER_TIMER];
+    uint8_t channelCount;
+    PE_PWM_Channel_p channelItems[PE_PWM_CHANNEL_PER_TIMER];
 } PE_PWM_Timer_t;
 
+void PE_PWM_createTimer(PE_PWM_Timer_t *timer);
 void PE_PWM_dispatchTick(PE_PWM_Timer_t *timer);
 
 void PE_PWM_setChannelPin0(uint8_t id);
