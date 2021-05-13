@@ -12,7 +12,7 @@ PE_SPI_Status_t PE_SPI_initDriver(PE_SPI_Driver_t *driver, void *hw)
     return PE_SPI_STATUS_OK;
 }
 
-PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device2_t *device, uint32_t baudRate, PE_SPI_BitOrder_t bitOrder, PE_SPI_DataMode_t dataMode)
+PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device_t *device, uint32_t baudRate, PE_SPI_BitOrder_t bitOrder, PE_SPI_DataMode_t dataMode)
 {
     if (NULL == device) {
         return PE_SPI_STATUS_ERROR;
@@ -25,12 +25,22 @@ PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device2_t *device, uint32_t baudRate, P
     return PE_SPI_STATUS_OK;
 }
 
-void PE_SPI_init(PE_SPI_Device_t *device)
+PE_SPI_Status_t PE_SPI_transmit(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size)
 {
-    //TODO split master/slave definitions
-    //TODO deselect
-    //TODO set config
-    //TODO call specific init implementation
+    if (NULL == driver || NULL == device) {
+        return PE_SPI_STATUS_ERROR;
+    }
+
+    device->txBuffer = data;
+    device->txTotal  = size;
+    device->txCount  = size;
+
+    driver->device = device;
+
+    PE_SPI_chipSelectClr(device);
+    PE_SPI_sendData(driver);//TODO weak
+
+    return PE_SPI_STATUS_OK;
 }
 
 void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size)

@@ -32,30 +32,18 @@ typedef enum {
 //TODO master/slave mode? maybe separate types
 //TODO interrupt like callbacks?
 
-typedef struct PE_SPI_Config_s {
-    uint32_t baud;
-    PE_SPI_BitOrder_t bitOrder;
-    PE_SPI_DataMode_t dataMode;
-} PE_SPI_Config_t;
-
 typedef struct PE_SPI_Device_s {
-    uint8_t *txBuffer;
-    volatile uint16_t txBufferTotal;
-    uint16_t txBufferCount;
-    uint8_t *rxBuffer;
-    volatile uint16_t rxBufferTotal;
-    uint16_t rxBufferCount;
-} PE_SPI_Device_t;
-
-typedef struct PE_SPI_Device2_s {
     uint32_t baudRate;
     PE_SPI_BitOrder_t bitOrder;
     PE_SPI_DataMode_t dataMode;
-} PE_SPI_Device2_t;
+    uint8_t *txBuffer;
+    volatile uint16_t txTotal;
+    volatile uint16_t txCount;
+} PE_SPI_Device_t;
 
 typedef struct PE_SPI_Driver_s {
     void *hw;
-    PE_SPI_Device2_t *device;
+    PE_SPI_Device_t *device;
     PE_SPI_Status_t status;
 } PE_SPI_Driver_t;
 
@@ -73,16 +61,16 @@ PE_SPI_Status_t PE_SPI_initDriver(PE_SPI_Driver_t *driver, void *hw);
  * @param dataMode
  * @return
  */
-PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device2_t *device, uint32_t baudRate, PE_SPI_BitOrder_t bitOrder, PE_SPI_DataMode_t dataMode);
+PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device_t *device, uint32_t baudRate, PE_SPI_BitOrder_t bitOrder, PE_SPI_DataMode_t dataMode);
 
 // tx, tx, tx, ...
-PE_SPI_Status_t PE_SPI_transmit(PE_SPI_Driver_t *driver, PE_SPI_Device2_t *device, uint8_t *data, uint16_t size);
+PE_SPI_Status_t PE_SPI_transmit(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 
 // rx, rx, rx, ...
-PE_SPI_Status_t PE_SPI_receive(PE_SPI_Driver_t *driver, PE_SPI_Device2_t *device, uint8_t *data, uint16_t size);
+PE_SPI_Status_t PE_SPI_receive(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 
 // tx, rx, tx, rx, ...
-PE_SPI_Status_t PE_SPI_transfer(PE_SPI_Driver_t *driver, PE_SPI_Device2_t *device, uint8_t *txData, uint8_t *rxData, uint16_t size);
+PE_SPI_Status_t PE_SPI_transfer(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *txData, uint8_t *rxData, uint16_t size);
 
 void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 void PE_SPI_wait(PE_SPI_Device_t *device);
