@@ -46,7 +46,7 @@ typedef struct PE_SPI_Device_s {
     uint16_t rxBufferCount;
 } PE_SPI_Device_t;
 
-void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size, uint32_t timeout);
+void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 void PE_SPI_wait(PE_SPI_Device_t *device);
 
 void PE_SPI_onTXComplete(PE_SPI_Device_t *device);
