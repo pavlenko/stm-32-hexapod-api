@@ -7,15 +7,23 @@ extern "C" {
 
 #include <stdint.h>
 
-//TODO enum
-#define PE_SPI_MODE0 0b00
-#define PE_SPI_MODE1 0b01
-#define PE_SPI_MODE2 0b10
-#define PE_SPI_MODE3 0b11
+typedef enum {
+    PE_SPI_DATA_MODE_0 = 0x0U,
+    PE_SPI_DATA_MODE_1 = 0x1U,
+    PE_SPI_DATA_MODE_2 = 0x2U,
+    PE_SPI_DATA_MODE_3 = 0x3U,
+} PE_SPI_DataMode_t;
 
-//TODO enum
-#define PE_SPI_MSB_FIRST 0U
-#define PE_SPI_LSB_FIRST 1U
+typedef enum {
+    PE_SPI_MSB_FIRST = 0x0U,
+    PE_SPI_LSB_FIRST = 0x1U,
+} PE_SPI_BitOrder_t;
+
+typedef enum {
+    PE_SPI_STATUS_OK    = 0x0U,
+    PE_SPI_STATUS_ERROR = 0x1U,
+    /*TODO other statuses*/
+} PE_SPI_Status_t;
 
 //TODO SS pin abstraction
 //TODO transmit/receive logic with interrupt based and blocking modes
@@ -25,8 +33,8 @@ extern "C" {
 
 typedef struct PE_SPI_Config_s {
     uint32_t baud;
-    uint8_t bitOrder;
-    uint8_t dataMode;
+    PE_SPI_BitOrder_t bitOrder;
+    PE_SPI_DataMode_t dataMode;
 } PE_SPI_Config_t;
 
 typedef struct PE_SPI_Device_s {
