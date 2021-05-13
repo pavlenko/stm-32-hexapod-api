@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stddef.h>
 
 typedef enum {
     PE_SPI_DATA_MODE_0 = 0x0U,
@@ -73,6 +74,15 @@ PE_SPI_Status_t PE_SPI_initDriver(PE_SPI_Driver_t *driver, void *hw);
  * @return
  */
 PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device2_t *device, uint32_t baudRate, PE_SPI_BitOrder_t bitOrder, PE_SPI_DataMode_t dataMode);
+
+// tx, tx, tx, ...
+PE_SPI_Status_t PE_SPI_transmit(PE_SPI_Driver_t *driver, PE_SPI_Device2_t *device, uint8_t *data, uint16_t size);
+
+// rx, rx, rx, ...
+PE_SPI_Status_t PE_SPI_receive(PE_SPI_Driver_t *driver, PE_SPI_Device2_t *device, uint8_t *data, uint16_t size);
+
+// tx, rx, tx, rx, ...
+PE_SPI_Status_t PE_SPI_transfer(PE_SPI_Driver_t *driver, PE_SPI_Device2_t *device, uint8_t *txData, uint8_t *rxData, uint16_t size);
 
 void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 void PE_SPI_wait(PE_SPI_Device_t *device);

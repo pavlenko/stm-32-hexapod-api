@@ -1,7 +1,5 @@
 #include "PE_SPI.h"
 
-#include <stddef.h>
-
 PE_SPI_Status_t PE_SPI_initDriver(PE_SPI_Driver_t *driver, void *hw)
 {
     if (NULL == driver || NULL == hw) {
