@@ -5,16 +5,17 @@ SPI_HandleTypeDef hSPI1;
 PE_SPI_Device_t spi;
 
 int main(void) {
-    char data = "Hello World!";
+    uint8_t data[16];
     while (1) {
-        PE_SPI_send(&spi, (uint8_t *) data, sizeof(data), 1000);
+        PE_SPI_read(&spi, (uint8_t *) data, sizeof(data), 1000);
         PE_SPI_wait(&spi);
+        //TODO Do something with received data
     }
 }
 
-void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi) {
+void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi) {
     if (hspi == &hSPI1) {
-        PE_SPI_onTXComplete(&spi);
+        PE_SPI_onRXComplete(&spi);
     }
 }
 
