@@ -46,6 +46,34 @@ typedef struct PE_SPI_Device_s {
     uint16_t rxBufferCount;
 } PE_SPI_Device_t;
 
+typedef struct PE_SPI_Device2_s {
+    uint32_t baudRate;
+    PE_SPI_BitOrder_t bitOrder;
+    PE_SPI_DataMode_t dataMode;
+} PE_SPI_Device2_t;
+
+typedef struct PE_SPI_Driver_s {
+    void *hw;
+    PE_SPI_Device2_t *device;
+    PE_SPI_Status_t status;
+} PE_SPI_Driver_t;
+
+/**
+ * @param driver
+ * @param hw
+ * @return
+ */
+PE_SPI_Status_t PE_SPI_initDriver(PE_SPI_Driver_t *driver, void *hw);
+
+/**
+ * @param device
+ * @param baudRate
+ * @param bitOrder
+ * @param dataMode
+ * @return
+ */
+PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device2_t *device, uint32_t baudRate, PE_SPI_BitOrder_t bitOrder, PE_SPI_DataMode_t dataMode);
+
 void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 void PE_SPI_wait(PE_SPI_Device_t *device);
 

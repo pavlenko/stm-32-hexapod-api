@@ -2,6 +2,31 @@
 
 #include <stddef.h>
 
+PE_SPI_Status_t PE_SPI_initDriver(PE_SPI_Driver_t *driver, void *hw)
+{
+    if (NULL == driver || NULL == hw) {
+        return PE_SPI_STATUS_ERROR;
+    }
+
+    driver->hw     = hw;
+    driver->device = NULL;
+
+    return PE_SPI_STATUS_OK;
+}
+
+PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device2_t *device, uint32_t baudRate, PE_SPI_BitOrder_t bitOrder, PE_SPI_DataMode_t dataMode)
+{
+    if (NULL == device) {
+        return PE_SPI_STATUS_ERROR;
+    }
+
+    device->baudRate = baudRate;
+    device->bitOrder = bitOrder;
+    device->dataMode = dataMode;
+
+    return PE_SPI_STATUS_OK;
+}
+
 void PE_SPI_init(PE_SPI_Device_t *device)
 {
     //TODO split master/slave definitions
