@@ -2,23 +2,33 @@
 
 #include <stddef.h>
 
-void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size)
+void PE_SPI_init(PE_SPI_Device_t *device)
+{
+    //TODO split master/slave definitions
+    //TODO deselect
+    //TODO set config
+    //TODO call specific init implementation
+}
+
+void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size, uint32_t timeout)
 {
     PE_SPI_select(device);
-
-    device->txBuffer = data;
-    device->txBuffer = data;
-    device->txBuffer = data;
-
-    device->rxBuffer = (uint8_t *)NULL;
-    device->txBuffer = 0U;
-    device->txBuffer = 0U;
-
-    //TODO weak send implementation callback
 }
 
 __attribute__((weak))
-void PE_SPI_select(PE_SPI_Device_t *spi)
+void PE_SPI_wait(PE_SPI_Device_t *device)
 {
-    (void) spi;
+    (void) device;
+}
+
+__attribute__((weak))
+void PE_SPI_chipSelectSet(PE_SPI_Device_t *device)
+{
+    (void) device;
+}
+
+__attribute__((weak))
+void PE_SPI_chipSelectClr(PE_SPI_Device_t *device)
+{
+    (void) device;
 }
