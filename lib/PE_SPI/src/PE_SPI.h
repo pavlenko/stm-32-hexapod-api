@@ -42,6 +42,9 @@ typedef struct PE_SPI_Device_s {
     uint8_t *txBuffer;
     volatile uint16_t txTotal;
     volatile uint16_t txCount;
+    uint8_t *rxBuffer;
+    volatile uint16_t rxTotal;
+    volatile uint16_t rxCount;
 } PE_SPI_Device_t;
 
 typedef struct PE_SPI_Driver_s {
@@ -82,7 +85,7 @@ void PE_SPI_wait(PE_SPI_Device_t *device);
  * TX ISR handler
  *
  * @param driver Driver instance
- * @param data   Pointer to tx register
+ * @param data   Pointer to tx data
  */
 void PE_SPI_onTX_ISR(PE_SPI_Driver_t *driver, uint8_t *data);
 
@@ -93,9 +96,33 @@ void PE_SPI_onTX_ISR(PE_SPI_Driver_t *driver, uint8_t *data);
  */
 void PE_SPI_onTXCompleted(PE_SPI_Driver_t *driver);
 
-void PE_SPI_onRXComplete(PE_SPI_Device_t *device);
+/**
+ * RX ISR Handler
+ *
+ * @param driver Driver instance
+ * @param data   Pointer to rx data
+ */
+void PE_SPI_onRX_ISR(PE_SPI_Driver_t *driver, uint8_t *data);
 
+/**
+ * RX Completed callback
+ *
+ * @param driver Driver instance
+ */
+void PE_SPI_onRXCompleted(PE_SPI_Driver_t *driver);
+
+/**
+ * Chip de-select helper
+ *
+ * @param device Device instance
+ */
 void PE_SPI_chipSelectSet(PE_SPI_Device_t *device);
+
+/**
+ * Chip select helper
+ *
+ * @param device Device instance
+ */
 void PE_SPI_chipSelectClr(PE_SPI_Device_t *device);
 
 #ifdef __cplusplus

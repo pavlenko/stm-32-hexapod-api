@@ -75,26 +75,29 @@ void PE_SPI_onTXCompleted(PE_SPI_Driver_t *driver)
     (void) driver;
 }
 
+void PE_SPI_onRX_ISR(PE_SPI_Driver_t *driver, uint8_t *data)
+{
+    *driver->device->rxBuffer = *data;
+    driver->device->rxCount--;
+
+    if (0U == driver->device->rxCount) {
+        PE_SPI_chipSelectSet(driver->device);
+        driver->status = PE_SPI_STATUS_OK;
+        PE_SPI_onRXCompleted(driver);
+    }
+}
+
+__attribute__((weak))
+void PE_SPI_onRXCompleted(PE_SPI_Driver_t *driver)
+{
+    (void) driver;
+}
+
 void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size)
 {
     //TODO select slave device
     //TODO maybe configure SPI parameters?
     //TODO call send implementation
-}
-
-void PE_SPI_onTXComplete(PE_SPI_Device_t *device)
-{
-    //TODO update status
-    //TODO clear slave device pointer
-    //TODO unselect slave device
-    //TODO maybe call user function?
-}
-
-void PE_SPI_onRXComplete(PE_SPI_Device_t *device)
-{
-    //TODO update status
-    //TODO clear slave device pointer
-    //TODO maybe call user function
 }
 
 __attribute__((weak))
