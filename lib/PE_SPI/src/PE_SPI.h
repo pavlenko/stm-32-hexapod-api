@@ -70,7 +70,7 @@ PE_SPI_Status_t PE_SPI_initDriver(PE_SPI_Driver_t *driver, void *hw);
 PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device_t *device, uint32_t baudRate, PE_SPI_BitOrder_t bitOrder, PE_SPI_DataMode_t dataMode);
 
 // tx, tx, tx, ...
-PE_SPI_Status_t PE_SPI_transmit(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
+PE_SPI_Status_t PE_SPI_send(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 
 /**
  * Send implementation callback
@@ -85,8 +85,12 @@ PE_SPI_Status_t PE_SPI_receive(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device,
 // tx, rx, tx, rx, ...
 PE_SPI_Status_t PE_SPI_transfer(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *txData, uint8_t *rxData, uint16_t size);
 
-void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
-void PE_SPI_wait(PE_SPI_Device_t *device);
+/**
+ * Wait for tx/rx completed
+ *
+ * @param driver
+ */
+void PE_SPI_wait(PE_SPI_Driver_t *driver);
 
 /**
  * TX ISR handler

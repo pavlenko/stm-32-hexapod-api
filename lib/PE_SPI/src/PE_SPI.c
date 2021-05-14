@@ -25,7 +25,7 @@ PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device_t *device, uint32_t baudRate, PE
     return PE_SPI_STATUS_OK;
 }
 
-PE_SPI_Status_t PE_SPI_transmit(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size)
+PE_SPI_Status_t PE_SPI_send(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size)
 {
     if (NULL == driver || NULL == device || NULL == data || 0 == size) {
         return PE_SPI_STATUS_ERROR;
@@ -99,19 +99,10 @@ void PE_SPI_onRXCompleted(PE_SPI_Driver_t *driver)
     (void) driver;
 }
 
-void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size)
-{
-    //TODO select slave device
-    //TODO maybe configure SPI parameters?
-    //TODO call send implementation
-}
-
 __attribute__((weak))
-void PE_SPI_wait(PE_SPI_Device_t *device)
+void PE_SPI_wait(PE_SPI_Driver_t *driver)
 {
-    //TODO maybe call wait implementation instead of weak?
-    //TODO maybe add timeout check?
-    (void) device;
+    (void) driver;
 }
 
 __attribute__((weak))
