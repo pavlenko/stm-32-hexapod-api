@@ -21,8 +21,11 @@ typedef enum {
 } PE_SPI_BitOrder_t;
 
 typedef enum {
-    PE_SPI_STATUS_OK    = 0x0U,
-    PE_SPI_STATUS_ERROR = 0x1U,
+    PE_SPI_STATUS_OK      = 0x0U,
+    PE_SPI_STATUS_ERROR   = 0x1U,
+    PE_SPI_STATUS_BUSY    = 0x2U,
+    PE_SPI_STATUS_BUSY_TX = 0x3U,
+    PE_SPI_STATUS_BUSY_RX = 0x4U,
     /*TODO other statuses*/
 } PE_SPI_Status_t;
 
@@ -75,7 +78,21 @@ PE_SPI_Status_t PE_SPI_transfer(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device
 void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 void PE_SPI_wait(PE_SPI_Device_t *device);
 
-void PE_SPI_onTXComplete(PE_SPI_Device_t *device);
+/**
+ * TX ISR handler
+ *
+ * @param driver Driver instance
+ * @param data   Pointer to tx register
+ */
+void PE_SPI_onTX_ISR(PE_SPI_Driver_t *driver, uint8_t *data);
+
+/**
+ * TX Completed callback
+ *
+ * @param driver Driver instance
+ */
+void PE_SPI_onTXCompleted(PE_SPI_Driver_t *driver);
+
 void PE_SPI_onRXComplete(PE_SPI_Device_t *device);
 
 void PE_SPI_chipSelectSet(PE_SPI_Device_t *device);

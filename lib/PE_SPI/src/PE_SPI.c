@@ -27,8 +27,11 @@ PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device_t *device, uint32_t baudRate, PE
 
 PE_SPI_Status_t PE_SPI_transmit(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size)
 {
-    if (NULL == driver || NULL == device) {
+    if (NULL == driver || NULL == device || NULL == data || 0 == size) {
         return PE_SPI_STATUS_ERROR;
+    }
+    if (PE_SPI_STATUS_BUSY_TX == driver->status) {
+        return PE_SPI_STATUS_BUSY_TX;
     }
 
     device->txBuffer = data;
@@ -36,11 +39,40 @@ PE_SPI_Status_t PE_SPI_transmit(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device
     device->txCount  = size;
 
     driver->device = device;
+    driver->status = PE_SPI_STATUS_BUSY_TX;
 
     PE_SPI_chipSelectClr(device);
     PE_SPI_sendData(driver);//TODO weak
 
     return PE_SPI_STATUS_OK;
+}
+
+void PE_SPI_onTX_ISR(PE_SPI_Driver_t *driver, uint8_t *data)
+{
+    if (NULL == driver) {
+        return;
+    }
+    if (NULL == driver->device) {
+        driver->status = PE_SPI_STATUS_ERROR;
+        return;
+    }
+
+    if (0U == driver->device->txCount) {
+        // Send completed
+        PE_SPI_chipSelectSet(driver->device);
+        driver->status = PE_SPI_STATUS_OK;
+        PE_SPI_onTXCompleted(driver);
+    } else {
+        // Send next byte
+        *data = (*driver->device->txBuffer++);
+        driver->device->txCount--;
+    }
+}
+
+__attribute__((weak))
+void PE_SPI_onTXCompleted(PE_SPI_Driver_t *driver)
+{
+    (void) driver;
 }
 
 void PE_SPI_send(PE_SPI_Device_t *device, uint8_t *data, uint16_t size)
