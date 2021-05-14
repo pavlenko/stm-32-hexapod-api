@@ -25,6 +25,12 @@ PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device_t *device, uint32_t baudRate, PE
     return PE_SPI_STATUS_OK;
 }
 
+__attribute__((weak))
+void PE_SPI_init(PE_SPI_Driver_t *driver)
+{
+    (void) driver;
+}
+
 PE_SPI_Status_t PE_SPI_send(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size)
 {
     if (NULL == driver || NULL == device || NULL == data || 0 == size) {
@@ -41,6 +47,7 @@ PE_SPI_Status_t PE_SPI_send(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, ui
     driver->device = device;
     driver->status = PE_SPI_STATUS_BUSY_TX;
 
+    PE_SPI_init(driver);
     PE_SPI_chipSelectClr(device);
     PE_SPI_doSend(driver);
 

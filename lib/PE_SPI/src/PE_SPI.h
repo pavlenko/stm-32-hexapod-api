@@ -69,13 +69,20 @@ PE_SPI_Status_t PE_SPI_initDriver(PE_SPI_Driver_t *driver, void *hw);
  */
 PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device_t *device, uint32_t baudRate, PE_SPI_BitOrder_t bitOrder, PE_SPI_DataMode_t dataMode);
 
+/**
+ * Initialize SPI with selected device configuration
+ *
+ * @param driver Driver instance
+ */
+void PE_SPI_init(PE_SPI_Driver_t *driver);
+
 // tx, tx, tx, ...
 PE_SPI_Status_t PE_SPI_send(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 
 /**
  * Send implementation callback
  *
- * @param driver
+ * @param driver Driver instance
  */
 void PE_SPI_doSend(PE_SPI_Driver_t *driver);
 
@@ -88,7 +95,7 @@ PE_SPI_Status_t PE_SPI_transfer(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device
 /**
  * Wait for tx/rx completed
  *
- * @param driver
+ * @param driver Driver instance
  */
 void PE_SPI_wait(PE_SPI_Driver_t *driver);
 
