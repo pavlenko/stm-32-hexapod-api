@@ -72,6 +72,13 @@ PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device_t *device, uint32_t baudRate, PE
 // tx, tx, tx, ...
 PE_SPI_Status_t PE_SPI_transmit(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 
+/**
+ * Send implementation callback
+ *
+ * @param driver
+ */
+void PE_SPI_doSend(PE_SPI_Driver_t *driver);
+
 // rx, rx, rx, ...
 PE_SPI_Status_t PE_SPI_receive(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 

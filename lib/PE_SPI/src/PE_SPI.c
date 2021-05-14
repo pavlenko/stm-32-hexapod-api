@@ -42,9 +42,15 @@ PE_SPI_Status_t PE_SPI_transmit(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device
     driver->status = PE_SPI_STATUS_BUSY_TX;
 
     PE_SPI_chipSelectClr(device);
-    PE_SPI_sendData(driver);//TODO weak
+    PE_SPI_doSend(driver);
 
     return PE_SPI_STATUS_OK;
+}
+
+__attribute__((weak))
+void PE_SPI_doSend(PE_SPI_Driver_t *driver)
+{
+    (void) driver;
 }
 
 void PE_SPI_onTX_ISR(PE_SPI_Driver_t *driver, uint8_t *data)
