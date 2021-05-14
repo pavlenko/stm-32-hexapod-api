@@ -86,6 +86,8 @@ PE_SPI_Status_t PE_SPI_send(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, ui
  */
 void PE_SPI_doSend(PE_SPI_Driver_t *driver);
 
+PE_SPI_Status_t PE_SPI_read(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
+
 // rx, rx, rx, ...
 PE_SPI_Status_t PE_SPI_receive(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 

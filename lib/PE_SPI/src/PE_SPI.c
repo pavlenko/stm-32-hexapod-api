@@ -36,7 +36,7 @@ PE_SPI_Status_t PE_SPI_send(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, ui
     if (NULL == driver || NULL == device || NULL == data || 0 == size) {
         return PE_SPI_STATUS_ERROR;
     }
-    if (PE_SPI_STATUS_BUSY_TX == driver->status) {
+    if (PE_SPI_STATUS_OK != driver->status) {
         return PE_SPI_STATUS_BUSY_TX;
     }
 
@@ -58,6 +58,29 @@ __attribute__((weak))
 void PE_SPI_doSend(PE_SPI_Driver_t *driver)
 {
     (void) driver;
+}
+
+PE_SPI_Status_t PE_SPI_read(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size)
+{
+    if (NULL == driver || NULL == device || NULL == data || 0 == size) {
+        return PE_SPI_STATUS_ERROR;
+    }
+    if (PE_SPI_STATUS_OK != driver->status) {
+        return PE_SPI_STATUS_BUSY_RX;
+    }
+
+    device->rxBuffer = data;
+    device->rxTotal  = size;
+    device->rxCount  = size;
+
+    driver->device = device;
+    driver->status = PE_SPI_STATUS_BUSY_TX;
+
+    PE_SPI_init(driver);
+    PE_SPI_chipSelectClr(device);
+    PE_SPI_doRead(driver);
+
+    return PE_SPI_STATUS_OK;
 }
 
 void PE_SPI_onTX_ISR(PE_SPI_Driver_t *driver, uint8_t *data)
