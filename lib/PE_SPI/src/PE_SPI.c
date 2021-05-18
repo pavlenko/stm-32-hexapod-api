@@ -48,7 +48,7 @@ PE_SPI_Status_t PE_SPI_send(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, ui
     driver->status = PE_SPI_STATUS_BUSY_TX;
 
     PE_SPI_init(driver);
-    PE_SPI_chipSelectClr(device);
+    PE_SPI_chipSelect(device, PE_SPI_CS_LO);
     PE_SPI_doSend(driver);
 
     return PE_SPI_STATUS_OK;
@@ -77,7 +77,7 @@ PE_SPI_Status_t PE_SPI_read(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, ui
     driver->status = PE_SPI_STATUS_BUSY_TX;
 
     PE_SPI_init(driver);
-    PE_SPI_chipSelectClr(device);
+    PE_SPI_chipSelect(device, PE_SPI_CS_LO);
     PE_SPI_doRead(driver);
 
     return PE_SPI_STATUS_OK;
@@ -95,7 +95,7 @@ void PE_SPI_onTX_ISR(PE_SPI_Driver_t *driver, uint8_t *data)
 
     if (0U == driver->device->txCount) {
         // Send completed
-        PE_SPI_chipSelectSet(driver->device);
+        PE_SPI_chipSelect(driver->device, PE_SPI_CS_HI);
         driver->status = PE_SPI_STATUS_OK;
         PE_SPI_onTXCompleted(driver);
     } else {
@@ -117,7 +117,7 @@ void PE_SPI_onRX_ISR(PE_SPI_Driver_t *driver, uint8_t *data)
     driver->device->rxCount--;
 
     if (0U == driver->device->rxCount) {
-        PE_SPI_chipSelectSet(driver->device);
+        PE_SPI_chipSelect(driver->device, PE_SPI_CS_HI);
         driver->status = PE_SPI_STATUS_OK;
         PE_SPI_onRXCompleted(driver);
     }
@@ -136,13 +136,8 @@ void PE_SPI_wait(PE_SPI_Driver_t *driver)
 }
 
 __attribute__((weak))
-void PE_SPI_chipSelectSet(PE_SPI_Device_t *device)
+void PE_SPI_chipSelect(PE_SPI_Device_t *device, PE_SPI_CS_t value)
 {
     (void) device;
-}
-
-__attribute__((weak))
-void PE_SPI_chipSelectClr(PE_SPI_Device_t *device)
-{
-    (void) device;
+    (void) value;
 }

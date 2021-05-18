@@ -21,6 +21,11 @@ typedef enum {
 } PE_SPI_BitOrder_t;
 
 typedef enum {
+    PE_SPI_CS_LO = 0x0U,
+    PE_SPI_CS_HI = 0x1U,
+} PE_SPI_CS_t;
+
+typedef enum {
     PE_SPI_STATUS_OK      = 0x0U,
     PE_SPI_STATUS_ERROR   = 0x1U,
     PE_SPI_STATUS_BUSY    = 0x2U,
@@ -29,7 +34,6 @@ typedef enum {
     /*TODO other statuses*/
 } PE_SPI_Status_t;
 
-//TODO SS pin abstraction
 //TODO transmit/receive logic with interrupt based and blocking modes
 //TODO separate configuration structure?
 //TODO master/slave mode? maybe separate types
@@ -132,18 +136,12 @@ void PE_SPI_onRX_ISR(PE_SPI_Driver_t *driver, uint8_t *data);
 void PE_SPI_onRXCompleted(PE_SPI_Driver_t *driver);
 
 /**
- * Chip de-select helper
- *
- * @param device Device instance
- */
-void PE_SPI_chipSelectSet(PE_SPI_Device_t *device);
-
-/**
  * Chip select helper
  *
  * @param device Device instance
+ * @param value  CS pin state
  */
-void PE_SPI_chipSelectClr(PE_SPI_Device_t *device);
+void PE_SPI_chipSelect(PE_SPI_Device_t *device, PE_SPI_CS_t value);
 
 #ifdef __cplusplus
 }
