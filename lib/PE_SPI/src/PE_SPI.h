@@ -57,22 +57,6 @@ typedef struct PE_SPI_Driver_s {
     PE_SPI_Status_t status;
 } PE_SPI_Driver_t;
 
-/**
- * @param driver
- * @param hw
- * @return
- */
-PE_SPI_Status_t PE_SPI_initDriver(PE_SPI_Driver_t *driver, void *hw);
-
-/**
- * @param device
- * @param baudRate
- * @param bitOrder
- * @param dataMode
- * @return
- */
-PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device_t *device, uint32_t baudRate, PE_SPI_BitOrder_t bitOrder, PE_SPI_DataMode_t dataMode);
-
 // tx, tx, tx, ...
 PE_SPI_Status_t PE_SPI_send(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size);
 
@@ -100,26 +84,12 @@ PE_SPI_Status_t PE_SPI_transfer(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device
 void PE_SPI_onTX_ISR(PE_SPI_Driver_t *driver, uint8_t *data);
 
 /**
- * TX Completed callback
- *
- * @param driver Driver instance
- */
-void PE_SPI_onTXCompleted(PE_SPI_Driver_t *driver);
-
-/**
  * RX ISR Handler
  *
  * @param driver Driver instance
  * @param data   Pointer to rx data
  */
 void PE_SPI_onRX_ISR(PE_SPI_Driver_t *driver, uint8_t *data);
-
-/**
- * RX Completed callback
- *
- * @param driver Driver instance
- */
-void PE_SPI_onRXCompleted(PE_SPI_Driver_t *driver);
 
 /**
  * Initialize SPI with selected device configuration
@@ -142,6 +112,20 @@ void PE_SPI_wait(PE_SPI_Driver_t *driver);
  * @param value  CS pin state
  */
 void PE_SPI_chipSelect(PE_SPI_Device_t *device, PE_SPI_CS_t value);
+
+/**
+ * TX Completed callback
+ *
+ * @param driver Driver instance
+ */
+void PE_SPI_onTXCompleted(PE_SPI_Driver_t *driver);
+
+/**
+ * RX Completed callback
+ *
+ * @param driver Driver instance
+ */
+void PE_SPI_onRXCompleted(PE_SPI_Driver_t *driver);
 
 #ifdef __cplusplus
 }
