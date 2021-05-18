@@ -80,6 +80,8 @@ PE_SPI_Status_t PE_SPI_transfer(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device
  *
  * @param driver Driver instance
  * @param data   Pointer to tx data
+ *
+ * @deprecated ?
  */
 void PE_SPI_onTX_ISR(PE_SPI_Driver_t *driver, uint8_t *data);
 
@@ -88,6 +90,8 @@ void PE_SPI_onTX_ISR(PE_SPI_Driver_t *driver, uint8_t *data);
  *
  * @param driver Driver instance
  * @param data   Pointer to rx data
+ *
+ * @deprecated ?
  */
 void PE_SPI_onRX_ISR(PE_SPI_Driver_t *driver, uint8_t *data);
 
@@ -117,6 +121,8 @@ void PE_SPI_chipSelect(PE_SPI_Device_t *device, PE_SPI_CS_t value);
  * TX Completed callback
  *
  * @param driver Driver instance
+ *
+ * @deprecated ?
  */
 void PE_SPI_onTXCompleted(PE_SPI_Driver_t *driver);
 
@@ -124,8 +130,30 @@ void PE_SPI_onTXCompleted(PE_SPI_Driver_t *driver);
  * RX Completed callback
  *
  * @param driver Driver instance
+ *
+ * @deprecated ?
  */
 void PE_SPI_onRXCompleted(PE_SPI_Driver_t *driver);
+
+/**
+ * Chip select interrupt handler
+ */
+void PE_SPI_CS_Interrupt();
+
+/**
+ * Transmit byte completed interrupt handler
+ */
+void PE_SPI_TX_Interrupt();
+
+/**
+ * Receive byte interrupt handler
+ */
+void PE_SPI_RX_Interrupt();
+
+/**
+ * Error interrupt handler
+ */
+void PE_SPI_ER_Interrupt();
 
 #ifdef __cplusplus
 }

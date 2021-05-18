@@ -116,3 +116,75 @@ void PE_SPI_onRXCompleted(PE_SPI_Driver_t *driver)
 {
     (void) driver;
 }
+
+static void SPI_2linesTxISR_8BIT(struct __SPI_HandleTypeDef *hspi) {
+    *(__IO uint8_t *)&hspi->Instance->DR = (*hspi->pTxBuffPtr++);
+    hspi->TxXferCount--;
+
+    /* check the end of the transmission */
+    if (hspi->TxXferCount == 0U) {
+        /* Disable TXE interrupt */
+        __HAL_SPI_DISABLE_IT(hspi, SPI_IT_TXE);
+
+        if(hspi->RxXferCount == 0U) {
+            SPI_CloseRxTx_ISR(hspi);
+        }
+    }
+}
+
+static void SPI_2linesRxISR_8BIT(struct __SPI_HandleTypeDef *hspi) {
+    /* Receive data in 8bit mode */
+    *hspi->pRxBuffPtr++ = *((__IO uint8_t *)&hspi->Instance->DR);
+    hspi->RxXferCount--;
+
+    /* check end of the reception */
+    if (hspi->RxXferCount == 0U) {
+        /* Disable RXNE interrupt */
+        __HAL_SPI_DISABLE_IT(hspi, (SPI_IT_RXNE | SPI_IT_ERR));
+
+        if (hspi->TxXferCount == 0U) {
+            SPI_CloseRxTx_ISR(hspi);
+        }
+    }
+}
+
+static void SPI_CloseRxTx_ISR(SPI_HandleTypeDef *hspi) {
+    uint32_t tickstart = 0U;
+    __IO uint32_t count = SPI_DEFAULT_TIMEOUT * (SystemCoreClock / 24U / 1000U);
+    /* Init tickstart for timeout managment*/
+    tickstart = HAL_GetTick();
+
+    /* Disable ERR interrupt */
+    __HAL_SPI_DISABLE_IT(hspi, SPI_IT_ERR);
+
+    /* Wait until TXE flag is set */
+    do {
+        if (count-- == 0U) {
+            SET_BIT(hspi->ErrorCode, HAL_SPI_ERROR_FLAG);
+            break;
+        }
+    } while((hspi->Instance->SR & SPI_FLAG_TXE) == RESET);
+
+    /* Check the end of the transaction */
+    if (SPI_CheckFlag_BSY(hspi, SPI_DEFAULT_TIMEOUT, tickstart)!=HAL_OK) {
+        SET_BIT(hspi->ErrorCode, HAL_SPI_ERROR_FLAG);
+    }
+
+    /* Clear overrun flag in 2 Lines communication mode because received is not read */
+    if (hspi->Init.Direction == SPI_DIRECTION_2LINES) {
+        __HAL_SPI_CLEAR_OVRFLAG(hspi);
+    }
+
+    if (hspi->ErrorCode == HAL_SPI_ERROR_NONE) {
+        if (hspi->State == HAL_SPI_STATE_BUSY_RX) {
+            hspi->State = HAL_SPI_STATE_READY;
+            HAL_SPI_RxCpltCallback(hspi);
+        } else {
+            hspi->State = HAL_SPI_STATE_READY;
+            HAL_SPI_TxRxCpltCallback(hspi);
+        }
+    } else {
+        hspi->State = HAL_SPI_STATE_READY;
+        HAL_SPI_ErrorCallback(hspi);
+    }
+}
