@@ -25,12 +25,6 @@ PE_SPI_Status_t PE_SPI_initDevice(PE_SPI_Device_t *device, uint32_t baudRate, PE
     return PE_SPI_STATUS_OK;
 }
 
-__attribute__((weak))
-void PE_SPI_init(PE_SPI_Driver_t *driver)
-{
-    (void) driver;
-}
-
 PE_SPI_Status_t PE_SPI_send(PE_SPI_Driver_t *driver, PE_SPI_Device_t *device, uint8_t *data, uint16_t size)
 {
     if (NULL == driver || NULL == device || NULL == data || 0 == size) {
@@ -125,6 +119,12 @@ void PE_SPI_onRX_ISR(PE_SPI_Driver_t *driver, uint8_t *data)
 
 __attribute__((weak))
 void PE_SPI_onRXCompleted(PE_SPI_Driver_t *driver)
+{
+    (void) driver;
+}
+
+__attribute__((weak))
+void PE_SPI_init(PE_SPI_Driver_t *driver)
 {
     (void) driver;
 }
