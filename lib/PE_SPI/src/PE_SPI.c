@@ -132,6 +132,24 @@ static void SPI_2linesTxISR_8BIT(struct __SPI_HandleTypeDef *hspi) {
     }
 }
 
+static void SPI_TxISR_8BIT(struct __SPI_HandleTypeDef *hspi) {
+    *(__IO uint8_t *)&hspi->Instance->DR = (*hspi->pTxBuffPtr++);
+    hspi->TxXferCount--;
+
+    if (hspi->TxXferCount == 0U) {
+        SPI_CloseTx_ISR(hspi);
+    }
+}
+
+static void SPI_RxISR_8BIT(struct __SPI_HandleTypeDef *hspi) {
+    *hspi->pRxBuffPtr++ = (*(__IO uint8_t *)&hspi->Instance->DR);
+    hspi->RxXferCount--;
+
+    if (hspi->RxXferCount == 0U) {
+        SPI_CloseRx_ISR(hspi);
+    }
+}
+
 static void SPI_2linesRxISR_8BIT(struct __SPI_HandleTypeDef *hspi) {
     /* Receive data in 8bit mode */
     *hspi->pRxBuffPtr++ = *((__IO uint8_t *)&hspi->Instance->DR);
@@ -186,5 +204,64 @@ static void SPI_CloseRxTx_ISR(SPI_HandleTypeDef *hspi) {
     } else {
         hspi->State = HAL_SPI_STATE_READY;
         HAL_SPI_ErrorCallback(hspi);
+    }
+}
+
+static void SPI_CloseRx_ISR(SPI_HandleTypeDef *hspi) {
+    /* Disable RXNE and ERR interrupt */
+    __HAL_SPI_DISABLE_IT(hspi, (SPI_IT_RXNE | SPI_IT_ERR));
+
+    /* Check the end of the transaction */
+    if ((hspi->Init.Mode == SPI_MODE_MASTER) && ((hspi->Init.Direction == SPI_DIRECTION_1LINE) || (hspi->Init.Direction == SPI_DIRECTION_2LINES_RXONLY))) {
+        /* Disable SPI peripheral */
+        __HAL_SPI_DISABLE(hspi);
+    }
+
+    /* Clear overrun flag in 2 Lines communication mode because received is not read */
+    if (hspi->Init.Direction == SPI_DIRECTION_2LINES) {
+        __HAL_SPI_CLEAR_OVRFLAG(hspi);
+    }
+    hspi->State = HAL_SPI_STATE_READY;
+
+    if (hspi->ErrorCode == HAL_SPI_ERROR_NONE) {
+        HAL_SPI_RxCpltCallback(hspi);
+    } else {
+        HAL_SPI_ErrorCallback(hspi);
+    }
+}
+
+static void SPI_CloseTx_ISR(SPI_HandleTypeDef *hspi) {
+    uint32_t tickstart = 0U;
+    __IO uint32_t count = SPI_DEFAULT_TIMEOUT * (SystemCoreClock / 24U / 1000U);
+
+    /* Init tickstart for timeout management*/
+    tickstart = HAL_GetTick();
+
+    /* Wait until TXE flag is set */
+    do {
+        if (count-- == 0U) {
+            SET_BIT(hspi->ErrorCode, HAL_SPI_ERROR_FLAG);
+            break;
+        }
+    } while((hspi->Instance->SR & SPI_FLAG_TXE) == RESET);
+
+    /* Disable TXE and ERR interrupt */
+    __HAL_SPI_DISABLE_IT(hspi, (SPI_IT_TXE | SPI_IT_ERR));
+
+    /* Check Busy flag */
+    if (SPI_CheckFlag_BSY(hspi, SPI_DEFAULT_TIMEOUT, tickstart) != HAL_OK) {
+        SET_BIT(hspi->ErrorCode, HAL_SPI_ERROR_FLAG);
+    }
+
+    /* Clear overrun flag in 2 Lines communication mode because received is not read */
+    if (hspi->Init.Direction == SPI_DIRECTION_2LINES) {
+        __HAL_SPI_CLEAR_OVRFLAG(hspi);
+    }
+
+    hspi->State = HAL_SPI_STATE_READY;
+    if (hspi->ErrorCode != HAL_SPI_ERROR_NONE) {
+        HAL_SPI_ErrorCallback(hspi);
+    } else {
+        HAL_SPI_TxCpltCallback(hspi);
     }
 }
