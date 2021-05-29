@@ -30,8 +30,28 @@ typedef struct {
     PE_I2C_State_t status;
 } PE_I2C_Driver_t;
 
-//TODO PE_I2C_send(driver, device, data, size)
-//TODO PE_I2C_read(driver, device, data, size)
+// Master functions
+void PE_I2C_init(PE_I2C_Device_t *dev);// configure bus
+void PE_I2C_wait(PE_I2C_Device_t *dev);// wait operation completed
+void PE_I2C_stop(PE_I2C_Device_t *dev);// un-configure device (need?)
+
+void PE_I2C_send(PE_I2C_Device_t *dev, uint8_t *data, uint16_t size);// send data in async mode
+void PE_I2C_read(PE_I2C_Device_t *dev, uint8_t *data, uint16_t size);// read data in async mode
+
+void PE_I2C_setMem(PE_I2C_Device_t *dev, uint16_t *addr, uint8_t addrSize, uint8_t *data, uint8_t size);// send data internal memory address
+void PE_I2C_getMem(PE_I2C_Device_t *dev, uint16_t *addr, uint8_t addrSize, uint8_t *data, uint8_t size);// read data internal memory address
+
+// Slave functions
+void PE_I2C_listenTo(PE_I2C_Device_t *dev);// init slave mode with specific address + configure bus
+void PE_I2C_onReceive();// call when master use send mode
+void PE_I2C_onRequest();// call when master use read mode
+
+// Interrupt handlers
+void PE_I2C_TX_interrupt(PE_I2C_Device_t *dev);
+void PE_I2C_RX_interrupt(PE_I2C_Device_t *dev);
+void PE_I2C_ER_interrupt(PE_I2C_Device_t *dev);
+
+//TODO callbacks
 
 #ifdef __cplusplus
 }
