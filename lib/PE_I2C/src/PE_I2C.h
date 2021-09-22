@@ -18,10 +18,12 @@ typedef enum {
 
 typedef struct {
     uint32_t speed;
-    uint8_t rxBufferData[5];
-    uint8_t rxBufferSize;
-    uint8_t txBufferData[4];
-    uint8_t txBufferSize;
+    uint8_t *rxBufferData;
+    uint8_t rxBufferCount;
+    uint8_t rxBufferTotal;
+    uint8_t *txBufferData;
+    uint8_t txBufferCount;
+    uint8_t txBufferTotal;
 } PE_I2C_Device_t;
 
 typedef struct {
