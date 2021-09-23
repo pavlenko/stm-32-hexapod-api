@@ -26,11 +26,11 @@ typedef enum PE_SpiderV2_LegPos_s {
     PE_SPIDER_V2_LEG_POS_BR,
 } PE_SpiderV2_LegPos_t;
 
-typedef enum PE_SpiderV2_State_s {
-    PE_SPIDER_V2_STATE_OFF,
-    PE_SPIDER_V2_STATE_IDLE,
-    PE_SPIDER_V2_STATE_MOVING,
-} PE_SpiderV2_State_1;
+//typedef enum PE_SpiderV2_State_s {
+//    PE_SPIDER_V2_STATE_OFF,
+//    PE_SPIDER_V2_STATE_IDLE,
+//    PE_SPIDER_V2_STATE_MOVING,
+//} PE_SpiderV2_State_1;
 
 typedef struct PE_SpiderV2_Leg_s PE_SpiderV2_Leg_t;
 typedef struct PE_SpiderV2_s PE_SpiderV2_t;
