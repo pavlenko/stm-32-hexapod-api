@@ -45,8 +45,8 @@ PE_I2C_Status_t PE_I2C_open(PE_I2C_Driver_t *driver, PE_I2C_Device_t *device);
 PE_I2C_Status_t PE_I2C_wait(PE_I2C_Driver_t *driver);
 PE_I2C_Status_t PE_I2C_stop(PE_I2C_Driver_t *driver);
 
-PE_I2C_Status_t PE_I2C_send(PE_I2C_Driver_t *driver, uint8_t *data, uint16_t size);// send data in async mode
-PE_I2C_Status_t PE_I2C_read(PE_I2C_Driver_t *driver, uint8_t *data, uint16_t size);// read data in async mode
+PE_I2C_Status_t PE_I2C_send(PE_I2C_Driver_t *driver, uint8_t *data, uint16_t size);
+PE_I2C_Status_t PE_I2C_read(PE_I2C_Driver_t *driver, uint8_t *data, uint16_t size);
 
 PE_I2C_Status_t PE_I2C_setMem(PE_I2C_Driver_t *driver, uint16_t *addr, uint8_t addrSize, uint8_t *data, uint8_t size);// send data internal memory address
 PE_I2C_Status_t PE_I2C_getMem(PE_I2C_Driver_t *driver, uint16_t *addr, uint8_t addrSize, uint8_t *data, uint8_t size);// read data internal memory address

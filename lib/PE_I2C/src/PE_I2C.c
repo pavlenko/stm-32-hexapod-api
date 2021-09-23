@@ -29,3 +29,33 @@ PE_I2C_Status_t PE_I2C_stop(PE_I2C_Driver_t *driver) {
     driver->device = NULL;
     return PE_I2C_STATUS_OK;
 }
+
+PE_I2C_Status_t PE_I2C_send(PE_I2C_Driver_t *driver, uint8_t *data, uint16_t size) {
+    if (driver->state != PE_I2C_STATE_READY) {
+        return PE_I2C_STATUS_BUSY;
+    }
+
+    driver->device->txBufferData  = data;
+    driver->device->txBufferCount = 0;
+    driver->device->txBufferTotal = size;
+
+    driver->state = PE_I2C_STATE_BUSY_TX;
+
+    //TODO pass to implementation
+    return PE_I2C_STATUS_OK;
+}
+
+PE_I2C_Status_t PE_I2C_read(PE_I2C_Driver_t *driver, uint8_t *data, uint16_t size) {
+    if (driver->state != PE_I2C_STATE_READY) {
+        return PE_I2C_STATUS_BUSY;
+    }
+
+    driver->device->rxBufferData  = data;
+    driver->device->rxBufferCount = 0;
+    driver->device->rxBufferTotal = size;
+
+    driver->state = PE_I2C_STATE_BUSY_RX;
+
+    //TODO pass to implementation
+    return PE_I2C_STATUS_OK;
+}
