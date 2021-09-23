@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "PE_I2C_Device.h"
+
 //TODO device
 //TODO status
 //TODO lock
@@ -17,7 +19,7 @@ private:
 public:
     PE_I2C_Driver();
 
-    void open(void *device);// configure bus
+    void open(PE_I2C_Device *device);// configure bus
     void wait();// wait operation completed
     void stop();// un-configure device (need?)
 
