@@ -17,6 +17,7 @@ typedef enum {
 } PE_I2C_State_t;
 
 typedef struct {
+    uint16_t address;
     uint32_t speed;
     uint8_t *rxBufferData;
     uint8_t rxBufferCount;
